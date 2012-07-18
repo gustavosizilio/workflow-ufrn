@@ -1,0 +1,16 @@
+action.package=org.domain.workflow.session
+action.sources=/workflow/src
+eclipse.preferences.version=1
+model.package=org.domain.workflow.entity
+model.sources=/workflow/src
+seam.ear.project=workflow
+seam.ejb.project=workflow
+seam.project.connection.profile=PostgreSQL
+seam.project.deployment.type=ear
+seam.project.settings.version=1.1
+seam.project.web.root.folder=/workflow/WebContent
+seam.runtime.name=jboss-seam-2.2.2.Final
+seam.test.creating=false
+seam.test.project=workflow
+test.package=org.domain.workflow.test
+test.sources=/workflow/src

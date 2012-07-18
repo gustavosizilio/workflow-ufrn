@@ -1,0 +1,39 @@
+package org.domain.workflow.session;
+
+import org.domain.dao.UserDAO;
+import org.domain.utils.BasicPasswordEncryptor;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.security.Credentials;
+import org.jboss.seam.security.Identity;
+
+@Name("authenticator")
+public class Authenticator
+{
+    @Logger private Log log;
+
+    @In Identity identity;
+    @In Credentials credentials;
+    @In("userDao") UserDAO userDAO;
+    
+    public boolean authenticate()
+    {
+        log.info("authenticating {0}", credentials.getUsername());
+        log.info("pass {0}", new BasicPasswordEncryptor().encryptPassword(credentials.getPassword()));
+        
+        
+
+        System.out.println(userDAO.findAllByEmail(credentials.getUsername()));
+        
+        
+        if ("admin".equals(credentials.getUsername()))
+        {
+            identity.addRole("admin");
+            return true;
+        }
+        return false;
+    }
+
+}

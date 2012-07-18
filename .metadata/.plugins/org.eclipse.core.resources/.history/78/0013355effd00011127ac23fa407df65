@@ -1,0 +1,16 @@
+package org.domain.initializer;
+
+import org.jboss.seam.annotations.Install;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Observer;
+
+@Name("seed")
+@Install(precedence = Install.APPLICATION)
+public class Seed {
+
+	@Observer("org.jboss.seam.postInitialization")
+	public void popula() {
+		
+	}
+
+}

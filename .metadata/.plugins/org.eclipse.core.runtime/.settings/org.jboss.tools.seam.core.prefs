@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+org.jboss.tools.seam.core.hibernate.default.db.type=PostgreSQL
+org.jboss.tools.seam.core.project.default.deployment.type=ear
+org.jboss.tools.seam.core.project.facet.config.template=template.jst.seam22
+org.jboss.tools.seam.core.project.facet.default.conn.profile=PostgreSQL
+org.jboss.tools.seam.core.project.facet.last.server.name=JBoss 5.1 Runtime Server
+org.jboss.tools.seam.core.runtime.list=name|jboss-seam-2.2.2.Final|version|2.2|homeDir|/opt/jboss-seam-2.2.2.Final|default|true
+seam.packageStructure=editable
+seam.scopePresentation=label

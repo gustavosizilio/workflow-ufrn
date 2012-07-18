@@ -1,0 +1,280 @@
+package org.domain.model;
+
+import java.io.Serializable;
+
+import org.jboss.seam.Component;
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.security.Identity;
+
+
+/**
+ * Classe criada para encapsular a complexidade do SISEG e EGP.
+ * Nesta classe serão criados métodos utilitários que permitrão
+ * que o restante do código fique desacoplado destes dois sistemas.
+ * 
+ * @author Eduardo Colaço
+ *
+ */
+@AutoCreate
+@Name("ator")
+@Scope(ScopeType.SESSION)
+public class Ator implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+
+	@In
+	private Identity identity;
+	
+	@In
+	private SeamDAO seamDao;
+	
+	private UsuarioDTO usuarioSiseg;
+	
+	private Pessoa pessoa;
+	
+	public static final Ator ATOR_ANONIMO = new Ator();
+	
+	public Ator() {}
+	
+	/**
+	 * Constrói o ator do e-Pol a partir de uma Pessoa do EGP
+	 * Esse construtor deixará de existir apos integraçãoo SISEG
+	 * @param usuarioSiseg
+	 */
+	public void load(Pessoa pessoa) {
+		this.pessoa = pessoa;
+		PerfilUsuarioDTO perfil = new PerfilUsuarioDTO();
+		LotacaoDTO lotacao = new LotacaoDTO();
+		
+		if (getServidor() == null) {
+			perfil.setCodigoGrupo("-1");
+			perfil.setNomeGrupo("pessoa");
+			lotacao.setCodigo("-1");
+			lotacao.setSigla("nenhum");
+			lotacao.setCodigoPai("nenhum");
+		} else {
+			perfil.setCodigoGrupo(getServidor().getCargo().getId().toString());
+			perfil.setNomeGrupo(getServidor().getCargo().getDenominacao());
+			lotacao.setCodigo(getServidor().getUnidade().getId().toString());
+			lotacao.setSigla(getServidor().getUnidade().getNome());
+			lotacao.setCodigoPai(getServidor().getUnidade().getUnidadeResponsavelOrganizacional() == null ?
+					"-1" : getServidor().getUnidade().getUnidadeResponsavelOrganizacional().getId().toString());
+		}
+		
+		this.usuarioSiseg = new UsuarioDTO();
+		this.usuarioSiseg.setCdPessoa(pessoa.getId().toString());
+		this.usuarioSiseg.setNome(pessoa.getNome());
+		this.usuarioSiseg.setMatricula(pessoa.getMatricula().toString());
+		this.usuarioSiseg.setPerfil(perfil);
+		this.usuarioSiseg.setLotacao(lotacao);
+	}
+	
+	/**
+	 * Retorna o ID do ator, no momento é CD_PESSOA do EGP
+	 * @return
+	 */
+	public Integer getId() {
+		if(pessoa == null)
+			return null;
+		return this.pessoa.getId();
+	}
+	
+	/**
+	 * Retorna um usuario SISEG
+	 * @return
+	 */
+	public UsuarioDTO getUsuario(){
+		return this.usuarioSiseg;
+	}
+	
+	/**
+	 * Retorna uma Pessoa EGP
+	 * @return
+	 */
+	public Pessoa getPessoa() {
+		return this.pessoa;
+	}
+	
+	public void setPessoa(Pessoa pessoa) {
+		this.pessoa = pessoa;
+	}
+	
+	public SeamDAO getSeamDao() {
+		return seamDao;
+	}
+
+	public void setSeamDao(SeamDAO seamDao) {
+		this.seamDao = seamDao;
+	}
+
+
+	/**
+	 * Retorna um Servidor EGP (no futuro sera uma List<Servidor>)
+	 * @return
+	 */
+	public Servidor getServidor() {
+		if(this.pessoa != null)
+			return pessoa.getServidor();
+		else
+			return null;
+	}
+	
+	/**
+	 * Retorna um Cargo EGP (no futuro sera uma List<Cargo>)
+	 * @return
+	 */
+	public Cargo getCargo() {
+		if(this.getServidor() != null)
+			return pessoa.getServidor().getCargo();
+		else
+			return null;
+	}
+	
+	/**
+	 * Retorna um Unidade EGP (no futuro sera uma List<Unidade>)
+	 * @return
+	 */
+	public Unidade getUnidade() {
+		if(this.getServidor()!=null)
+			return pessoa.getServidor().getUnidade();
+		else
+			return null;
+	}
+	
+	/**
+	 * Retorna String com o nome do usuario loggedin in, ou ANONIMO caso contrario
+	 * @return
+	 */
+	public String getNome() {
+		return getUsuario() == null ? "ANONIMO" : getUsuario().getNome();
+	}
+	
+	/**
+	 * Retorna String com matricula do usuario loggedin in, ou "???????"  caso contrario
+	 * @return
+	 */
+	public String getMatricula() {
+		return getUsuario() == null ? "???????" : getUsuario().getMatricula();
+	}
+
+	/**
+	 * Retorna String com cpf do usuario loggedin in, ou "???.???.???-??"  caso contrario
+	 * @return
+	 */
+	public String getCPF() {
+		return getUsuario() == null ? "???.???.???-??" : getUsuario().getCpf();
+	}
+	
+	/**
+	 * Retorna String do grupo SISEG do usuario loggedin in, ou v  caso contrario
+	 * @return
+	 */
+	public String getGrupoSiseg() {
+		return getUsuario() == null ? "GRUPO ANONIMO" : getUsuario().getPerfil().getNomeGrupo();
+	}
+	
+	/**
+	 * Retorna se o usuário está logged in ou não
+	 * @return
+	 */
+	public boolean isLoggedIn() {
+		return this.usuarioSiseg != null && identity != null && identity.isLoggedIn();
+	}
+	
+	/**
+	 * Retorna se o usuário é policial ou não. 
+	 * @return
+	 */
+	public boolean isPolicial() {
+		return this.getCargo() != null && this.getCargo().isPolicial();
+	}
+	
+	/**
+	 * Retorna se o usuário é servidor administrativo ou não. 
+	 * @return
+	 */
+	public boolean isAdministrativo() {
+		return this.getCargo() != null && this.getCargo().isAdministrativo();
+	}
+	
+	/**
+	 * Retorna se o usuário é servidor delegado PF ou não. 
+	 * @return
+	 */
+	public boolean isDelegado() {
+		return this.getCargo() != null && this.getCargo().isDelegado();
+	}
+	
+	/**
+	 * Retorna se o usuário é servidor papiloscopista PF ou não. 
+	 * @return
+	 */
+	public boolean isPapiloscopista() {
+		return this.getCargo() != null && this.getCargo().isPapiloscopista();
+	}
+	
+	/**
+	 * Retorna se o usuário é servidor perito PF ou não. 
+	 * @return
+	 */
+	public boolean isPerito() {
+		return this.getCargo() != null && this.getCargo().isPerito();
+	}
+	
+	/**
+	 * Retorna se o usuário é servidor escrivao PF ou não. 
+	 * @return
+	 */
+	public boolean isEscrivao() {
+		return this.getCargo() != null && this.getCargo().isEscrivao();
+	}
+	
+	/**
+	 * Retorna se o usuário é agente PF ou não. 
+	 * @return
+	 */
+	public boolean isAgente() {
+		return this.getCargo() != null && this.getCargo().isAgente();
+	}
+	
+	@Override
+	public String toString() {
+		return getPessoa() == null ? "[not found]" : getPessoa().toString();
+	}
+
+	protected SeamDAO getEGPDao() {
+		return seamDao;
+	}
+
+	/**
+	 * Retorna o ator da sessão.
+	 * @return
+	 */
+	public static Ator instance() {
+		if (!Contexts.isSessionContextActive()) {
+			throw new IllegalStateException("Nenhum contexto de sessão ativa");
+	    }
+
+		Ator instance = (Ator) Component.getInstance(Ator.class, ScopeType.SESSION);
+
+		if (instance == null) {
+			throw new IllegalStateException("Nenhum Ator pode ser criado");
+		}
+
+		return instance;
+	}
+
+	public Identity getIdentity() {
+		return identity;
+	}
+
+	public void setIdentity(Identity identity) {
+		this.identity = identity;
+	}
+
+}

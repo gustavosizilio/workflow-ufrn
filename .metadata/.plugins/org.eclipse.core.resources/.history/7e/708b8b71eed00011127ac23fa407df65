@@ -1,0 +1,211 @@
+package org.domain.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.ejb.Remove;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.Query;
+
+import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.criterion.Example;
+import org.hibernate.ejb.EntityManagerImpl;
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.Destroy;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
+
+@Name("seamDao")
+@Scope(ScopeType.CONVERSATION)
+@AutoCreate
+public class SeamDAO implements Serializable, SeamDAOLocal{
+
+	private static final long serialVersionUID = -5025840242524481093L;
+	
+	@In("em")
+	private EntityManager entityManager;
+	
+	@Override
+	public Query createQuery(String query) {
+		return entityManager.createQuery(query);
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#createSQLQuery(java.lang.String)
+	 */
+	@Override
+	public SQLQuery createSQLQuery(String query) {
+		return getHibernateSession().createSQLQuery(query);
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#createNamedQuery(java.lang.String)
+	 */
+	@Override
+	public Query createNamedQuery(String name) {
+		return entityManager.createNamedQuery(name);
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#findByExample(T)
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> List<T> findByExample(T exemplo) {
+    	Session hibernateSession = getHibernateSession();
+    	Example hibernateExample = Example.create(exemplo);
+    	Criteria hibernateCriteria = hibernateSession.createCriteria(exemplo.getClass()).add(hibernateExample);
+    	return hibernateCriteria.list();
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#findAll(java.lang.Class)
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> List<T> findAll(Class<T> entityClass) {
+		return (List<T>) entityManager.createQuery("From " + entityClass.getName()).getResultList();
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#find(java.lang.Class, java.lang.Object)
+	 */
+	@Override
+	public <T> T find(Class<T> entityClass, Object id) {
+		return entityManager.find(entityClass, id);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#getReference(java.lang.Class, java.lang.Object)
+	 */
+	@Override
+	public <T> T getReference(Class<T> entityClass, Object id) {
+		return entityManager.getReference(entityClass, id);
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#merge(T)
+	 */
+	@Override
+	public <T> T merge(T entity) {
+		return entityManager.merge(entity);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#persist(java.lang.Object)
+	 */
+	@Override
+	@Transactional
+	public void persist(Object entity) {
+		entityManager.persist(entity);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#refresh(java.lang.Object)
+	 */
+	@Override
+	public void refresh(Object entity) {
+		entityManager.refresh(entity);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#remove(java.lang.Object)
+	 */
+	@Override
+	public void remove(Object entity) {
+		entityManager.remove(entity);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#contains(java.lang.Object)
+	 */
+	@Override
+	public boolean contains(Object entity) {
+		return entityManager.contains(entity);
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#lock(java.lang.Object, javax.persistence.LockModeType)
+	 */
+	@Override
+	public void lock(Object entity, LockModeType lockMode) {
+		entityManager.lock(entity, lockMode);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#flush()
+	 */
+	@Override
+	public void flush() {
+		entityManager.flush();
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#clear()
+	 */
+	@Override
+	public void clear() {
+		entityManager.clear();
+	}
+
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#close()
+	 */
+	@Override
+	public void close() {
+		entityManager.close();
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#getHibernateSession()
+	 */
+	@Override
+	public Session getHibernateSession() {
+		Object delegate = entityManager.getDelegate();
+		if( delegate == null ) {
+			throw new UnsupportedOperationException();
+		} else if ( delegate instanceof EntityManagerImpl ) { 
+			//se o se o provedor JPA for hibernate...
+			return ((EntityManagerImpl) delegate).getSession();
+		} else if ( delegate instanceof Session ) {
+			//se o provedor JPA fornecer mesma interface que a session hibernate
+    		return	(Session) delegate;
+		} else {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#createCriteria(java.lang.Class)
+	 */
+	@Override
+	public Criteria createCriteria(Class<?> c) {
+		Session hibernateSession = getHibernateSession();
+		return hibernateSession.createCriteria(c).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#destroy()
+	 */
+	@Override
+	@Remove @Destroy
+	public void destroy(){
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.gov.dpf.epol.dao.SeamDaoLocal#setEntityManager(javax.persistence.EntityManager)
+	 */
+	@Override
+	public void setEntityManager(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
+
+}
+
+

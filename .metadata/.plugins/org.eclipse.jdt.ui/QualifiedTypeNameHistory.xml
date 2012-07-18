@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="javax.persistence.Entity"/>
+<fullyQualifiedTypeName name="javax.persistence.Id"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="org.domain.dao.UserDAO"/>
+<fullyQualifiedTypeName name="java.security.MessageDigest"/>
+<fullyQualifiedTypeName name="org.domain.dao.SeamDAO"/>
+<fullyQualifiedTypeName name="org.jboss.seam.annotations.In"/>
+<fullyQualifiedTypeName name="org.domain.utils.BasicPasswordEncryptor"/>
+<fullyQualifiedTypeName name="javax.persistence.GeneratedValue"/>
+<fullyQualifiedTypeName name="org.domain.model.User"/>
+<fullyQualifiedTypeName name="org.jboss.seam.annotations.Scope"/>
+<fullyQualifiedTypeName name="org.jboss.seam.annotations.Out"/>
+</qualifiedTypeNameHistroy>

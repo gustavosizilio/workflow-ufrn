@@ -1,0 +1,10 @@
+package org.domain.utils;
+
+public class BasicPasswordEncryptor {
+
+	public String encryptPassword(String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

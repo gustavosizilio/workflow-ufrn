@@ -1,27 +1,19 @@
-<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
-                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                 xmlns:h="http://java.sun.com/jsf/html"
-                 xmlns:f="http://java.sun.com/jsf/core"
-                 xmlns:s="http://jboss.com/products/seam/taglib">
-
-    <div class="prop">
-
-        <s:label styleClass="name #{invalid?'errors':''}">
-            <ui:insert name="label"/>
-            <s:span styleClass="required" rendered="#{required}">*</s:span>
-        </s:label>
-
-        <span class="value #{invalid?'errors':''}">
-            <s:validateAll>
-                <ui:insert/>
-            </s:validateAll>
-        </span>
-
-        <span class="error">
-            <h:graphicImage value="/img/error.gif" rendered="#{invalid}" styleClass="errors"/>
-            <s:message styleClass="errors"/>
-        </span>
-
-    </div>
-
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+	
+	<ui:define name="body">
+		<rich:panel header="Editar">
+	    	<ui:insert name="edit" />
+	    	<h:commandButton action="#{action.save()}" value="Salvar" styleClass="commit" />
+		</rich:panel>
+		<rich:separator  height="4" lineType="double"/>
+    	<h:commandButton action="#{action.list()}" value="Listar" />
+	</ui:define>
 </ui:composition>

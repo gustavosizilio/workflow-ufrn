@@ -19,7 +19,7 @@
                  http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.2.xsd">
 
    <core:init debug="true" jndi-pattern="@jndiPattern@"/>
-
+   
    <core:manager concurrent-request-timeout="500"
                  conversation-timeout="120000"
                  conversation-id-parameter="cid"
@@ -28,8 +28,15 @@
    <!-- Make sure this URL pattern is the same as that used by the Faces Servlet -->
    <web:hot-deploy-filter url-pattern="*.seam"/>
 
-   <persistence:managed-persistence-context name="entityManager" auto-create="true"
-                      persistence-unit-jndi-name="java:/workflowEntityManagerFactory"/>
+   <web:multipart-filter create-temp-files="true"
+                      max-request-size="1000000" 
+                      url-pattern="*.seam" />
+                      
+   <persistence:managed-persistence-context 
+   						name="entityManager" 
+   						auto-create="true" 
+   						scope="conversation"
+                      	persistence-unit-jndi-name="java:/workflowEntityManagerFactory"/>
 
    <drools:rule-base name="securityRules">
       <drools:rule-files>

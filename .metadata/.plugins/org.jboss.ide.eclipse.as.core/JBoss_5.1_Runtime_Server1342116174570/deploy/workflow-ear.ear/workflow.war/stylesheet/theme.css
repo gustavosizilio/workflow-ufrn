@@ -216,3 +216,22 @@ table.radio td {
 table.radio input[type=radio] {
    vertical-align: bottom;
 }
+
+#menuLinks a {
+	padding: 10px;
+}
+
+input[type=text],  input[type=password], textarea {
+	width: 500px;
+}
+
+.commit {
+	margin-left: 105px !important;
+}
+
+label {
+	font-weight: bold;
+	display: block;
+	text-align: right;
+	width: 100px;
+}

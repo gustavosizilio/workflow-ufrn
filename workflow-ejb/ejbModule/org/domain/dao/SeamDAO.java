@@ -30,7 +30,7 @@ public class SeamDAO implements Serializable, SeamDAOLocal{
 	
 	@In("entityManager")
 	private EntityManager entityManager;
-	
+
 	public Query createQuery(String query) {
 		return entityManager.createQuery(query);
 	}
@@ -88,7 +88,7 @@ public class SeamDAO implements Serializable, SeamDAOLocal{
 	public void lock(Object entity, LockModeType lockMode) {
 		entityManager.lock(entity, lockMode);
 	}
-
+	
 	public void flush() {
 		entityManager.flush();
 	}

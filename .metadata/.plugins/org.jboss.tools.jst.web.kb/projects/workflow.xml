@@ -537,124 +537,188 @@
    <linked-resource declaration="true" name="%2" path="%4;%5;"/>
    <linked-resource declaration="true" name="%6" path="%3;"/>
    <linked-resource declaration="true" name="%7" path="%1;"/>
-   <linked-resource declaration="true" name="%8" path="%9;"/>
-   <linked-resource declaration="true" name="%10" path="%1;"/>
+   <linked-resource declaration="true" name="%8" path="%1;"/>
+   <linked-resource declaration="true" name="%9" path="%10;"/>
    <linked-resource declaration="true" name="%11" path="%1;"/>
-   <linked-resource name="%12" path="%9;"/>
-   <linked-resource declaration="true" name="%13" path="%1;"/>
+   <linked-resource declaration="true" name="%12" path="%1;"/>
+   <linked-resource name="%13" path="%10;"/>
    <linked-resource declaration="true" name="%14" path="%1;"/>
-   <linked-resource name="%15" path="%9;"/>
-   <linked-resource name="%16" path="%9;"/>
-   <linked-resource declaration="true" name="%16" path="%4;%17;%5;"/>
-   <linked-resource declaration="true" name="%18" path="%1;"/>
-   <linked-resource declaration="true" name="%19" path="%20;%9;"/>
-   <linked-resource name="%21" path="%4;"/>
-   <linked-resource declaration="true" name="%21" path="%1;"/>
+   <linked-resource declaration="true" name="%15" path="%1;"/>
+   <linked-resource name="%16" path="%10;"/>
+   <linked-resource declaration="true" name="%17" path="%1;"/>
+   <linked-resource name="%18" path="%10;"/>
+   <linked-resource declaration="true" name="%18" path="%19;"/>
+   <linked-resource declaration="true" name="%20" path="%21;%22;"/>
+   <linked-resource declaration="true" name="%23" path="%24;%10;"/>
+   <linked-resource name="%25" path="%4;"/>
+   <linked-resource declaration="true" name="%25" path="%1;"/>
   </core>
   <core validator-id="jboss.jsf.core"/>
   <el>
-   <linked-el length="135" name="%22" offset="328" path="%23"/>
-   <linked-el length="99" name="%22" offset="554" path="%23"/>
-   <linked-el length="32" name="%9" offset="2314" path="%1"/>
-   <linked-el length="27" name="%9" offset="697" path="%24"/>
-   <linked-el length="135" name="%25" offset="328" path="%23"/>
-   <linked-el length="99" name="%25" offset="554" path="%23"/>
-   <linked-el length="17" name="%25" offset="500" path="%23"/>
-   <linked-el length="27" name="%20" offset="697" path="%24"/>
-   <linked-el length="135" name="%26" offset="328" path="%23"/>
-   <linked-el length="21" name="%27" offset="942" path="%24"/>
-   <linked-el length="19" name="%27" offset="288" path="%28"/>
-   <linked-el length="22" name="%27" offset="405" path="%24"/>
-   <linked-el length="41" name="%27" offset="1858" path="%29"/>
-   <linked-el length="19" name="%27" offset="1458" path="%30"/>
-   <linked-el length="23" name="%27" offset="987" path="%24"/>
-   <linked-el length="23" name="%27" offset="1261" path="%30"/>
-   <linked-el length="22" name="%27" offset="324" path="%28"/>
-   <linked-el length="25" name="%27" offset="857" path="%30"/>
-   <linked-el length="26" name="%27" offset="520" path="%24"/>
-   <linked-el length="27" name="%27" offset="834" path="%24"/>
-   <linked-el length="25" name="%27" offset="1044" path="%30"/>
-   <linked-el length="18" name="%27" offset="2250" path="%1"/>
-   <linked-el length="135" name="%27" offset="328" path="%23"/>
-   <linked-el length="34" name="%27" offset="2571" path="%1"/>
-   <linked-el length="22" name="%27" offset="733" path="%24"/>
-   <linked-el length="32" name="%27" offset="2444" path="%1"/>
-   <linked-el length="34" name="%31" offset="1074" path="%32"/>
-   <linked-el length="135" name="%33" offset="328" path="%23"/>
-   <linked-el length="99" name="%33" offset="554" path="%23"/>
-   <linked-el length="36" name="%34" offset="577" path="%32"/>
-   <linked-el length="32" name="%8" offset="2314" path="%1"/>
-   <linked-el length="135" name="%35" offset="328" path="%23"/>
-   <linked-el length="41" name="%35" offset="1858" path="%29"/>
-   <linked-el length="21" name="%12" offset="942" path="%24"/>
-   <linked-el length="26" name="%12" offset="520" path="%24"/>
-   <linked-el length="27" name="%12" offset="834" path="%24"/>
-   <linked-el length="19" name="%12" offset="288" path="%28"/>
-   <linked-el length="22" name="%12" offset="405" path="%24"/>
-   <linked-el length="19" name="%12" offset="1458" path="%30"/>
-   <linked-el length="23" name="%12" offset="987" path="%24"/>
-   <linked-el length="22" name="%12" offset="733" path="%24"/>
-   <linked-el length="22" name="%12" offset="324" path="%28"/>
-   <linked-el length="29" name="%36" offset="346" path="%37"/>
-   <linked-el length="13" name="%36" offset="755" path="%37"/>
-   <linked-el length="30" name="%36" offset="531" path="%37"/>
-   <linked-el length="23" name="%38" offset="1261" path="%30"/>
-   <linked-el length="135" name="%39" offset="328" path="%23"/>
-   <linked-el length="99" name="%39" offset="554" path="%23"/>
-   <linked-el length="36" name="%40" offset="577" path="%32"/>
-   <linked-el length="25" name="%15" offset="857" path="%30"/>
-   <linked-el length="25" name="%15" offset="1044" path="%30"/>
-   <linked-el length="34" name="%41" offset="2571" path="%1"/>
-   <linked-el length="32" name="%41" offset="2444" path="%1"/>
-   <linked-el length="18" name="%18" offset="2250" path="%1"/>
-   <linked-el length="13" name="%42" offset="466" path="%37"/>
-   <linked-el length="27" name="%19" offset="697" path="%24"/>
+   <linked-el length="135" name="%26" offset="328" path="%27"/>
+   <linked-el length="99" name="%26" offset="554" path="%27"/>
+   <linked-el length="24" name="%28" offset="952" path="%29"/>
+   <linked-el length="27" name="%28" offset="754" path="%29"/>
+   <linked-el length="27" name="%28" offset="1145" path="%29"/>
+   <linked-el length="18" name="%28" offset="834" path="%30"/>
+   <linked-el length="15" name="%28" offset="665" path="%30"/>
+   <linked-el length="135" name="%31" offset="328" path="%27"/>
+   <linked-el length="99" name="%31" offset="554" path="%27"/>
+   <linked-el length="36" name="%32" offset="621" path="%33"/>
+   <linked-el length="135" name="%34" offset="328" path="%27"/>
+   <linked-el length="21" name="%13" offset="890" path="%35"/>
+   <linked-el length="22" name="%13" offset="327" path="%22"/>
+   <linked-el length="19" name="%13" offset="288" path="%36"/>
+   <linked-el length="19" name="%13" offset="1452" path="%37"/>
+   <linked-el length="23" name="%13" offset="935" path="%35"/>
+   <linked-el length="22" name="%13" offset="367" path="%35"/>
+   <linked-el length="22" name="%13" offset="680" path="%35"/>
+   <linked-el length="27" name="%13" offset="781" path="%35"/>
+   <linked-el length="22" name="%13" offset="324" path="%36"/>
+   <linked-el length="37" name="%21" offset="775" path="%38"/>
+   <linked-el length="25" name="%21" offset="423" path="%35"/>
+   <linked-el length="31" name="%21" offset="643" path="%38"/>
+   <linked-el length="37" name="%21" offset="660" path="%39"/>
+   <linked-el length="24" name="%21" offset="277" path="%40"/>
+   <linked-el length="31" name="%21" offset="524" path="%39"/>
+   <linked-el length="36" name="%41" offset="621" path="%33"/>
+   <linked-el length="19" name="%42" offset="726" path="%43"/>
+   <linked-el length="19" name="%42" offset="574" path="%43"/>
+   <linked-el length="24" name="%42" offset="952" path="%29"/>
+   <linked-el length="27" name="%42" offset="754" path="%29"/>
+   <linked-el length="21" name="%42" offset="508" path="%29"/>
+   <linked-el length="19" name="%42" offset="725" path="%44"/>
+   <linked-el length="27" name="%42" offset="1145" path="%29"/>
+   <linked-el length="19" name="%42" offset="643" path="%45"/>
+   <linked-el length="19" name="%42" offset="574" path="%44"/>
+   <linked-el length="32" name="%42" offset="709" path="%45"/>
+   <linked-el length="21" name="%42" offset="1591" path="%29"/>
+   <linked-el length="32" name="%46" offset="2668" path="%1"/>
+   <linked-el length="34" name="%46" offset="2795" path="%1"/>
+   <linked-el length="25" name="%16" offset="1038" path="%37"/>
+   <linked-el length="25" name="%16" offset="851" path="%37"/>
+   <linked-el length="18" name="%20" offset="481" path="%47"/>
+   <linked-el length="37" name="%20" offset="775" path="%38"/>
+   <linked-el length="18" name="%20" offset="483" path="%38"/>
+   <linked-el length="18" name="%20" offset="483" path="%48"/>
+   <linked-el length="25" name="%20" offset="423" path="%35"/>
+   <linked-el length="31" name="%20" offset="643" path="%38"/>
+   <linked-el length="37" name="%20" offset="660" path="%39"/>
+   <linked-el length="24" name="%20" offset="277" path="%40"/>
+   <linked-el length="18" name="%20" offset="481" path="%30"/>
+   <linked-el length="31" name="%20" offset="524" path="%39"/>
+   <linked-el length="15" name="%49" offset="665" path="%30"/>
+   <linked-el length="37" name="%50" offset="775" path="%38"/>
+   <linked-el length="31" name="%50" offset="643" path="%38"/>
+   <linked-el length="37" name="%50" offset="660" path="%39"/>
+   <linked-el length="31" name="%50" offset="524" path="%39"/>
+   <linked-el length="18" name="%51" offset="834" path="%30"/>
+   <linked-el length="32" name="%10" offset="2538" path="%1"/>
+   <linked-el length="135" name="%52" offset="328" path="%27"/>
+   <linked-el length="99" name="%52" offset="554" path="%27"/>
+   <linked-el length="17" name="%52" offset="500" path="%27"/>
+   <linked-el length="18" name="%22" offset="481" path="%47"/>
+   <linked-el length="37" name="%22" offset="775" path="%38"/>
+   <linked-el length="18" name="%22" offset="483" path="%38"/>
+   <linked-el length="18" name="%22" offset="483" path="%48"/>
+   <linked-el length="25" name="%22" offset="423" path="%35"/>
+   <linked-el length="31" name="%22" offset="643" path="%38"/>
+   <linked-el length="37" name="%22" offset="660" path="%39"/>
+   <linked-el length="24" name="%22" offset="277" path="%40"/>
+   <linked-el length="18" name="%22" offset="481" path="%30"/>
+   <linked-el length="31" name="%22" offset="524" path="%39"/>
+   <linked-el length="27" name="%24" offset="644" path="%35"/>
+   <linked-el length="22" name="%53" offset="327" path="%22"/>
+   <linked-el length="19" name="%53" offset="288" path="%36"/>
+   <linked-el length="19" name="%53" offset="1452" path="%37"/>
+   <linked-el length="22" name="%53" offset="367" path="%35"/>
+   <linked-el length="23" name="%53" offset="935" path="%35"/>
+   <linked-el length="23" name="%53" offset="1255" path="%37"/>
+   <linked-el length="27" name="%53" offset="781" path="%35"/>
+   <linked-el length="34" name="%53" offset="2795" path="%1"/>
+   <linked-el length="25" name="%53" offset="851" path="%37"/>
+   <linked-el length="22" name="%53" offset="324" path="%36"/>
+   <linked-el length="21" name="%53" offset="890" path="%35"/>
+   <linked-el length="135" name="%53" offset="328" path="%27"/>
+   <linked-el length="32" name="%53" offset="2668" path="%1"/>
+   <linked-el length="22" name="%53" offset="680" path="%35"/>
+   <linked-el length="18" name="%53" offset="2474" path="%1"/>
+   <linked-el length="25" name="%53" offset="1038" path="%37"/>
+   <linked-el length="135" name="%54" offset="328" path="%27"/>
+   <linked-el length="34" name="%55" offset="1047" path="%33"/>
+   <linked-el length="32" name="%9" offset="2538" path="%1"/>
+   <linked-el length="23" name="%56" offset="1255" path="%37"/>
+   <linked-el length="21" name="%57" offset="508" path="%29"/>
+   <linked-el length="32" name="%58" offset="709" path="%45"/>
+   <linked-el length="135" name="%59" offset="328" path="%27"/>
+   <linked-el length="99" name="%59" offset="554" path="%27"/>
+   <linked-el length="18" name="%17" offset="2474" path="%1"/>
+   <linked-el length="27" name="%23" offset="644" path="%35"/>
   </el>
  </validation>
  <aliases>
-  <alias path="entityList.orderDirection" value="%22"/>
   <alias path="org.jboss.seam.security.ruleBasedPermissionResolver" value="%0"/>
-  <alias path="/workflow-ejb/ejbModule/org/domain/initializer/Seed.java" value="%3"/>
-  <alias path="/workflow/WebContent/WEB-INF/pages.xml" value="%29"/>
-  <alias path="entityList.orderColumn" value="%33"/>
+  <alias path="/workflow/WebContent/layout/list.xhtml" value="%29"/>
+  <alias path="/workflow/WebContent/layout/create.xhtml" value="%44"/>
+  <alias path="entity" value="%28"/>
   <alias path="org.jboss.seam.core.manager" value="%7"/>
-  <alias path="request.contextPath" value="%34"/>
-  <alias path="org.jboss.seam.core.init" value="%10"/>
-  <alias path="/workflow-ejb/ejbModule/org/domain/dao/SeamDAOLocal.java" value="%5"/>
-  <alias path="messages" value="%35"/>
-  <alias path="identity" value="%12"/>
-  <alias path="/workflow/WebContent/layout/edit.xhtml" value="%37"/>
-  <alias path="invalid" value="%36"/>
-  <alias path="request" value="%40"/>
-  <alias path="redirect" value="%41"/>
-  <alias path="credentials" value="%15"/>
-  <alias path="userDao" value="%16"/>
-  <alias path="required" value="%42"/>
-  <alias path="/workflow-ejb/ejbModule/org/domain/dao/UserDAO.java" value="%17"/>
-  <alias path="propertyPath" value="%25"/>
+  <alias path="org.jboss.seam.core.init" value="%8"/>
+  <alias path="/workflow/WebContent/workflow/list.xhtml" value="%30"/>
   <alias
-   path="/workflow-ejb/ejbModule/org/domain/workflow/session/Authenticator.java" value="%9"/>
-  <alias path="/workflow-ejb/ejbModule/org/domain/dao/SeamDAO.java" value="%4"/>
-  <alias path="/workflow-ear/EarContent/jboss-seam.jar" value="%27"/>
-  <alias path="propertyLabel" value="%26"/>
-  <alias path="seed" value="%6"/>
-  <alias path="seamDao" value="%2"/>
-  <alias path="/workflow-ejb/ejbModule/org/domain/model/User.java" value="%20"/>
-  <alias path="showGlobalMessages" value="%31"/>
-  <alias path="/workflow/WebContent/layout/menu.xhtml" value="%24"/>
-  <alias path="/workflow/WebContent/WEB-INF/components.xml" value="%1"/>
-  <alias path="authenticator" value="%8"/>
+   path="/workflow-ejb/ejbModule/org/domain/workflow/session/generic/CrudAction.java" value="%21"/>
+  <alias path="request" value="%41"/>
+  <alias path="action" value="%42"/>
+  <alias path="credentials" value="%16"/>
+  <alias path="crudWorkflow" value="%20"/>
+  <alias path="/workflow-ejb/ejbModule/org/domain/dao/UserDAO.java" value="%19"/>
+  <alias path="/workflow-ejb/ejbModule/org/domain/model/Workflow.java" value="%50"/>
+  <alias path="entity.title" value="%51"/>
+  <alias path="propertyPath" value="%52"/>
+  <alias
+   path="/workflow-ejb/ejbModule/org/domain/workflow/session/Authenticator.java" value="%10"/>
+  <alias path="/workflow/WebContent/workflow/form.xhtml" value="%39"/>
+  <alias path="/workflow-ear/EarContent/jboss-seam.jar" value="%53"/>
+  <alias
+   path="/workflow-ejb/ejbModule/org/domain/workflow/session/CrudWorkflow.java" value="%22"/>
+  <alias path="showGlobalMessages" value="%55"/>
+  <alias path="/workflow/WebContent/workflow/detail.xhtml" value="%38"/>
+  <alias path="authenticator" value="%9"/>
   <alias path="org.jboss.seam.security.identity" value="%11"/>
-  <alias path="rememberMe" value="%38"/>
-  <alias path="org.jboss.seam.mail.mailSession" value="%13"/>
-  <alias path="/workflow/WebContent/login.xhtml" value="%30"/>
-  <alias path="entityList" value="%39"/>
-  <alias path="org.jboss.seam.web.hotDeployFilter" value="%14"/>
-  <alias path="/workflow/WebContent/login.page.xml" value="%28"/>
-  <alias path="/workflow/WebContent/layout/sort.xhtml" value="%23"/>
-  <alias path="securityRules" value="%18"/>
-  <alias path="/workflow/WebContent/layout/template.xhtml" value="%32"/>
-  <alias path="user" value="%19"/>
-  <alias path="entityManager" value="%21"/>
+  <alias path="org.jboss.seam.web.multipartFilter" value="%12"/>
+  <alias path="/workflow/WebContent/workflow/edit.xhtml" value="%47"/>
+  <alias path="rememberMe" value="%56"/>
+  <alias path="entityList" value="%59"/>
+  <alias path="org.jboss.seam.web.hotDeployFilter" value="%15"/>
+  <alias path="securityRules" value="%17"/>
+  <alias path="/workflow/WebContent/layout/template.xhtml" value="%33"/>
+  <alias path="entityManager" value="%25"/>
+  <alias path="entityList.orderDirection" value="%26"/>
+  <alias path="/workflow-ejb/ejbModule/org/domain/initializer/Seed.java" value="%3"/>
+  <alias path="entityList.orderColumn" value="%31"/>
+  <alias path="request.contextPath" value="%32"/>
+  <alias path="/workflow-ejb/ejbModule/org/domain/dao/SeamDAOLocal.java" value="%5"/>
+  <alias path="messages" value="%34"/>
+  <alias path="identity" value="%13"/>
+  <alias path="/workflow/WebContent/workflow/create.xhtml" value="%48"/>
+  <alias path="/workflow/WebContent/layout/edit.xhtml" value="%43"/>
+  <alias path="/workflow/WebContent/processLogin.page.xml" value="%40"/>
+  <alias path="redirect" value="%46"/>
+  <alias path="userDao" value="%18"/>
+  <alias path="entity.id" value="%49"/>
+  <alias path="/workflow/WebContent/layout/detail.xhtml" value="%45"/>
+  <alias path="/workflow-ejb/ejbModule/org/domain/dao/SeamDAO.java" value="%4"/>
+  <alias path="propertyLabel" value="%54"/>
+  <alias path="/workflow-ejb/ejbModule/org/domain/model/User.java" value="%24"/>
+  <alias path="seamDao" value="%2"/>
+  <alias path="seed" value="%6"/>
+  <alias path="/workflow/WebContent/layout/menu.xhtml" value="%35"/>
+  <alias path="/workflow/WebContent/WEB-INF/components.xml" value="%1"/>
+  <alias path="action.entities" value="%57"/>
+  <alias path="org.jboss.seam.mail.mailSession" value="%14"/>
+  <alias path="action.entity" value="%58"/>
+  <alias path="/workflow/WebContent/login.xhtml" value="%37"/>
+  <alias path="/workflow/WebContent/layout/sort.xhtml" value="%27"/>
+  <alias path="/workflow/WebContent/login.page.xml" value="%36"/>
+  <alias path="user" value="%23"/>
  </aliases>
 </kb-project>

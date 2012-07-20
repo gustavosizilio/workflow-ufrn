@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <seam-project>
  <depends-on-projects>
-  <project name="workflow-ejb"/>
   <project name="workflow"/>
+  <project name="workflow-ejb"/>
  </depends-on-projects>
  <used-by-projects/>
  <namespaces>
@@ -24,14 +24,14 @@
    path="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/jboss-seam.jar" uri="http://jboss.com/products/seam/cache"/>
   <namespace package="org.jboss.seam.remoting"
    path="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/jboss-seam-remoting.jar" uri="http://jboss.com/products/seam/remoting"/>
-  <namespace package="org.jboss.seam.core"
-   path="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/jboss-seam.jar" uri="http://jboss.com/products/seam/core"/>
   <namespace package="org.jboss.seam.security"
    path="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/jboss-seam.jar" uri="http://jboss.com/products/seam/security"/>
   <namespace package="org.jboss.seam.security.management"
    path="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/jboss-seam.jar" uri="http://jboss.com/products/seam/security"/>
   <namespace package="org.jboss.seam.security.permission"
    path="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/jboss-seam.jar" uri="http://jboss.com/products/seam/security"/>
+  <namespace package="org.jboss.seam.core"
+   path="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/jboss-seam.jar" uri="http://jboss.com/products/seam/core"/>
   <namespace package="org.jboss.seam.jms"
    path="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/jboss-seam.jar" uri="http://jboss.com/products/seam/jms"/>
   <namespace package="org.jboss.seam.captcha"
@@ -52,14 +52,10 @@
  <paths>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-test/lib/thirdparty-all.jar"/>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-test/lib/jboss-embedded-api.jar"/>
-  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/jboss-el.jar"/>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-test/lib/testng-jdk15.jar"/>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/richfaces-api.jar"/>
-  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/drools-core.jar"/>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/mvel2.jar"/>
-  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-test/lib/hibernate-all.jar"/>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-test/lib/jboss-embedded-all.jar"/>
-  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/drools-compiler.jar"/>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/commons-beanutils.jar"/>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/jboss-seam.jar">
    <components>
@@ -370,10 +366,10 @@
      <id class="type" project="workflow" type="org.jboss.seam.security.permission.RuleBasedPermissionResolver"/>
      <methods>
       <method comp-types="OBSERVER;">
-       <id class="method" name="unAuthenticate" params=""/>
+       <id class="method" name="setUserAccountInSecurityContext" params=""/>
       </method>
       <method comp-types="OBSERVER;">
-       <id class="method" name="setUserAccountInSecurityContext" params=""/>
+       <id class="method" name="unAuthenticate" params=""/>
       </method>
       <method comp-types="CREATE;">
        <id class="method" name="create" params=""/>
@@ -397,14 +393,14 @@
     <component class="java" precedence="20" scope="EVENT">
      <id class="type" project="workflow" type="org.jboss.seam.jms.ManagedTopicPublisher"/>
      <methods>
-      <method comp-types="DESTROY;">
-       <id class="method" name="destroy" params=""/>
+      <method comp-types="UNWRAP;">
+       <id class="method" name="getTopicPublisher" params=""/>
       </method>
       <method comp-types="CREATE;">
        <id class="method" name="create" params=""/>
       </method>
-      <method comp-types="UNWRAP;">
-       <id class="method" name="getTopicPublisher" params=""/>
+      <method comp-types="DESTROY;">
+       <id class="method" name="destroy" params=""/>
       </method>
      </methods>
     </component>
@@ -412,14 +408,14 @@
      precedence="0" scope="APPLICATION">
      <id class="type" project="workflow" type="org.jboss.seam.jms.QueueConnection"/>
      <methods>
-      <method comp-types="CREATE;">
-       <id class="method" name="init" params=""/>
-      </method>
       <method comp-types="DESTROY;">
        <id class="method" name="destroy" params=""/>
       </method>
       <method comp-types="UNWRAP;">
        <id class="method" name="getQueueConnection" params=""/>
+      </method>
+      <method comp-types="CREATE;">
+       <id class="method" name="init" params=""/>
       </method>
      </methods>
     </component>
@@ -430,11 +426,11 @@
       <method comp-types="DESTROY;">
        <id class="method" name="destroy" params=""/>
       </method>
-      <method comp-types="CREATE;">
-       <id class="method" name="create" params=""/>
-      </method>
       <method comp-types="UNWRAP;">
        <id class="method" name="getQueueSession" params=""/>
+      </method>
+      <method comp-types="CREATE;">
+       <id class="method" name="create" params=""/>
       </method>
      </methods>
     </component>
@@ -445,11 +441,11 @@
       <method comp-types="DESTROY;">
        <id class="method" name="destroy" params=""/>
       </method>
-      <method comp-types="CREATE;">
-       <id class="method" name="init" params=""/>
-      </method>
       <method comp-types="UNWRAP;">
        <id class="method" name="getTopicConnection" params=""/>
+      </method>
+      <method comp-types="CREATE;">
+       <id class="method" name="init" params=""/>
       </method>
      </methods>
     </component>
@@ -460,11 +456,11 @@
       <method comp-types="CREATE;">
        <id class="method" name="create" params=""/>
       </method>
-      <method comp-types="DESTROY;">
-       <id class="method" name="destroy" params=""/>
-      </method>
       <method comp-types="UNWRAP;">
        <id class="method" name="getTopicSession" params=""/>
+      </method>
+      <method comp-types="DESTROY;">
+       <id class="method" name="destroy" params=""/>
       </method>
      </methods>
     </component>
@@ -610,11 +606,11 @@
      name="org.jboss.seam.international.timeZones" precedence="20" scope="APPLICATION">
      <id class="type" project="workflow" type="org.jboss.seam.international.TimeZones"/>
      <methods>
-      <method comp-types="CREATE;">
-       <id class="method" name="init" params=""/>
-      </method>
       <method comp-types="UNWRAP;">
        <id class="method" name="getTimeZones" params=""/>
+      </method>
+      <method comp-types="CREATE;">
+       <id class="method" name="init" params=""/>
       </method>
      </methods>
     </component>
@@ -634,11 +630,11 @@
      precedence="0" scope="APPLICATION">
      <id class="type" project="workflow" type="org.jboss.seam.cache.JbossCache2Provider"/>
      <methods>
-      <method comp-types="DESTROY;">
-       <id class="method" name="destroy" params=""/>
-      </method>
       <method comp-types="CREATE;">
        <id class="method" name="create" params=""/>
+      </method>
+      <method comp-types="DESTROY;">
+       <id class="method" name="destroy" params=""/>
       </method>
      </methods>
     </component>
@@ -646,11 +642,11 @@
      precedence="0" scope="APPLICATION">
      <id class="type" project="workflow" type="org.jboss.seam.cache.JbossCacheProvider"/>
      <methods>
-      <method comp-types="DESTROY;">
-       <id class="method" name="destroy" params=""/>
-      </method>
       <method comp-types="CREATE;">
        <id class="method" name="create" params=""/>
+      </method>
+      <method comp-types="DESTROY;">
+       <id class="method" name="destroy" params=""/>
       </method>
      </methods>
     </component>
@@ -678,14 +674,14 @@
     <component class="java" precedence="20" scope="APPLICATION">
      <id class="type" project="workflow" type="org.jboss.seam.persistence.EntityManagerFactory"/>
      <methods>
-      <method comp-types="CREATE;">
-       <id class="method" name="startup" params="Lorg.jboss.seam.Component;,"/>
-      </method>
       <method comp-types="UNWRAP;">
        <id class="method" name="getEntityManagerFactory" params=""/>
       </method>
       <method comp-types="DESTROY;">
        <id class="method" name="shutdown" params=""/>
+      </method>
+      <method comp-types="CREATE;">
+       <id class="method" name="startup" params="Lorg.jboss.seam.Component;,"/>
       </method>
      </methods>
     </component>
@@ -728,28 +724,28 @@
     <component class="java" precedence="20" scope="CONVERSATION">
      <id class="type" project="workflow" type="org.jboss.seam.persistence.ManagedHibernateSession"/>
      <methods>
+      <method comp-types="UNWRAP;">
+       <id class="method" name="getSession" params=""/>
+      </method>
       <method comp-types="DESTROY;">
        <id class="method" name="destroy" params=""/>
       </method>
       <method comp-types="CREATE;">
        <id class="method" name="create" params="Lorg.jboss.seam.Component;,"/>
-      </method>
-      <method comp-types="UNWRAP;">
-       <id class="method" name="getSession" params=""/>
       </method>
      </methods>
     </component>
     <component class="java" precedence="20" scope="CONVERSATION">
      <id class="type" project="workflow" type="org.jboss.seam.persistence.ManagedPersistenceContext"/>
      <methods>
-      <method comp-types="UNWRAP;">
-       <id class="method" name="getEntityManager" params=""/>
-      </method>
       <method comp-types="DESTROY;">
        <id class="method" name="destroy" params=""/>
       </method>
       <method comp-types="CREATE;">
        <id class="method" name="create" params="Lorg.jboss.seam.Component;,"/>
+      </method>
+      <method comp-types="UNWRAP;">
+       <id class="method" name="getEntityManager" params=""/>
       </method>
      </methods>
     </component>
@@ -804,14 +800,14 @@
      precedence="0" scope="EVENT">
      <id class="type" project="workflow" type="org.jboss.seam.bpm.ManagedJbpmContext"/>
      <methods>
+      <method comp-types="DESTROY;">
+       <id class="method" name="destroy" params=""/>
+      </method>
       <method comp-types="UNWRAP;">
        <id class="method" name="getJbpmContext" params=""/>
       </method>
       <method comp-types="CREATE;">
        <id class="method" name="create" params=""/>
-      </method>
-      <method comp-types="DESTROY;">
-       <id class="method" name="destroy" params=""/>
       </method>
      </methods>
     </component>
@@ -999,11 +995,11 @@
      precedence="20" scope="APPLICATION">
      <id class="type" project="workflow" type="org.jboss.seam.el.JBossELReferenceCache"/>
      <methods>
-      <method comp-types="CREATE;">
-       <id class="method" name="start" params=""/>
-      </method>
       <method comp-types="DESTROY;">
        <id class="method" name="stop" params=""/>
+      </method>
+      <method comp-types="CREATE;">
+       <id class="method" name="start" params=""/>
       </method>
      </methods>
     </component>
@@ -1050,11 +1046,11 @@
     <component class="java" precedence="20" scope="APPLICATION">
      <id class="type" project="workflow" type="org.jboss.seam.drools.RuleAgent"/>
      <methods>
-      <method comp-types="CREATE;">
-       <id class="method" name="createAgent" params=""/>
-      </method>
       <method comp-types="UNWRAP;">
        <id class="method" name="getRuleBase" params=""/>
+      </method>
+      <method comp-types="CREATE;">
+       <id class="method" name="createAgent" params=""/>
       </method>
      </methods>
     </component>
@@ -1096,19 +1092,19 @@
      <id class="type" project="workflow" type="org.jboss.seam.security.FacesSecurityEvents"/>
      <methods>
       <method comp-types="OBSERVER;">
-       <id class="method" name="addLoginSuccessfulMessage" params=""/>
-      </method>
-      <method comp-types="OBSERVER;">
        <id class="method" name="addNotLoggedInMessage" params=""/>
       </method>
       <method comp-types="OBSERVER;">
        <id class="method" name="addAlreadyLoggedInMessage" params=""/>
       </method>
       <method comp-types="OBSERVER;">
-       <id class="method" name="addLoginFailedMessage" params="Ljavax.security.auth.login.LoginException;,"/>
+       <id class="method" name="postAuthenticate" params="Lorg.jboss.seam.security.Identity;,"/>
       </method>
       <method comp-types="OBSERVER;">
-       <id class="method" name="postAuthenticate" params="Lorg.jboss.seam.security.Identity;,"/>
+       <id class="method" name="addLoginSuccessfulMessage" params=""/>
+      </method>
+      <method comp-types="OBSERVER;">
+       <id class="method" name="addLoginFailedMessage" params="Ljavax.security.auth.login.LoginException;,"/>
       </method>
      </methods>
     </component>
@@ -1137,17 +1133,17 @@
       <method comp-types="OBSERVER;">
        <id class="method" name="quietLogin" params=""/>
       </method>
-      <method comp-types="CREATE;">
-       <id class="method" name="create" params=""/>
-      </method>
       <method comp-types="OBSERVER;"/>
-      <method comp-types="OBSERVER;"/>
-      <method comp-types="OBSERVER;">
-       <id class="method" name="loggedOut" params=""/>
-      </method>
       <method comp-types="OBSERVER;">
        <id class="method" name="credentialsUpdated" params=""/>
       </method>
+      <method comp-types="CREATE;">
+       <id class="method" name="create" params=""/>
+      </method>
+      <method comp-types="OBSERVER;">
+       <id class="method" name="loggedOut" params=""/>
+      </method>
+      <method comp-types="OBSERVER;"/>
      </methods>
     </component>
     <component class="java" precedence="20" scope="UNSPECIFIED">
@@ -1421,20 +1417,18 @@
     <import value="org.jboss.seam.excel.exporter"/>
    </imports>
   </path>
-  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/drools-api.jar"/>
-  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/antlr-runtime.jar"/>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-test/lib/core.jar"/>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/jboss-seam-remoting.jar">
    <components>
     <component class="java"
      name="org.jboss.seam.remoting.messaging.subscriptionRegistry"
      precedence="0" scope="APPLICATION">
-     <id class="type" project="workflow-ejb" type="org.jboss.seam.remoting.messaging.SubscriptionRegistry"/>
+     <id class="type" project="workflow" type="org.jboss.seam.remoting.messaging.SubscriptionRegistry"/>
     </component>
     <component class="java"
      name="org.jboss.seam.remoting.messaging.SubscriptionRegistry.userTokens"
      precedence="20" scope="SESSION">
-     <id class="type" project="workflow-ejb" type="org.jboss.seam.remoting.messaging.UserTokens"/>
+     <id class="type" project="workflow" type="org.jboss.seam.remoting.messaging.UserTokens"/>
      <methods>
       <method comp-types="DESTROY;">
        <id class="method" name="cleanUp" params=""/>
@@ -1443,11 +1437,11 @@
     </component>
     <component class="java" name="org.jboss.seam.remoting.remoting"
      precedence="0" scope="APPLICATION">
-     <id class="type" project="workflow-ejb" type="org.jboss.seam.remoting.Remoting"/>
+     <id class="type" project="workflow" type="org.jboss.seam.remoting.Remoting"/>
     </component>
     <component class="java"
      name="org.jboss.seam.remoting.gwt.gwtRemoteService" precedence="0" scope="APPLICATION">
-     <id class="type" project="workflow-ejb" type="org.jboss.seam.remoting.gwt.GWT14Service"/>
+     <id class="type" project="workflow" type="org.jboss.seam.remoting.gwt.GWT14Service"/>
      <methods>
       <method comp-types="CREATE;">
        <id class="method" name="startup" params=""/>
@@ -1456,10 +1450,16 @@
     </component>
     <component class="java"
      name="org.jboss.seam.remoting.gwt.gwtToSeamAdapter" precedence="0" scope="APPLICATION">
-     <id class="type" project="workflow-ejb" type="org.jboss.seam.remoting.gwt.GWTToSeamAdapter"/>
+     <id class="type" project="workflow" type="org.jboss.seam.remoting.gwt.GWTToSeamAdapter"/>
     </component>
    </components>
   </path>
+  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/jboss-el.jar"/>
+  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/drools-core.jar"/>
+  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-test/lib/hibernate-all.jar"/>
+  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/drools-compiler.jar"/>
+  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/drools-api.jar"/>
+  <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/antlr-runtime.jar"/>
   <path value="/home/buda/workspace/mestrado/desenvolvimento/workflow/workflow-ear/EarContent/lib/jbpm-jpdl.jar"/>
   <path value="/workflow-test/test-src/seam.properties">
    <components>
@@ -1485,4 +1485,8 @@
    </components>
   </path>
  </paths>
+ <validation>
+  <el/>
+ </validation>
+ <aliases/>
 </seam-project>

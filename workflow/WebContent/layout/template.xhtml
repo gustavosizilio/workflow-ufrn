@@ -4,30 +4,33 @@
    xmlns:ui="http://java.sun.com/jsf/facelets"
    xmlns:f="http://java.sun.com/jsf/core"
    xmlns:h="http://java.sun.com/jsf/html"
-   xmlns:a="http://richfaces.org/a4j"
+   xmlns:a4j="http://richfaces.org/a4j"
    xmlns:s="http://jboss.com/products/seam/taglib"
+   xmlns:rich="http://richfaces.org/rich"
    contentType="text/html">
 <html>
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-      <title>workflow</title>
+      <title>Workflow</title>
       <link rel="shortcut icon" href="#{request.contextPath}/favicon.ico"/>
-      <a:loadStyle src="/stylesheet/theme.xcss"/>
-      <a:loadStyle src="/stylesheet/theme.css"/>
+      <a4j:loadStyle src="/stylesheet/theme.xcss"/>
+      <a4j:loadStyle src="/stylesheet/theme.css"/>
       <ui:insert name="head"/>
    </head>
    <body>
-      <ui:include src="menu.xhtml">
-         <ui:param name="projectName" value="workflow"/>
-      </ui:include>
+      <ui:include src="menu.xhtml" />
       <div class="body">
          <h:messages id="messages" globalOnly="true" styleClass="message"
             errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
             rendered="#{showGlobalMessages != 'false'}"/>
+        
+        <h:form>
          <ui:insert name="body"/>
+        </h:form>
       </div>
       <div class="footer">
-       
+		<rich:separator  height="4" lineType="solid"/><br/>
+		Workflow Executer       
       </div>
    </body>
 </html>

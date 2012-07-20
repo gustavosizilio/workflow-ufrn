@@ -6,13 +6,16 @@
     xmlns:s="http://jboss.com/products/seam/taglib"
     xmlns:rich="http://richfaces.org/rich">
     <rich:toolBarGroup>
-        <s:link id="menuHomeId" view="/userHome.xhtml" value="Home" propagation="none" rendered="#{identity.loggedIn}"/>
-        <s:link id="menuHome" view="/home.xhtml" value="Home" propagation="none" rendered="#{not identity.loggedIn}"/>        
+        <h:form id="menuLinks">
+			<h:panelGroup rendered="#{identity.loggedIn}">
+	        	<h:commandLink action="#{crudWorkflow.list()}" value="Workflow" />
+			</h:panelGroup>
+       </h:form>
     </rich:toolBarGroup>
     <!-- @newMenuItem@ -->
     <rich:toolBarGroup location="right">
         <h:outputText id="menuWelcomeId" value="Bem vindo, #{user.name}!" rendered="#{identity.loggedIn}"/>
         <s:link id="menuLoginId" view="/login.xhtml" value="Login" rendered="#{not identity.loggedIn}" propagation="none"/>
-        <s:link id="menuLogoutId" view="/home.xhtml" action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}" propagation="none"/>
+        <s:link id="menuLogoutId" view="/index.xhtml" action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}" propagation="none"/>
     </rich:toolBarGroup>
 </rich:toolBar>

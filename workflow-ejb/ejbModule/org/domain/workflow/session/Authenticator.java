@@ -19,7 +19,8 @@ public class Authenticator
     @In Identity identity;
     @In Credentials credentials;
     @In("userDao") UserDAO userDAO;
-    @Out User user;
+    @Out(required=false)
+    User user;
     
     public boolean authenticate()
     {

@@ -2,6 +2,7 @@ package org.domain.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.domain.utils.BasicPasswordEncryptor;
@@ -15,7 +16,7 @@ import org.jboss.seam.annotations.Scope;
 public class User {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
 	private String email;

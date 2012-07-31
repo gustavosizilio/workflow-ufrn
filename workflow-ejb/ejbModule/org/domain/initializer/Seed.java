@@ -1,6 +1,7 @@
 package org.domain.initializer;
 
 import org.domain.dao.SeamDAO;
+import org.domain.exception.ValidationException;
 import org.domain.model.User;
 import org.domain.model.Workflow;
 import org.domain.utils.BasicPasswordEncryptor;
@@ -17,14 +18,12 @@ public class Seed {
 	
 	@Observer("org.jboss.seam.postInitialization")
 	@Transactional
-	public void popula() {
+	public void popula() throws ValidationException {
 		User u = new User("gustavosizilio@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Gustavo Sizílio Nery");
 		seamDao.persist(u);
 		
-		Workflow w = new Workflow(u);
+		Workflow w = new Workflow(u, "Experimento Test");
 		seamDao.persist(w);
-		
-		seamDao.flush();
 	}
 
 }

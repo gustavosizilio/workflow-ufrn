@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Layout resource="/workflow-ear/resources/workflow-ds.xml">
- <TreeFormPage>
-  <Memento type="FileDSDatasources">
-   <Memento type="Datasources"/>
-  </Memento>
- </TreeFormPage>
-</Layout>

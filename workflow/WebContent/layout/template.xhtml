@@ -11,7 +11,7 @@
 <html>
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-      <title>Workflow</title>
+      <title>Experimentos</title>
       <link rel="shortcut icon" href="#{request.contextPath}/favicon.ico"/>
       <a4j:loadStyle src="/stylesheet/theme.xcss"/>
       <a4j:loadStyle src="/stylesheet/theme.css"/>
@@ -24,13 +24,13 @@
             errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
             rendered="#{showGlobalMessages != 'false'}"/>
         
-        <h:form>
+        <h:form enctype="multipart/form-data">
          <ui:insert name="body"/>
         </h:form>
       </div>
       <div class="footer">
 		<rich:separator  height="4" lineType="solid"/><br/>
-		Workflow Executer       
+		Experiments Executer       
       </div>
    </body>
 </html>

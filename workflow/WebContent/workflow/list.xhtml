@@ -12,15 +12,21 @@
     <ui:define name="columns">
 		<rich:column>
 		 	<f:facet name="header">
-            	<h:outputText value="Id"/>
-            </f:facet>
-			<h:outputText value="#{entity.id}" />
-		</rich:column>
-		<rich:column>
-		 	<f:facet name="header">
             	<h:outputText value="Título"/>
             </f:facet>
 			<h:outputText value="#{entity.title}" />
 		</rich:column>    	
+		<rich:column>
+		 	<f:facet name="header">
+            	<h:outputText value="Descrição"/>
+            </f:facet>
+			<h:outputText value="#{entity.description}" />
+		</rich:column>   
+    </ui:define>
+    
+    <ui:define name="actions"> 
+    	<h:commandLink action="#{executer.init(entity)}" title="play">
+    		<h:graphicImage value="/img/play.png" />
+    	</h:commandLink>
     </ui:define>
 </ui:composition>

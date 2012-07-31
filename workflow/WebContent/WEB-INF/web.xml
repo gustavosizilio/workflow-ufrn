@@ -24,6 +24,7 @@
   <listener>
     <listener-class>org.jboss.seam.servlet.SeamListener</listener-class>
   </listener>
+  
   <filter>
     <filter-name>Seam Filter</filter-name>
     <filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>

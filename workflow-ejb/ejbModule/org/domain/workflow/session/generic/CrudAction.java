@@ -3,8 +3,9 @@ package org.domain.workflow.session.generic;
 import java.util.List;
 
 import org.domain.dao.SeamDAO;
+import org.domain.exception.ValidationException;
 import org.domain.model.User;
-import org.domain.model.generic.CrudEntity;
+import org.domain.model.generic.GenericEntity;
 import org.domain.model.generic.CrudType;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -17,7 +18,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 
 
 @Scope(ScopeType.CONVERSATION)
-public abstract class CrudAction<T extends CrudEntity> {
+public abstract class CrudAction<T extends GenericEntity> {
 	@In
 	private FacesMessages facesMessages;
 	protected final Class<T> type;
@@ -48,6 +49,7 @@ public abstract class CrudAction<T extends CrudEntity> {
 	@Begin(join=true, flushMode = FlushModeType.MANUAL)
 	public String detail(T entity){
 		crudType = CrudType.DETAIL;
+		seamDao.refresh(entity);
 		this.entity = entity;
 		detailImpl();
 		return getPage();
@@ -69,26 +71,28 @@ public abstract class CrudAction<T extends CrudEntity> {
 	@Begin(join=true, flushMode = FlushModeType.MANUAL)
 	public String edit(T entity){
 		crudType = CrudType.EDIT;
+		seamDao.refresh(entity);
 		this.entity = entity;
 		editImpl();
 		return getPage();
 	}
 	
 	protected boolean saveImpl(){
-		if(this.entity.isValid()){
+		try {
 			if(this.crudType.equals(CrudType.CREATE)){
-				seamDao.persist(this.entity);
+					seamDao.persist(this.entity);
 			}
 			if(this.crudType.equals(CrudType.EDIT)){
 				seamDao.merge(this.entity);
 			}
-			seamDao.flush();
-			addInfo("Atualização efetuada com sucesso.");
-			return true;
-		} else {
-			addErrors(this.entity.getErrors());
+		} catch (ValidationException e) {
+			addErrors(e.getErrors());
 			return false;
 		}
+
+		seamDao.flush();
+		addInfo("Atualização efetuada com sucesso.");
+		return true;
 	};
 	
 	public String save(){
@@ -113,12 +117,13 @@ public abstract class CrudAction<T extends CrudEntity> {
 	
 	public String delete(T entity){
 		crudType = CrudType.DELETE;
+		seamDao.refresh(entity);
 		this.entity = entity;
 		deleteImpl();
 		return list();
 	}
 	
-	private String getPage() {
+	protected String getPage() {
 		return "/" + getType().toLowerCase() + "/" + crudType.toString().toLowerCase() + ".xhtml";
 	}
 	/* END ACTIONS */
@@ -165,7 +170,7 @@ public abstract class CrudAction<T extends CrudEntity> {
 		getFacesMessages().add(Severity.ERROR, message);
 	}
 	
-	private void addErrors(List<String> errors) {
+	protected void addErrors(List<String> errors) {
 		for (String string : errors) {
 			addError(string);
 		}

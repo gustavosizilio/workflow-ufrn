@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modules>
-  <module moduleId="org.eclipse.jst.jee.server:workflow-ear" serverId="JBoss 5.1 Runtime Server1342116174570"/>
-  <module moduleId="org.eclipse.jst.jee.server:workflow" serverId="JBoss 5.1 Runtime Server1342116174570"/>
-</modules>

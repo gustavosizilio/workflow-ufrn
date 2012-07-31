@@ -6,14 +6,9 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
-    xmlns:t="http://myfaces.apache.org/tomahawk">
-
-	<h:panelGrid columns="2">
-		<h:outputLabel value="Título:" for="title" />
-		<h:inputText id="title" value="#{crudWorkflow.entity.title}" />
-		
-		<h:outputLabel value="Descrição:" for="description" />
-		<h:inputTextarea id="description" value="#{crudWorkflow.entity.description}" />
-	</h:panelGrid>
-
+    template="/layout/template.xhtml">
+	<ui:define name="body">
+		Teste!
+			
+	</ui:define>
 </ui:composition>

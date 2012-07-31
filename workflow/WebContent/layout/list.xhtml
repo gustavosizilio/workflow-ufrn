@@ -11,7 +11,7 @@
 	<ui:define name="body">
     	<rich:dataTable value="#{action.entities}" var="entity" rows="20">
 		    <ui:insert name="columns" /> 
-		    <rich:column width="200" >
+		    <rich:column width="200" style="text-align: center;"  >
 			 	<f:facet name="header">
                     <h:outputText value="Ações"/>
                 </f:facet>
@@ -30,6 +30,9 @@
 				<h:commandLink action="#{action.delete(entity)}" onclick="return confirm('Você tem certeza?');" >
 					<h:graphicImage value="/img/delete.png" alt="detalhes" title="detalhes"/>
 				</h:commandLink>
+				
+				<h:graphicImage value="/img/space.png" />
+				<ui:insert name="actions"/>
 			</rich:column>
 			
 		    <f:facet name="footer">

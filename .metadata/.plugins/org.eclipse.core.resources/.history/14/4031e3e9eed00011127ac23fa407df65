@@ -1,5 +1,0 @@
-package org.domain.dao;
-
-public class UserDAO extends SeamDAO {
-
-}

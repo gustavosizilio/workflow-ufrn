@@ -6,6 +6,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/detail.xhtml">
 	<ui:param name="action" value="#{crudWorkflow}" />
 
@@ -18,4 +19,164 @@
 		</h:panelGrid>
 	</ui:define>
 	
+	<ui:define name="detailExtended">
+		<br />
+		<rich:panel id="workflowConfiguratioin" header="Configuração do Experimento">
+		
+		    <h:panelGrid columns="2" id="fileUpload" rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}">
+				<h:outputLabel value="Deploy JPDL:" for="description" />
+				<rich:fileUpload
+					uploadControlLabel="Deploy"
+					immediateUpload="false"
+					listHeight="70px;"
+		            noDuplicate="true" listWidth="350px;" 
+		            locale="pt-BR" 
+		            autoclear="false"
+		            maxFilesQuantity="1" 
+		            cancelEntryControlLabel="Limpar"
+		            transferErrorLabel="Erro ao importar arquivo, verifique se é um arquivo JPDL válido"           
+		            fileUploadListener="#{crudWorkflow.deployWorkflow}"
+		            onfileuploadcomplete="refreshPanel()">
+		        </rich:fileUpload>    
+	       </h:panelGrid>
+	       
+	       <h:panelGroup id="processDefinition" rendered="#{crudWorkflow.entity.processDefinitions.size() gt 0}">
+			<ui:repeat var="processDefinition" value="#{crudWorkflow.entity.processDefinitions}">
+			  <rich:simpleTogglePanel switchType="client" label="#{processDefinition.name}" opened="false">
+				<rich:simpleTogglePanel switchType="client" label="process-definition" opened="true">
+					<h:outputLabel value="name: #{processDefinition.name}" />
+				</rich:simpleTogglePanel>
+				
+				<rich:simpleTogglePanel switchType="client" label="swimlanes" opened="false">				
+					<rich:dataTable var="swimlane" value="#{processDefinition.swimlanes}">
+						<rich:column>
+							<f:facet name="header">Name</f:facet>
+							<b><h:outputText value="#{swimlane.name}"/></b>
+						</rich:column>
+						<rich:column>
+							 <f:facet name="header">actor-id</f:facet>
+							 <h:outputText value="#{swimlane.assignment.actorId}" /><br />
+						</rich:column>
+						<rich:column>
+							 <f:facet name="header">expression</f:facet>
+							 <h:outputText value="#{swimlane.assignment.expression}" /><br />
+						</rich:column>
+						<rich:column>
+							 <f:facet name="header">pooled-actors</f:facet>
+							 <h:outputText value="#{swimlane.assignment.pooledActors}" />
+						</rich:column>
+					</rich:dataTable>
+				</rich:simpleTogglePanel>
+				
+				<rich:simpleTogglePanel switchType="client" label="start-state" opened="false">			
+					<h:panelGrid columns="2" >
+						<h:outputText value="Name: " />
+						<h:outputText value="#{processDefinition.startState.name}" />
+						
+						<h:outputText value="Task: " />
+						<h:panelGroup rendered="#{processDefinition.startState.task ne null}">
+							<h:outputText value="#{processDefinition.startState.task}" />
+						</h:panelGroup>
+						
+						<h:outputText value="Transitions: " />
+						<h:panelGroup rendered="#{processDefinition.startState.transitions.size() > 0}">
+							<rich:dataList var="transition" value="#{processDefinition.startState.transitions}" >
+								<h:outputText value="#{transition}" />
+							</rich:dataList>
+						</h:panelGroup>
+						
+						<h:outputText value="Events: " />
+						<h:panelGroup rendered="#{processDefinition.startState.events.size() > 0}">
+							<rich:dataList var="event" value="#{processDefinition.startState.events}" >
+								<h:outputText value="#{event}" />
+							</rich:dataList>
+						</h:panelGroup>
+					</h:panelGrid>
+				</rich:simpleTogglePanel>
+				
+				<rich:simpleTogglePanel switchType="client" label="Task-nodes" opened="false">
+					<ui:repeat var="taskNode" value="#{processDefinition.taskNodes}">
+						<rich:simpleTogglePanel switchType="client" label="task-node (#{taskNode.name})" opened="false">			
+							<h:panelGrid columns="2" >
+								<h:outputText value="Name: " />
+								<h:outputText value="#{taskNode.name}" />
+								<h:outputText value="Create-tasks: " />
+								<h:outputText value="#{taskNode.createTasks}" />
+								
+								<h:outputText value="Tasks: " />
+								<h:panelGroup rendered="#{taskNode.tasks.size() > 0}">
+									<rich:dataList var="task" value="#{taskNode.tasks}" >
+										<h:outputText value="#{task}" />
+									</rich:dataList>	
+								</h:panelGroup>
+								
+								<h:outputText value="Transitions: " />
+								<h:panelGroup rendered="#{taskNode.transitions.size() > 0}">
+									<rich:dataList var="transition" value="#{taskNode.transitions}" >
+										<h:outputText value="#{transition}" />
+									</rich:dataList>
+								</h:panelGroup>
+								
+								<h:outputText value="Events: " />
+								<h:panelGroup rendered="#{taskNode.events.size() > 0}">
+									<rich:dataList var="event" value="#{taskNode.events}" >
+										<h:outputText value="#{event}" />
+									</rich:dataList>
+								</h:panelGroup>
+							</h:panelGrid>
+						</rich:simpleTogglePanel>
+					</ui:repeat>
+				</rich:simpleTogglePanel>
+				
+				<rich:simpleTogglePanel switchType="client" label="Joins" opened="false">
+					<ui:repeat var="join" value="#{processDefinition.joins}">
+						<rich:simpleTogglePanel switchType="client" label="task-node (#{join.name})" opened="false">			
+							<h:panelGrid columns="2" >
+								<h:outputText value="Name: " />
+								<h:outputText value="#{join.name}" />
+								
+								<h:outputText value="Transitions: " />
+								<h:panelGroup rendered="#{join.transitions.size() > 0}">
+									<rich:dataList var="transition" value="#{join.transitions}" >
+										<h:outputText value="#{transition}" />
+									</rich:dataList>
+								</h:panelGroup>
+							</h:panelGrid>
+						</rich:simpleTogglePanel>
+					</ui:repeat>
+				</rich:simpleTogglePanel>
+				
+				<rich:simpleTogglePanel switchType="client" label="Forks" opened="false">
+					<ui:repeat var="fork" value="#{processDefinition.forks}">
+						<rich:simpleTogglePanel switchType="client" label="fork (#{fork.name})" opened="false">			
+							<h:panelGrid columns="2" >
+								<h:outputText value="Name: " />
+								<h:outputText value="#{fork.name}" />
+								
+								<h:outputText value="Transitions: " />
+								<h:panelGroup rendered="#{fork.transitions.size() > 0}">
+									<rich:dataList var="transition" value="#{fork.transitions}" >
+										<h:outputText value="#{transition}" />
+									</rich:dataList>
+								</h:panelGroup>
+							</h:panelGrid>
+						</rich:simpleTogglePanel>
+					</ui:repeat>
+				</rich:simpleTogglePanel>
+				
+				<rich:simpleTogglePanel switchType="client" label="End-states" opened="false">	
+					<rich:dataList var="endState" value="#{processDefinition.endStates}" >
+						<h:outputText value="#{endState}" />
+					</rich:dataList>
+				</rich:simpleTogglePanel>
+			  </rich:simpleTogglePanel>
+			</ui:repeat>
+	       </h:panelGroup>
+	       
+	    </rich:panel>
+	    
+	    <a4j:jsFunction name="refreshPanel" reRender="workflowConfiguratioin" />
+	    
+	    <h:commandButton value="Undeploy" action="#{crudWorkflow.undeployWorkflow()}" />
+	</ui:define>
 </ui:composition>

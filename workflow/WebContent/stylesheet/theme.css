@@ -224,7 +224,9 @@ table.radio input[type=radio] {
 input[type=text],  input[type=password], textarea {
 	width: 500px;
 }
-
+.rich-fileupload-list-decor {
+	width: 503px !important;
+}
 .commit {
 	margin-left: 105px !important;
 }

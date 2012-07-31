@@ -12,6 +12,7 @@
 		<rich:panel header="Detalhes">
 	    	<ui:insert name="detail" />
 		</rich:panel>
+		<ui:insert name="detailExtended" />
 		<rich:separator  height="4" lineType="double"/>
     	<h:commandButton action="#{action.list()}" value="Listar" />
     	<h:commandButton action="#{action.edit(action.entity)}" value="Editar" />

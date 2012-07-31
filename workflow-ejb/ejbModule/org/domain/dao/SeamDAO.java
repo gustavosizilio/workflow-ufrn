@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 
+import org.domain.exception.ValidationException;
+import org.domain.model.generic.GenericEntity;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -68,11 +70,27 @@ public class SeamDAO implements Serializable, SeamDAOLocal{
 		return entityManager.merge(entity);
 	}
 
+	public GenericEntity merge(GenericEntity entity) throws ValidationException {
+		if(entity.isValid()){
+			return entityManager.merge(entity);
+		}else{
+			throw new ValidationException(entity.getErrors());
+		}
+	}
+	
 	@Transactional
 	public void persist(Object entity) {
 		entityManager.persist(entity);
 	}
-
+	@Transactional
+	public void persist(GenericEntity entity) throws ValidationException {
+		if(entity.isValid()){
+			entityManager.persist(entity);
+		}else{
+			throw new ValidationException(entity.getErrors());
+		}
+	}
+	
 	public void refresh(Object entity) {
 		entityManager.refresh(entity);
 	}

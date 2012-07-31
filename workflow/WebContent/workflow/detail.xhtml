@@ -17,30 +17,8 @@
 			<h:outputLabel value="Descrição:" for="description" />
 			<h:outputText id="description" value="#{crudWorkflow.entity.description}" />
 		</h:panelGrid>
-	</ui:define>
-	
-	<ui:define name="detailExtended">
 		<br />
-		<rich:panel id="workflowConfiguratioin" header="Configuração do Experimento">
-		
-		    <h:panelGrid columns="2" id="fileUpload" rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}">
-				<h:outputLabel value="Deploy JPDL:" for="description" />
-				<rich:fileUpload
-					uploadControlLabel="Deploy"
-					immediateUpload="false"
-					listHeight="70px;"
-		            noDuplicate="true" listWidth="350px;" 
-		            locale="pt-BR" 
-		            autoclear="false"
-		            maxFilesQuantity="1" 
-		            cancelEntryControlLabel="Limpar"
-		            transferErrorLabel="Erro ao importar arquivo, verifique se é um arquivo JPDL válido"           
-		            fileUploadListener="#{crudWorkflow.deployWorkflow}"
-		            onfileuploadcomplete="refreshPanel()">
-		        </rich:fileUpload>    
-	       </h:panelGrid>
-	       
-	       <h:panelGroup id="processDefinition" rendered="#{crudWorkflow.entity.processDefinitions.size() gt 0}">
+		<rich:panel id="processDefinition" header="Experimentos">
 			<ui:repeat var="processDefinition" value="#{crudWorkflow.entity.processDefinitions}">
 			  <rich:simpleTogglePanel switchType="client" label="#{processDefinition.name}" opened="false">
 				<rich:simpleTogglePanel switchType="client" label="process-definition" opened="true">
@@ -171,12 +149,33 @@
 				</rich:simpleTogglePanel>
 			  </rich:simpleTogglePanel>
 			</ui:repeat>
-	       </h:panelGroup>
-	       
+	       </rich:panel>
+	</ui:define>
+	
+	<ui:define name="detailExtended">
+		<br />
+		<rich:panel id="workflowConfiguratioin" header="Configuração do Experimento">
+		    <h:panelGrid columns="2" id="fileUpload" rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}">
+				<h:outputLabel value="Deploy JPDL:" for="description" />
+				<rich:fileUpload
+					uploadControlLabel="Deploy"
+					immediateUpload="false"
+					listHeight="70px;"
+		            noDuplicate="true" listWidth="350px;" 
+		            locale="pt-BR" 
+		            autoclear="false"
+		            maxFilesQuantity="1" 
+		            cancelEntryControlLabel="Limpar"
+		            transferErrorLabel="Erro ao importar arquivo, verifique se é um arquivo JPDL válido"           
+		            fileUploadListener="#{crudWorkflow.deployWorkflow}"
+		            onfileuploadcomplete="refreshPanel()">
+		        </rich:fileUpload>    
+	       </h:panelGrid>
 	    </rich:panel>
 	    
-	    <a4j:jsFunction name="refreshPanel" reRender="workflowConfiguratioin" />
-	    
-	    <h:commandButton value="Undeploy" action="#{crudWorkflow.undeployWorkflow()}" />
+	    <a4j:jsFunction name="refreshPanel" reRender="workflowConfiguratioin,processDefinition,actions" />
+	    <h:panelGroup id="actions">
+		    <h:commandButton value="Undeploy" action="#{crudWorkflow.undeployWorkflow()}" rendered="#{crudWorkflow.entity.processDefinitions.size() > 0}" />
+	    </h:panelGroup>
 	</ui:define>
 </ui:composition>

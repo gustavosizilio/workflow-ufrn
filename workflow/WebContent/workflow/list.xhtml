@@ -18,9 +18,11 @@
 		</rich:column>    	
 		<rich:column>
 		 	<f:facet name="header">
-            	<h:outputText value="Descrição"/>
+            	<h:outputText value="Experimentos"/>
             </f:facet>
-			<h:outputText value="#{entity.description}" />
+			<rich:dataList var="processDefinition" value="#{entity.processDefinitions}" >
+				<h:outputText value="#{processDefinition.name}" />
+			</rich:dataList>
 		</rich:column>   
     </ui:define>
     

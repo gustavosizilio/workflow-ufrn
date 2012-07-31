@@ -45,21 +45,24 @@ public class JPDLManager {
 	}
 	
 	public List<ProcessDefinition> executeTransformations() throws ParserConfigurationException, SAXException, IOException{
-		System.out.println("extraindo elementos.....");
 		List<ProcessDefinition> processDefinitions = new ArrayList<ProcessDefinition>();
 		Element docEle = getDOM().getDocumentElement();
 		NodeList nodes = docEle.getChildNodes();
-		System.out.println(nodes);
 		
-		for (Node node : nodes) {
-			ProcessDefinition processDefinition = new ProcessDefinition(getAttribute(node, JPDLElements.NAME));
-			List<Node> nl = getElements(node.getChildNodes());
-			if(nl != null && nl.size() > 0) {
-				for(int i = 0 ; i < nl.size();i++) {
-					if(nl.get(i).getNodeType() == 1){ //Somente do tipo ELEMENT
-						extractElement(nl.get(i), processDefinition);
+		for (int e = 0 ; e < nodes.getLength();e++) {
+			if(getTagName(nodes.item(e)).equals(JPDLElements.PROCESS_DEFINITION)){
+				Node node = nodes.item(e);
+				ProcessDefinition processDefinition = new ProcessDefinition(getAttribute(node, JPDLElements.NAME));
+				System.out.println("um process "+processDefinition.getName());
+				List<Node> nl = getElements(node.getChildNodes());
+				if(nl != null && nl.size() > 0) {
+					for(int i = 0 ; i < nl.size();i++) {
+						if(nl.get(i).getNodeType() == 1){ //Somente do tipo ELEMENT
+							extractElement(nl.get(i), processDefinition);
+						}
 					}
 				}
+				processDefinitions.add(processDefinition);
 			}
 		}
 		
@@ -245,7 +248,10 @@ public class JPDLManager {
 	private String getAttribute(Node item, String attribute) {
 		return (item.getAttributes().getNamedItem(attribute) != null ? item.getAttributes().getNamedItem(attribute).getNodeValue() : null);
 	}
-
+	private String getTagName(Node item) {
+		return extraxtName(item.getNodeName());
+	}
+	
 	private List<Node> getElements(NodeList nl) {
 		List<Node> newNl = new ArrayList<Node>();
 		if(nl != null && nl.getLength() > 0) {

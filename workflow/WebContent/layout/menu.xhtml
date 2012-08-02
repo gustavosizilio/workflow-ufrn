@@ -8,7 +8,8 @@
     <rich:toolBarGroup>
         <h:form id="menuLinks">
 			<h:panelGroup rendered="#{identity.loggedIn}">
-	        	<h:commandLink action="#{crudWorkflow.list()}" value="Experimentos" />
+	        	<h:commandLink action="#{crudWorkflow.list()}" value="Meus Experimentos" />
+	        	<h:commandLink action="#{executer.list()}" value="Executar Experimento" />
 			</h:panelGroup>
        </h:form>
     </rich:toolBarGroup>

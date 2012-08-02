@@ -1,5 +1,8 @@
 package org.domain.model.processDefinition;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,8 +10,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.domain.model.User;
 import org.domain.model.processDefinition.dataType.PriorityType;
 
 @Entity
@@ -18,6 +24,11 @@ public class Task {
 	private Long id;
 	private String name;
 	private String description;
+	@OneToOne(cascade=CascadeType.REFRESH)
+	private StartState startState;
+	@ManyToOne(cascade=CascadeType.REFRESH)
+	private TaskNode taskNode;
+	
 	/*private boolean blocking;
 	private boolean signalling;
 	private String description;
@@ -27,7 +38,12 @@ public class Task {
 	private PriorityType priority;
 	@OneToOne(cascade=CascadeType.ALL)
 	private Controller controller;
+	@OneToMany(mappedBy="task",cascade=CascadeType.ALL)
+	private List<UserExecution> userExecutions;
 	
+	public Task() {
+		this.userExecutions = new ArrayList<UserExecution>();
+	}
 	public Long getId() {
 		return id;
 	}
@@ -92,8 +108,56 @@ public class Task {
 		/*return "{name="+this.name+", description="+this.description+", swimlane="+this.swimlane+", duedate="+this.duedate+"" +
 				", blocking="+this.blocking+", signalling="+this.signalling+", priority="+priority+"" +
 				", controller="+controller+"}";*/
-		return "{name='"+this.name+"' description='"+this.description+"', swimlane='"+this.swimlane +
+		return "{name='"+this.name+"' description='"+this.description+"', swimlane='"+this.getSwimlane() +
 				"', priority='"+priority+"'" +
 				", controller="+controller+"}";
+	}
+	public StartState getStartState() {
+		return startState;
+	}
+	public void setStartState(StartState startState) {
+		this.startState = startState;
+	}
+	public TaskNode getTaskNode() {
+		return taskNode;
+	}
+	public void setTaskNode(TaskNode taskNode) {
+		this.taskNode = taskNode;
+	}
+	public String getSwimlane() {
+		return swimlane;
+	}
+	public void setSwimlane(String swimlane) {
+		this.swimlane = swimlane;
+	}
+	public List<UserExecution> getUserExecutions() {
+		return userExecutions;
+	}
+	public void setUserExecutions(List<UserExecution> userExecutions) {
+		this.userExecutions = userExecutions;
+	}
+	public boolean startedByUser(User user){
+		if(getUserExecutionByUser(user) != null){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public boolean finishedByUser(User user){
+		UserExecution userExecution = getUserExecutionByUser(user);
+		if(userExecution != null && userExecution.getFinishedAt() != null){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public UserExecution getUserExecutionByUser(User user){
+		for (UserExecution userExecution : userExecutions) {
+			if(userExecution.getUser().equals(user)){
+				return userExecution;
+			}
+		}
+		return null;
 	}
 }

@@ -8,7 +8,26 @@
     xmlns:rich="http://richfaces.org/rich"
     template="/layout/template.xhtml">
 	<ui:define name="body">
-		Teste!
-			
+		<rich:simpleTogglePanel switchType="client" label="#{executer.currentProcess.workflow.title}" opened="false" >
+			<h:outputText value="#{executer.currentProcess.workflow.description}" />
+		</rich:simpleTogglePanel>
+		<br />
+		<rich:panel header="#{executer.currentTask.name}" rendered="#{executer.currentTask != null}">
+			<h:outputText value="#{executer.currentTask.description}" />
+		</rich:panel>
+		
+		<rich:panel header="#{executer.currentJoin.name}" rendered="#{executer.currentJoin != null}">
+			<h:outputText value="#{executer.currentJoin.description}" />
+		</rich:panel>
+		
+		<rich:panel header="#{executer.endState.name}" rendered="#{executer.endState != null}">
+			<h:outputText value="#{executer.endState.description}" />
+		</rich:panel>
+		
+		<h:panelGroup>
+			<ui:repeat var="transition" value="#{executer.transitions}">
+				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTask == null) ? transition.name : 'Pular tarefa já executada')}" styleClass="executeButton"/>
+			</ui:repeat>
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>

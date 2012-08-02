@@ -237,3 +237,10 @@ label {
 	text-align: right;
 	width: 100px;
 }
+.clear {
+	clear: both;
+}
+.executeButton{
+	padding: 10px;
+	float: right;
+}

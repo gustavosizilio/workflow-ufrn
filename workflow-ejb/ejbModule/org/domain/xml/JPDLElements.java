@@ -31,6 +31,7 @@ public class JPDLElements {
 	public static final String JOIN = "join";
 	public static final String FORK = "fork";
 	public static final String END_STATE = "end-state";
+	public static final String TITLE = "title";
 	
 	
 }

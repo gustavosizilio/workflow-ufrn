@@ -15,23 +15,25 @@
 			 	<f:facet name="header">
                     <h:outputText value="Ações"/>
                 </f:facet>
-				<h:commandLink action="#{action.detail(entity)}" >
-					<h:graphicImage value="/img/detail.png" alt="detalhes" title="detalhes"/>
-				</h:commandLink>
-				
-				<h:outputText value="   " />
-				
-				<h:commandLink action="#{action.edit(entity)}">
-					<h:graphicImage value="/img/edit.jpg" alt="detalhes" title="detalhes"/>
-				</h:commandLink>
-				
-				<h:outputText value="   " />
-				
-				<h:commandLink action="#{action.delete(entity)}" onclick="return confirm('Você tem certeza?');" >
-					<h:graphicImage value="/img/delete.png" alt="detalhes" title="detalhes"/>
-				</h:commandLink>
-				
-				<h:graphicImage value="/img/space.png" />
+				<h:panelGroup rendered="#{defautlActions == null ? true : defautlActions}">
+					<h:commandLink action="#{action.detail(entity)}" >
+						<h:graphicImage value="/img/detail.png" alt="detalhes" title="detalhes"/>
+					</h:commandLink>
+					
+					<h:outputText value="   " />
+					
+					<h:commandLink action="#{action.edit(entity)}">
+						<h:graphicImage value="/img/edit.jpg" alt="detalhes" title="detalhes"/>
+					</h:commandLink>
+					
+					<h:outputText value="   " />
+					
+					<h:commandLink action="#{action.delete(entity)}" onclick="return confirm('Você tem certeza?');" >
+						<h:graphicImage value="/img/delete.png" alt="detalhes" title="detalhes"/>
+					</h:commandLink>
+					
+					<h:graphicImage value="/img/space.png" />
+				</h:panelGroup>
 				<ui:insert name="actions"/>
 			</rich:column>
 			
@@ -40,7 +42,7 @@
             </f:facet>
     	</rich:dataTable>
     	<rich:separator  height="4" lineType="double"/>
-    	<h:commandButton action="#{action.create()}" value="Novo" />
+    	<h:commandButton action="#{action.create()}" value="Novo" rendered="#{defautlActions == null ? true : defautlActions}" />
     	
 	</ui:define>
 </ui:composition>

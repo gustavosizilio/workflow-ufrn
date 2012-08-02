@@ -1,0 +1,44 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+	<ui:define name="body">
+		<ui:repeat var="process" value="#{report.workflow.processDefinitions}">
+			<rich:simpleTogglePanel switchType="client" label="#{process.name}" opened="false">	
+				<h:outputText value="Não Iniciado..." rendered="#{process.startedAt == null}"/>
+				
+				<ui:repeat var="task" value="#{process.tasks}">
+					<rich:simpleTogglePanel switchType="client" label="#{task.name}" opened="true">	
+						<ui:repeat value="#{task.userExecutions}" var="userExecution" >
+							<rich:panel header="#{userExecution.user.name}" style="width: 300px; float: left;" >
+								<h:panelGrid columns="2">
+									<h:outputLabel value="Tempo gasto" />
+									<h:outputText rendered="#{userExecution.wastedTime != null}"  value="#{userExecution.wastedTime} Segundos" ></h:outputText>
+									<h:outputText rendered="#{userExecution.wastedTime == null}" value="Em andamento..." ></h:outputText>
+								
+									<h:outputLabel value="Inicio" />
+									<h:outputText value="#{userExecution.startedAt.time}" >
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+									</h:outputText>
+									
+									<h:outputLabel value="Fim" />
+									<h:outputText value="#{userExecution.finishedAt.time}" >
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+									</h:outputText>
+									
+									<h:outputLabel value="Tempo de pausa" />
+									<h:outputText value="Ainda nao implementado" />
+								</h:panelGrid>
+							</rich:panel>
+						</ui:repeat>
+					</rich:simpleTogglePanel>
+				</ui:repeat>
+			</rich:simpleTogglePanel>
+		</ui:repeat>
+	</ui:define>
+</ui:composition>

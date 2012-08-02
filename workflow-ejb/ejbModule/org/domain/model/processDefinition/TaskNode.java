@@ -17,7 +17,7 @@ public class TaskNode {
 	private Long id;
 	private String name;
 	private boolean createTasks;
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Task> tasks;
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Transition> transitions;

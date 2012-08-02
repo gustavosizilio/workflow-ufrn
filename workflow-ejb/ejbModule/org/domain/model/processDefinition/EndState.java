@@ -11,6 +11,7 @@ public class EndState {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	private String description;
 	public Long getId() {
 		return id;
 	}
@@ -26,5 +27,11 @@ public class EndState {
 	
 	public String toString(){
 		return "{name='"+this.name+"'}";
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

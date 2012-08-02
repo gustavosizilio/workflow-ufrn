@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 
 import org.domain.model.generic.GenericEntity;
 import org.domain.model.processDefinition.ProcessDefinition;
+import org.domain.model.processDefinition.Swimlane;
 
 @Entity
 public class Workflow extends GenericEntity {
@@ -28,7 +29,7 @@ public class Workflow extends GenericEntity {
 	
 	private String description;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="workflow")
 	private List<ProcessDefinition> processDefinitions;
 	
 	public Workflow() {
@@ -54,6 +55,22 @@ public class Workflow extends GenericEntity {
 			}
 		}
 	}
+	
+	public List<User> getAllUsers(){
+		List<User> users = new ArrayList<User>();
+		for (ProcessDefinition processDefinition : processDefinitions) {
+			users.addAll(processDefinition.getUsers());
+		}
+		return users;
+	}
+	public List<Swimlane> getAllSwimlanes(){
+		List<Swimlane> swimlanes= new ArrayList<Swimlane>();
+		for (ProcessDefinition processDefinition : processDefinitions) {
+			swimlanes.addAll(processDefinition.getSwimlanes());
+		}
+		return swimlanes;
+	}
+	
 	@Override
 	public void validateDeletable() {
 	}

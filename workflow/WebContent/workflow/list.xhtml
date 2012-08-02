@@ -6,6 +6,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/list.xhtml">
 	<ui:param name="action" value="#{crudWorkflow}" />
 	
@@ -20,15 +21,25 @@
 		 	<f:facet name="header">
             	<h:outputText value="Experimentos"/>
             </f:facet>
-			<rich:dataList var="processDefinition" value="#{entity.processDefinitions}" >
-				<h:outputText value="#{processDefinition.name}" />
+			<rich:dataList var="processDefinition" id="processDefinitions" value="#{entity.processDefinitions}" >
+				<h:outputText value="#{processDefinition.name} " />
+				<a4j:commandLink action="#{crudWorkflow.start(processDefinition)}"
+					reRender="processDefinitions" value="[Iniciar]"
+					rendered="#{processDefinition.startedAt eq null}" title="play" />
+		    		
+		    	<h:panelGroup rendered="#{processDefinition.startedAt != null}">
+			    	<h:outputText value=" - Iniciado em: " title="play" />
+			    	<h:outputText value="#{processDefinition.startedAt}" title="play">
+			    		<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+			    	</h:outputText>
+		    	</h:panelGroup>
 			</rich:dataList>
 		</rich:column>   
     </ui:define>
     
     <ui:define name="actions"> 
-    	<h:commandLink action="#{executer.init(entity)}" title="play">
-    		<h:graphicImage value="/img/play.png" />
+    	<h:commandLink action="#{report.init(entity)}" >
+    		<h:graphicImage value="/img/report.gif" title="relatório"/>
     	</h:commandLink>
     </ui:define>
 </ui:composition>

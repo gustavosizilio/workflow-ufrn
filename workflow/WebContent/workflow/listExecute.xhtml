@@ -1,0 +1,34 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="/layout/list.xhtml">
+	<ui:param name="action" value="#{executer}" />
+	<ui:param name="defautlActions" value="#{false}" />
+	
+    <ui:define name="columns">
+		<rich:column>
+		 	<f:facet name="header">
+            	<h:outputText value="Experimento"/>
+            </f:facet>
+			<h:outputText value="#{entity.name}" />
+		</rich:column>   
+		<rich:column>
+		 	<f:facet name="header">
+            	<h:outputText value="Título"/>
+            </f:facet>
+			<h:outputText value="#{entity.workflow.title}" />
+		</rich:column>    	
+    </ui:define>
+    
+    <ui:define name="actions"> 
+    	<h:commandLink action="#{executer.init(entity)}" title="play" >
+    		<h:graphicImage value="/img/play.png" />
+    	</h:commandLink>
+    </ui:define>
+</ui:composition>

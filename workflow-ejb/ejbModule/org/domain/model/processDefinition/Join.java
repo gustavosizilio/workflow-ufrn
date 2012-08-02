@@ -16,6 +16,7 @@ public class Join {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	private String description;
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Transition> transitions;
 	
@@ -42,5 +43,13 @@ public class Join {
 
 	public void setTransitions(List<Transition> transitions) {
 		this.transitions = transitions;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

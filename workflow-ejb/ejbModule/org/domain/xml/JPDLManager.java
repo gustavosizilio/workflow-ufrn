@@ -71,7 +71,7 @@ public class JPDLManager {
 
 	private void extractElement(Node item, ProcessDefinition processDefinition) {
 		if(extraxtName(item.getNodeName()) == JPDLElements.SWIMLANE){
-			processDefinition.getSwimlanes().add(extractSwimlane(item));
+			processDefinition.getSwimlanes().add(extractSwimlane(item, processDefinition));
 		} else if (extraxtName(item.getNodeName()) == JPDLElements.START_STATE){
 			processDefinition.setStartState(extractStartState(item));
 		} else if (extraxtName(item.getNodeName()) == JPDLElements.TASK_NODE){
@@ -88,6 +88,7 @@ public class JPDLManager {
 	private EndState extractEndState(Node item) {
 		EndState endState = new EndState();
 		endState.setName(getAttribute(item, JPDLElements.NAME));
+		endState.setDescription(getAttribute(item, JPDLElements.DESCRIPTION));
 		return endState;
 	}
 
@@ -108,6 +109,7 @@ public class JPDLManager {
 	private Join extractJoin(Node item) {
 		Join join = new Join();
 		join.setName(getAttribute(item, JPDLElements.NAME));
+		join.setDescription(getAttribute(item, JPDLElements.DESCRIPTION));
 		
 		List<Node> nodes = getElements(item.getChildNodes());
 		for (Node node : nodes) {
@@ -127,7 +129,9 @@ public class JPDLManager {
 		List<Node> nodes = getElements(item.getChildNodes());
 		for (Node node : nodes) {
 			if(extraxtName(node.getNodeName()) == JPDLElements.TASK){
-				taskNode.getTasks().add(extractTask(node));
+				Task task = extractTask(node);
+				task.setTaskNode(taskNode);
+				taskNode.getTasks().add(task);
 			} else if (extraxtName(node.getNodeName()) == JPDLElements.TRANSITION){
 				taskNode.getTransitions().add(extractTransition(node));
 			} else if (extraxtName(node.getNodeName()) == JPDLElements.EVENT){
@@ -145,7 +149,9 @@ public class JPDLManager {
 		List<Node> nodes = getElements(item.getChildNodes());
 		for (Node node : nodes) {
 			if(extraxtName(node.getNodeName()) == JPDLElements.TASK){
-				startState.setTask(extractTask(node));
+				Task task = extractTask(node);
+				task.setStartState(startState);
+				startState.setTask(task);
 			} else if (extraxtName(node.getNodeName()) == JPDLElements.TRANSITION){
 				startState.getTransitions().add(extractTransition(node));
 			} else if (extraxtName(node.getNodeName()) == JPDLElements.EVENT){
@@ -190,8 +196,8 @@ public class JPDLManager {
 		/*task.setBlocking(BooleanType.getValue(getAttribute(item, JPDLElements.BLOCKING), false));
 		task.setSignalling(BooleanType.getValue(getAttribute(item, JPDLElements.SIGNALLING), true));
 		task.setDescription(getAttribute(item, JPDLElements.DESCRIPTION));
-		task.setDuedate(getAttribute(item, JPDLElements.DUEDATE));
-		task.setSwimlane(getAttribute(item, JPDLElements.SWIMLANE));*/
+		task.setDuedate(getAttribute(item, JPDLElements.DUEDATE));*/
+		task.setSwimlane(getAttribute(item, JPDLElements.SWIMLANE));
 		task.setPriority(PriorityType.getValue(getAttribute(item, JPDLElements.PRIORITY), PriorityType.normal));
 		
 		List<Node> nodes = getElements(item.getChildNodes());
@@ -226,8 +232,9 @@ public class JPDLManager {
 		return variable;
 	}
 
-	private Swimlane extractSwimlane(Node item) {
+	private Swimlane extractSwimlane(Node item, ProcessDefinition processDefinition) {
 		Swimlane swimlane = new Swimlane();
+		swimlane.setProcessDefinition(processDefinition);
 		swimlane.setName(item.getAttributes().getNamedItem(JPDLElements.NAME).getNodeValue());
 		
 		List<Node> node = getElements(item.getChildNodes());

@@ -17,7 +17,7 @@ public class StartState {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL, mappedBy="startState")
 	private Task task;
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Transition> transitions;

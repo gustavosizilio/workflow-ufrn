@@ -171,6 +171,51 @@
 		            onfileuploadcomplete="refreshPanel()">
 		        </rich:fileUpload>    
 	       </h:panelGrid>
+	       
+	       <rich:simpleTogglePanel switchType="client" label="Configuração dos Participantes" opened="true"
+	       						   rendered="#{crudWorkflow.entity.processDefinitions.size() gt 0}">	
+				
+				<h:panelGrid columns="2" id="userConfigutarionForm">
+					<h:outputLabel value="Usuário:" />
+					<h:selectOneMenu value="#{crudWorkflow.userProperty}">
+						<s:selectItems value="#{crudWorkflow.users}" var="user" 
+					                  label="#{user.name} - #{user.email}" 
+					                  noSelectionLabel=""/>
+						<s:convertEntity />
+					</h:selectOneMenu>
+					
+					<h:outputLabel value="Swimlane:" />
+					<h:selectOneMenu value="#{crudWorkflow.swimlaneProperty}">
+						<s:selectItems value="#{crudWorkflow.entity.allSwimlanes}" var="swimlane" 
+					                  label="#{swimlane.name} - #{swimlane.processDefinition.name}" 
+					                  noSelectionLabel=""/>
+						<s:convertEntity />
+					</h:selectOneMenu>
+					
+					<rich:spacer />
+					<a4j:commandButton value="Adicionar" actionListener="#{crudWorkflow.addUserParticipant}"
+						reRender="userConfigutarionForm,userConfigurations" />
+				</h:panelGrid>
+				<br />
+		       <rich:dataTable value="#{crudWorkflow.entity.allSwimlanes}" id="userConfigurations" var="swimlane" >
+		       	<rich:column>
+		       		<f:facet name="header">Swimlane</f:facet>
+		       		<h:outputText value="#{swimlane.name}" />
+		       	</rich:column>
+		       	<rich:column>
+		       		<f:facet name="header">Experimento</f:facet>
+		       		<h:outputText value="#{swimlane.processDefinition.name}" />
+		       	</rich:column>
+		       	<rich:column>
+		       		<f:facet name="header">Participantes</f:facet>
+		       		<rich:dataList value="#{swimlane.users}" var="user" >
+						<h:outputText value="#{user.name} (#{user.email}) " />		       		
+			       		<a4j:commandLink action="#{crudWorkflow.removeUserParticipant(swimlane, user)}" reRender="userConfigurations"
+			       			value="[Remover]" />
+		       		</rich:dataList>
+		       	</rich:column>
+		       </rich:dataTable>
+	       </rich:simpleTogglePanel>
 	    </rich:panel>
 	    
 	    <a4j:jsFunction name="refreshPanel" reRender="workflowConfiguratioin,processDefinition,actions" />

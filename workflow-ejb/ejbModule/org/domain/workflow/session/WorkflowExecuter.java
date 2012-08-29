@@ -43,6 +43,7 @@ public class WorkflowExecuter {
 		setCurrentJoin(null);
 		setEndState(null);
 		setCurrentUserExecution(null);
+		
 		return WORKFLOW_EXECUTE_XHTML;
 	}
 	
@@ -84,15 +85,15 @@ public class WorkflowExecuter {
 		if(currentTask != null){
 			if(!currentTask.startedByUser(user)){
 					UserExecution userExecution = new UserExecution(user, true);
-					currentTask.getUserExecutions().add(userExecution);
 					userExecution.setTask(currentTask);
 					seamDao.persist(userExecution);
+					currentTask.getUserExecutions().add(userExecution);
+					seamDao.merge(currentTask);
 					if(currentUserExecution != null){
 						currentUserExecution.setNextUserExecution(userExecution);
 						seamDao.persist(currentUserExecution);
 					}
 					seamDao.flush();
-					
 					currentUserExecution = userExecution;
 			} else {
 				setCurrentUserExecution(currentTask.getUserExecutionByUser(user));

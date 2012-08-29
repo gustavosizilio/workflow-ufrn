@@ -6,13 +6,14 @@ import java.util.List;
 import javax.faces.event.ActionEvent;
 
 import org.domain.dao.UserDAO;
+import org.domain.dao.WorkflowDAO;
 import org.domain.exception.ValidationException;
 import org.domain.model.User;
 import org.domain.model.Workflow;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.Swimlane;
 import org.domain.workflow.session.generic.CrudAction;
-import org.domain.xml.JPDLManager;
+import org.domain.xml.Manager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -27,6 +28,7 @@ import org.richfaces.model.UploadItem;
 public class CrudWorkflow extends CrudAction<Workflow> {
 	
 	@In("userDao") UserDAO userDAO;
+	@In("workflowDAO") WorkflowDAO workflowDAO;
 	private User userProperty;
 	private Swimlane swimlaneProperty;
 	
@@ -35,8 +37,9 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	}
 	
 	@Override
-	protected Workflow getExampleForFind() {
-		return new Workflow(user);
+	public void findEntities()
+	{
+		setEntities(this.workflowDAO.findAllByUser(user));
 	}
 	
 	@Override
@@ -47,7 +50,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	//TODO parse jpdl
 	public void deployWorkflow(UploadEvent event) throws Exception {
 	    UploadItem item = event.getUploadItem();
-	    JPDLManager jpdl = new JPDLManager(item.getFile().getAbsolutePath());
+	    Manager jpdl = new Manager(item.getFile().getAbsolutePath());
 	    
 	    List<ProcessDefinition> processDefinitions;
 		try {
@@ -127,5 +130,10 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 
 	public void setSwimlaneProperty(Swimlane swimlaneProperty) {
 		this.swimlaneProperty = swimlaneProperty;
+	}
+
+	@Override
+	protected Workflow getExampleForFind() {
+		return new Workflow();
 	}
 }

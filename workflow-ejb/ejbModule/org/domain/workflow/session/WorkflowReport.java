@@ -25,6 +25,10 @@ public class WorkflowReport {
 		this.setWorkflow(workflow);
 		return WORKFLOW_REPORT_XHTML;
 	}
+	
+	public void wire(){
+		seamDao.refresh(workflow);
+	}
 
 	public Workflow getWorkflow() {
 		return workflow;

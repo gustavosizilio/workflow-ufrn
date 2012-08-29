@@ -33,6 +33,26 @@
 									
 									<h:outputLabel value="Tempo de pausa" />
 									<h:outputText value="Ainda nao implementado" />
+									
+									<rich:spacer></rich:spacer>
+									 <h:outputLink value="#" id="comment" rendered="#{userExecution.comment.length() > 0}">
+									        Comentário 
+									        <rich:componentControl for="commentModal" attachTo="comment" operation="show" event="onclick"/>
+									 </h:outputLink>
+									 <rich:modalPanel id="commentModal" width="500">
+								        <f:facet name="header">
+								            <h:panelGroup>
+								                <h:outputText value="Comentário"></h:outputText>
+								            </h:panelGroup>
+								        </f:facet>
+								        <f:facet name="controls">
+								            <h:panelGroup>
+								                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelink"/>
+								                <rich:componentControl for="commentModal" attachTo="hidelink" operation="hide" event="onclick"/>
+								            </h:panelGroup>
+								        </f:facet>
+								        <h:outputText value="#{userExecution.comment}" />
+								    </rich:modalPanel>
 								</h:panelGrid>
 							</rich:panel>
 						</ui:repeat>

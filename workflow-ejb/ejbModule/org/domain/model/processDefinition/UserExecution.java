@@ -29,6 +29,7 @@ public class UserExecution {
 	private Calendar finishedAt;
 	@OneToOne
 	private UserExecution nextUserExecution;
+	private String comment;
 
 	public UserExecution() {
 	}
@@ -88,5 +89,11 @@ public class UserExecution {
 	}
 	public void setNextUserExecution(UserExecution nextUserExecution) {
 		this.nextUserExecution = nextUserExecution;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

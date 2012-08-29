@@ -1,3 +1,4 @@
+/* UNUSED
 package org.domain.model.processDefinition.dataType;
 
 public enum PriorityType {
@@ -23,3 +24,4 @@ public enum PriorityType {
 		}
 	}
 }
+*/

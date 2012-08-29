@@ -32,5 +32,11 @@ public class Authenticator
         }
         return false;
     }
-
+    
+    public String logout(){
+    	user=null;
+    	identity.logout();
+    	
+    	return "/index.html";
+    }
 }

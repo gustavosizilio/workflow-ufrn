@@ -1,3 +1,4 @@
+/*UNUSED
 package org.domain.model.processDefinition.dataType;
 
 public class BooleanType {
@@ -15,3 +16,4 @@ public class BooleanType {
 		}
 	}
 }
+*/

@@ -1,10 +1,13 @@
 package org.domain.xml;
 
-public class JPDLElements {
+public class Elements {
 	public static final String PROCESS_DEFINITION = "process-definition";
 	public static final String START_STATE = "start-state";
 	public static final String SWIMLANE = "swimlane";
 	public static final String TASK = "task";
+	public static final String ELEMENTS = "elements";
+	public static final String ARTEFACTS = "artefacts";
+	
 	
 	public static final String NAME = "name";
 	public static final String BLOCKING = "blocking";
@@ -32,6 +35,5 @@ public class JPDLElements {
 	public static final String FORK = "fork";
 	public static final String END_STATE = "end-state";
 	public static final String TITLE = "title";
-	
 	
 }

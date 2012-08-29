@@ -78,8 +78,6 @@
 							<h:panelGrid columns="2" >
 								<h:outputText value="Name: " />
 								<h:outputText value="#{taskNode.name}" />
-								<h:outputText value="Create-tasks: " />
-								<h:outputText value="#{taskNode.createTasks}" />
 								
 								<h:outputText value="Tasks: " />
 								<h:panelGroup rendered="#{taskNode.tasks.size() > 0}">
@@ -184,7 +182,7 @@
 						<s:convertEntity />
 					</h:selectOneMenu>
 					
-					<h:outputLabel value="Swimlane:" />
+					<h:outputLabel value="Grupo:" />
 					<h:selectOneMenu value="#{crudWorkflow.swimlaneProperty}">
 						<s:selectItems value="#{crudWorkflow.entity.allSwimlanes}" var="swimlane" 
 					                  label="#{swimlane.name} - #{swimlane.processDefinition.name}" 
@@ -199,11 +197,11 @@
 				<br />
 		       <rich:dataTable value="#{crudWorkflow.entity.allSwimlanes}" id="userConfigurations" var="swimlane" >
 		       	<rich:column>
-		       		<f:facet name="header">Swimlane</f:facet>
+		       		<f:facet name="header">Grupo</f:facet>
 		       		<h:outputText value="#{swimlane.name}" />
 		       	</rich:column>
 		       	<rich:column>
-		       		<f:facet name="header">Experimento</f:facet>
+		       		<f:facet name="header">Tratamento</f:facet>
 		       		<h:outputText value="#{swimlane.processDefinition.name}" />
 		       	</rich:column>
 		       	<rich:column>

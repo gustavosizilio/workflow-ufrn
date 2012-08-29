@@ -16,13 +16,13 @@
 		 	<f:facet name="header">
             	<h:outputText value="Experimento"/>
             </f:facet>
-			<h:outputText value="#{entity.name}" />
+			<h:outputText value="#{entity.workflow.title}" />
 		</rich:column>   
 		<rich:column>
 		 	<f:facet name="header">
-            	<h:outputText value="Título"/>
+            	<h:outputText value="Tratamento"/>
             </f:facet>
-			<h:outputText value="#{entity.workflow.title}" />
+			<h:outputText value="#{entity.name}" />
 		</rich:column>    	
     </ui:define>
     

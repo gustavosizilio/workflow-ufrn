@@ -61,5 +61,14 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public boolean equals(Object object){
+		if(object instanceof User){
+			if(((User)object).getId().equals(this.getId())){
+				return true;
+			}
+		}
+		return false;
+	}
 	 
 }

@@ -14,6 +14,13 @@
 		<br />
 		<rich:panel header="#{executer.currentTask.name}" rendered="#{executer.currentTask != null}">
 			<h:outputText value="#{executer.currentTask.description}" />
+			<br /><br />
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Comentário:" for="userExecutionComment" rendered="#{executer.currentUserExecution != null}"/>
+				<h:inputTextarea id="userExecutionComment" value="#{executer.currentUserExecution.comment}"
+				 disabled="#{executer.currentUserExecution.finishedAt != null}"
+				 rendered="#{executer.currentUserExecution != null}" />
+			</h:panelGrid>
 		</rich:panel>
 		
 		<rich:panel header="#{executer.currentJoin.name}" rendered="#{executer.currentJoin != null}">

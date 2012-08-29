@@ -13,13 +13,13 @@
     <ui:define name="columns">
 		<rich:column>
 		 	<f:facet name="header">
-            	<h:outputText value="Título"/>
+            	<h:outputText value="Experimento"/>
             </f:facet>
 			<h:outputText value="#{entity.title}" />
 		</rich:column>    	
 		<rich:column>
 		 	<f:facet name="header">
-            	<h:outputText value="Experimentos"/>
+            	<h:outputText value="Tratamentos"/>
             </f:facet>
 			<rich:dataList var="processDefinition" id="processDefinitions" value="#{entity.processDefinitions}" >
 				<h:outputText value="#{processDefinition.name} " />

@@ -22,6 +22,9 @@ public class Seed {
 		User u = new User("gustavosizilio@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Gustavo Sizílio Nery");
 		seamDao.persist(u);
 		
+		User u2 = new User("marilia.freire@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Marília Freire");
+		seamDao.persist(u2);
+		
 		Workflow w = new Workflow(u, "Experimento Test");
 		seamDao.persist(w);
 	}

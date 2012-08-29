@@ -195,4 +195,14 @@ public class ProcessDefinition extends GenericEntity{
 		return null;
 	}
 	
+	
+	public boolean equals(Object process){
+		if(process instanceof ProcessDefinition){
+			if(((ProcessDefinition)process).getId().equals(this.getId())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

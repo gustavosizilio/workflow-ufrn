@@ -16,7 +16,6 @@ public class TaskNode {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private boolean createTasks;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Task> tasks;
 	@OneToMany(cascade=CascadeType.ALL)
@@ -61,13 +60,5 @@ public class TaskNode {
 
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
-	}
-
-	public boolean isCreateTasks() {
-		return createTasks;
-	}
-
-	public void setCreateTasks(boolean createTasks) {
-		this.createTasks = createTasks;
 	}
 }

@@ -1,4 +1,7 @@
+/* UNUSED
+
 package org.domain.model.processDefinition.dataType;
+
 
 public enum ConfigType {
 	FIELD("field"),
@@ -32,3 +35,4 @@ public enum ConfigType {
 		}
 	}
 }
+*/

@@ -21,12 +21,11 @@ public class StartState {
 	private Task task;
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Transition> transitions;
-	@OneToMany(cascade=CascadeType.ALL)
-	private List<Event> events;
+	@OneToOne
+	private	ProcessDefinition processDefinition;
 		
 	public StartState() {
 		transitions = new ArrayList<Transition>();
-		events = new ArrayList<Event>();
 	}
 	
 	public Long getId() {
@@ -53,11 +52,12 @@ public class StartState {
 	public void setTransitions(List<Transition> transitions) {
 		this.transitions = transitions;
 	}
-	public List<Event> getEvents() {
-		return events;
+	public ProcessDefinition getProcessDefinition() {
+		return processDefinition;
 	}
-	public void setEvents(List<Event> events) {
-		this.events = events;
+
+	public void setProcessDefinition(ProcessDefinition processDefinition) {
+		this.processDefinition = processDefinition;
 	}
 	
 	/*public String toString(){

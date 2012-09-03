@@ -6,6 +6,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import org.domain.model.processDefinition.dataType.ArtefactType;
 
@@ -17,6 +18,9 @@ public class Artefact {
 	private String name;
 	@Enumerated(EnumType.STRING)
 	private ArtefactType artefactType;
+	@ManyToOne
+	private Task task;
+	
 	public Long getId() {
 		return id;
 	}
@@ -38,7 +42,13 @@ public class Artefact {
 	
 	@Override
 	public String toString() {
-		return "{name='"+this.name+"', type='"+this.getArtefactType().toString()+"'}";
+		return "{name='"+this.name+"', type='"+this.getArtefactType().getName()+"'}";
+	}
+	public Task getTask() {
+		return task;
+	}
+	public void setTask(Task task) {
+		this.task = task;
 	}
 	
 }

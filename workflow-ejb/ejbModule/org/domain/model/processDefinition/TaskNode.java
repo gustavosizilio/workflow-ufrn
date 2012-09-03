@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -20,12 +21,11 @@ public class TaskNode {
 	private List<Task> tasks;
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Transition> transitions;
-	@OneToMany(cascade=CascadeType.ALL)
-	private List<Event> events;
+	@ManyToOne
+	private ProcessDefinition processDefinition;
 		
 	public TaskNode() {
 		transitions = new ArrayList<Transition>();
-		events = new ArrayList<Event>();
 		tasks = new ArrayList<Task>();
 	}
 	
@@ -47,12 +47,6 @@ public class TaskNode {
 	public void setTransitions(List<Transition> transitions) {
 		this.transitions = transitions;
 	}
-	public List<Event> getEvents() {
-		return events;
-	}
-	public void setEvents(List<Event> events) {
-		this.events = events;
-	}
 
 	public List<Task> getTasks() {
 		return tasks;
@@ -60,5 +54,13 @@ public class TaskNode {
 
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
+	}
+
+	public ProcessDefinition getProcessDefinition() {
+		return processDefinition;
+	}
+
+	public void setProcessDefinition(ProcessDefinition processDefinition) {
+		this.processDefinition = processDefinition;
 	}
 }

@@ -19,6 +19,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.security.Restrict;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 @Name("executer")
 @Restrict("#{identity.loggedIn}")
@@ -27,6 +29,9 @@ public class WorkflowExecuter {
 	@In("processDao") protected ProcessDefinitionDAO processDao;
 	@In("seamDao") protected SeamDAO seamDao;
 	@In("user") protected User user;
+	@In
+	private FacesMessages facesMessages;
+	
 	private static final String WORKFLOW_LIST_EXECUTE_XHTML = "/workflow/listExecute.xhtml";
 	private static final String WORKFLOW_EXECUTE_XHTML = "/workflow/execute.xhtml";
 	private List<ProcessDefinition> entities;
@@ -70,15 +75,25 @@ public class WorkflowExecuter {
 	}
 	
 	public void next(Transition transition){
-		finishUserExecution();
-		currentTask = currentProcess.getTask(transition.getDestination());
-		if(currentTask == null){
-			setCurrentJoin(currentProcess.getJoin(transition.getDestination()));
+		if(validateCurrentTask()){
+			finishUserExecution();
+			
+			currentTask = currentProcess.getTask(transition.getDestination());
+			currentJoin = currentProcess.getJoin(transition.getDestination());
+			endState = currentProcess.getEndState(transition.getDestination());
+			
+			startUserExecution();
 		}
-		if(currentTask == null && currentJoin == null){
-			setEndState(currentProcess.getEndState(transition.getDestination()));
+	}
+
+	private boolean validateCurrentTask() {
+		if(currentTask != null){
+			if(currentTask.getArtefacts().size() > 0){
+				facesMessages.add(Severity.ERROR, "É preciso enviar todos os artefatos!");
+				return false;
+			}
 		}
-		startUserExecution();
+		return true;
 	}
 
 	private void startUserExecution() {

@@ -62,13 +62,6 @@
 								<h:outputText value="#{transition}" />
 							</rich:dataList>
 						</h:panelGroup>
-						
-						<h:outputText value="Events: " />
-						<h:panelGroup rendered="#{processDefinition.startState.events.size() > 0}">
-							<rich:dataList var="event" value="#{processDefinition.startState.events}" >
-								<h:outputText value="#{event}" />
-							</rich:dataList>
-						</h:panelGroup>
 					</h:panelGrid>
 				</rich:simpleTogglePanel>
 				
@@ -90,13 +83,6 @@
 								<h:panelGroup rendered="#{taskNode.transitions.size() > 0}">
 									<rich:dataList var="transition" value="#{taskNode.transitions}" >
 										<h:outputText value="#{transition}" />
-									</rich:dataList>
-								</h:panelGroup>
-								
-								<h:outputText value="Events: " />
-								<h:panelGroup rendered="#{taskNode.events.size() > 0}">
-									<rich:dataList var="event" value="#{taskNode.events}" >
-										<h:outputText value="#{event}" />
 									</rich:dataList>
 								</h:panelGroup>
 							</h:panelGrid>
@@ -213,6 +199,25 @@
 		       		</rich:dataList>
 		       	</rich:column>
 		       </rich:dataTable>
+	       </rich:simpleTogglePanel>
+	       
+	       <rich:simpleTogglePanel switchType="client" label="Configuração dos Artefatos" opened="true"
+	       						   rendered="#{crudWorkflow.entity.allArtefacts.size() gt 0}">	
+
+				<rich:dataTable	value="#{crudWorkflow.entity.allArtefacts}" var="artefact" >
+					<h:column>
+						<f:facet name="header">Artefato</f:facet>
+						<h:outputText value="#{artefact.name}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Tratamento</f:facet>
+						<h:outputText value="#{artefact.task.taskNode.processDefinition.name}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Tarefa</f:facet>
+						<h:outputText value="#{artefact.task.name}" />
+					</h:column>
+				</rich:dataTable>
 	       </rich:simpleTogglePanel>
 	    </rich:panel>
 	    

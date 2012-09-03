@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class EndState {
@@ -12,6 +13,9 @@ public class EndState {
 	private Long id;
 	private String name;
 	private String description;
+	@ManyToOne
+	private ProcessDefinition processDefinition;
+	
 	public Long getId() {
 		return id;
 	}
@@ -33,5 +37,11 @@ public class EndState {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public ProcessDefinition getProcessDefinition() {
+		return processDefinition;
+	}
+	public void setProcessDefinition(ProcessDefinition processDefinition) {
+		this.processDefinition = processDefinition;
 	}
 }

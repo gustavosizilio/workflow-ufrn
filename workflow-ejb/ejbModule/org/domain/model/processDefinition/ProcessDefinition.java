@@ -31,19 +31,19 @@ public class ProcessDefinition extends GenericEntity{
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")
 	private List<Swimlane> swimlanes;
 	
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL, mappedBy="processDefinition")
 	private StartState startState;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")
 	private List<TaskNode> taskNodes;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")
 	private List<Join> joins;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")
 	private List<Fork> forks;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")
 	private List<EndState> endStates;
 	
 	@ManyToMany
@@ -156,6 +156,14 @@ public class ProcessDefinition extends GenericEntity{
 		return tasks;
 	}
 	
+	public ArrayList<Artefact> getArtefacts() {
+		ArrayList<Artefact> artefacts = new ArrayList<Artefact>();
+		ArrayList<Task> tasks = getTasks();
+		for (Task task : tasks) {
+			artefacts.addAll(task.getArtefacts());
+		}
+		return artefacts;
+	}
 	public Task getTask(String destination) {
 		for (TaskNode taskNode : taskNodes) {
 			for (Task task : taskNode.getTasks()) {

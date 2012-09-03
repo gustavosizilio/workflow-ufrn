@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.domain.model.generic.GenericEntity;
+import org.domain.model.processDefinition.Artefact;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.Swimlane;
 
@@ -69,6 +70,14 @@ public class Workflow extends GenericEntity {
 			swimlanes.addAll(processDefinition.getSwimlanes());
 		}
 		return swimlanes;
+	}
+	
+	public ArrayList<Artefact> getAllArtefacts() {
+		ArrayList<Artefact> artefacts = new ArrayList<Artefact>();
+		for (ProcessDefinition process: getProcessDefinitions()) {
+			artefacts.addAll(process.getArtefacts());
+		}
+		return artefacts;
 	}
 	
 	@Override

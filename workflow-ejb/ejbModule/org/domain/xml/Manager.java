@@ -8,11 +8,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.domain.model.processDefinition.Action;
 import org.domain.model.processDefinition.Artefact;
 import org.domain.model.processDefinition.Assignment;
 import org.domain.model.processDefinition.EndState;
-import org.domain.model.processDefinition.Event;
 import org.domain.model.processDefinition.Fork;
 import org.domain.model.processDefinition.Join;
 import org.domain.model.processDefinition.ProcessDefinition;
@@ -70,28 +68,30 @@ public class Manager {
 		if(extraxtName(item.getNodeName()) == Elements.SWIMLANE){
 			processDefinition.getSwimlanes().add(extractSwimlane(item, processDefinition));
 		} else if (extraxtName(item.getNodeName()) == Elements.START_STATE){
-			processDefinition.setStartState(extractStartState(item));
+			processDefinition.setStartState(extractStartState(item, processDefinition));
 		} else if (extraxtName(item.getNodeName()) == Elements.TASK_NODE){
-			processDefinition.getTaskNodes().add(extractTaskNode(item));
+			processDefinition.getTaskNodes().add(extractTaskNode(item, processDefinition));
 		} else if (extraxtName(item.getNodeName()) == Elements.JOIN){
-			processDefinition.getJoins().add(extractJoin(item));
+			processDefinition.getJoins().add(extractJoin(item, processDefinition));
 		} else if (extraxtName(item.getNodeName()) == Elements.FORK){
-			processDefinition.getForks().add(extractFork(item));
+			processDefinition.getForks().add(extractFork(item, processDefinition));
 		} else if (extraxtName(item.getNodeName()) == Elements.END_STATE){
-			processDefinition.getEndStates().add(extractEndState(item));
+			processDefinition.getEndStates().add(extractEndState(item, processDefinition));
 		}
 	}
 
-	private EndState extractEndState(Node item) {
+	private EndState extractEndState(Node item, ProcessDefinition processDefinition) {
 		EndState endState = new EndState();
 		endState.setName(getAttribute(item, Elements.NAME));
 		endState.setDescription(getAttribute(item, Elements.DESCRIPTION));
+		endState.setProcessDefinition(processDefinition);
 		return endState;
 	}
 
-	private Fork extractFork(Node item) {
+	private Fork extractFork(Node item, ProcessDefinition processDefinition) {
 		Fork fork = new Fork();
 		fork.setName(getAttribute(item, Elements.NAME));
+		fork.setProcessDefinition(processDefinition);
 		
 		List<Node> nodes = getElements(item.getChildNodes());
 		for (Node node : nodes) {
@@ -103,24 +103,27 @@ public class Manager {
 		return fork;
 	}
 
-	private Join extractJoin(Node item) {
+	private Join extractJoin(Node item, ProcessDefinition processDefinition) {
 		Join join = new Join();
 		join.setName(getAttribute(item, Elements.NAME));
 		join.setDescription(getAttribute(item, Elements.DESCRIPTION));
-		
+		join.setProcessDefinition(processDefinition);
 		List<Node> nodes = getElements(item.getChildNodes());
 		for (Node node : nodes) {
 			if (extraxtName(node.getNodeName()) == Elements.TRANSITION){
-				join.getTransitions().add(extractTransition(node));
+				Transition transition = extractTransition(node);
+				transition.setJoin(join);
+				join.getTransitions().add(transition);
 			}
 		}
 		
 		return join;
 	}
 
-	private TaskNode extractTaskNode(Node item) {
+	private TaskNode extractTaskNode(Node item, ProcessDefinition processDefinition) {
 		TaskNode taskNode = new TaskNode();
 		taskNode.setName(getAttribute(item, Elements.NAME));
+		taskNode.setProcessDefinition(processDefinition);
 		
 		List<Node> nodes = getElements(item.getChildNodes());
 		for (Node node : nodes) {
@@ -130,18 +133,16 @@ public class Manager {
 				taskNode.getTasks().add(task);
 			} else if (extraxtName(node.getNodeName()) == Elements.TRANSITION){
 				taskNode.getTransitions().add(extractTransition(node));
-			} else if (extraxtName(node.getNodeName()) == Elements.EVENT){
-				taskNode.getEvents().add(extractEvent(node));
 			}
 		}
 		
 		return taskNode;
 	}
 
-	private StartState extractStartState(Node item) {
+	private StartState extractStartState(Node item, ProcessDefinition processDefinition) {
 		StartState startState = new StartState();
 		startState.setName(getAttribute(item, Elements.NAME));
-		
+		startState.setProcessDefinition(processDefinition);
 		List<Node> nodes = getElements(item.getChildNodes());
 		for (Node node : nodes) {
 			if(extraxtName(node.getNodeName()) == Elements.TASK){
@@ -150,32 +151,10 @@ public class Manager {
 				startState.setTask(task);
 			} else if (extraxtName(node.getNodeName()) == Elements.TRANSITION){
 				startState.getTransitions().add(extractTransition(node));
-			} else if (extraxtName(node.getNodeName()) == Elements.EVENT){
-				startState.getEvents().add(extractEvent(node));
 			}
 		}
 		
 		return startState;
-	}
-
-	private Event extractEvent(Node item) {
-		Event event = new Event();
-		event.setType(getAttribute(item, Elements.TYPE));
-		
-		List<Node> nodes = getElements(item.getChildNodes());
-		for (Node node : nodes) {
-			if(extraxtName(node.getNodeName()) == Elements.ACTION){
-				event.getActions().add(extractAction(node));
-			} 
-		}
-		return event;
-	}
-
-	private Action extractAction(Node item) {
-		Action action = new Action();
-		action.setName(getAttribute(item, Elements.NAME));
-		action.setClazz(getAttribute(item, Elements.CLASS));
-		return action;
 	}
 
 	private Transition extractTransition(Node item) {
@@ -194,7 +173,7 @@ public class Manager {
 		for (Node node : nodes) {
 			if(extraxtName(node.getNodeName()) == Elements.ARTEFACTS){
 				Artefact artefact = extractArtefact(node);
-				System.out.println(artefact);
+				artefact.setTask(task);
 				task.getArtefacts().add(artefact);
 			}
 		}

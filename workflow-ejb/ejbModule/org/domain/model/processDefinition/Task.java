@@ -26,7 +26,7 @@ public class Task {
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private TaskNode taskNode;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="task")
 	private List<Artefact> artefacts;
 	
 	private String swimlane;

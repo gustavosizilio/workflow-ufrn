@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Transition {
@@ -12,6 +13,8 @@ public class Transition {
 	private Long id;
 	private String name;
 	private String destination; //Replace for TO attribute... conflict with JPA
+	@ManyToOne
+	private Join join;
 	public Long getId() {
 		return id;
 	}
@@ -32,5 +35,11 @@ public class Transition {
 	}
 	public String toString(){
 		return "{name='"+this.name+"', to='"+this.destination + "'}";
+	}
+	public Join getJoin() {
+		return join;
+	}
+	public void setJoin(Join join) {
+		this.join = join;
 	}
 }

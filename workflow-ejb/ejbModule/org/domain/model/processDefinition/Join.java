@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -17,8 +18,10 @@ public class Join {
 	private Long id;
 	private String name;
 	private String description;
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="join")
 	private List<Transition> transitions;
+	@ManyToOne
+	private ProcessDefinition processDefinition;
 	
 	public Join() {
 		setTransitions(new ArrayList<Transition>());
@@ -51,5 +54,13 @@ public class Join {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public ProcessDefinition getProcessDefinition() {
+		return processDefinition;
+	}
+
+	public void setProcessDefinition(ProcessDefinition processDefinition) {
+		this.processDefinition = processDefinition;
 	}
 }

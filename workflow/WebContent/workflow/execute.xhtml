@@ -15,8 +15,21 @@
 		<rich:panel header="#{executer.currentTask.name}" rendered="#{executer.currentTask != null}">
 			<h:outputText value="#{executer.currentTask.description}" />
 			<br /><br />
-			<h:panelGrid columns="2">
-				<h:outputLabel value="Comentário:" for="userExecutionComment" rendered="#{executer.currentUserExecution != null}"/>
+			
+			<h:panelGrid columns="2" rendered="#{executer.currentUserExecution != null}">
+				<h:outputLabel value="Artefatos:" rendered="#{executer.currentTask.artefacts.size() gt 0}"/>
+				<rich:dataTable value="#{executer.currentTask.artefacts}" var="artefact" rendered="#{executer.currentTask.artefacts.size() gt 0}">
+					<h:column>
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{artefact.name}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header"></f:facet>
+						<h:commandLink action="#" value="Download" />
+					</h:column>
+				</rich:dataTable>
+				
+				<h:outputLabel value="Comentário:" for="userExecutionComment"/>
 				<h:inputTextarea id="userExecutionComment" value="#{executer.currentUserExecution.comment}"
 				 disabled="#{executer.currentUserExecution.finishedAt != null}"
 				 rendered="#{executer.currentUserExecution != null}" />
@@ -33,7 +46,9 @@
 		
 		<h:panelGroup>
 			<ui:repeat var="transition" value="#{executer.transitions}">
-				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTask == null) ? transition.name : 'Pular tarefa já executada')}" styleClass="executeButton"/>
+				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTask == null) ? transition.name : 'Pular tarefa já executada')}"
+								 onclick="#{((executer.currentUserExecution.finishedAt == null and executer.currentTask != null) ? 'javascript:return confirm(\'Você tem certeza?\')' : '')}"
+								 styleClass="executeButton"/>
 			</ui:repeat>
 		</h:panelGroup>
 	</ui:define>

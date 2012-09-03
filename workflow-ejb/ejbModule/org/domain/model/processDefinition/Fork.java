@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -18,6 +19,8 @@ public class Fork {
 	private String name;
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Transition> transitions;
+	@ManyToOne
+	private ProcessDefinition processDefinition;
 	
 	public Fork() {
 		setTransitions(new ArrayList<Transition>());
@@ -42,6 +45,14 @@ public class Fork {
 
 	public void setTransitions(List<Transition> transitions) {
 		this.transitions = transitions;
+	}
+
+	public ProcessDefinition getProcessDefinition() {
+		return processDefinition;
+	}
+
+	public void setProcessDefinition(ProcessDefinition processDefinition) {
+		this.processDefinition = processDefinition;
 	}
 	
 }

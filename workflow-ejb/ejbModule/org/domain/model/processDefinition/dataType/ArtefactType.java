@@ -17,9 +17,9 @@ public enum ArtefactType {
 				return defaultValue;
 			}
 			
-			if(value.toLowerCase().trim().equals(ArtefactType.IN.toString())){
+			if(value.toLowerCase().trim().equals(ArtefactType.IN.getName())){
 				return ArtefactType.IN;
-			} else if(value.toLowerCase().trim().equals(ArtefactType.OUT.toString())){
+			} else if(value.toLowerCase().trim().equals(ArtefactType.OUT.getName())){
 				return ArtefactType.OUT;
 			} else {
 				return defaultValue;

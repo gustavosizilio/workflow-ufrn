@@ -22,7 +22,7 @@ public class UserExecution {
 	@OneToOne(cascade=CascadeType.REFRESH)
 	private User user;
 	@ManyToOne
-	private Task task;
+	private TaskNode taskNode;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar startedAt;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -78,12 +78,7 @@ public class UserExecution {
 	public void setFinishedAt(Calendar finishedAt) {
 		this.finishedAt = finishedAt;
 	}
-	public Task getTask() {
-		return task;
-	}
-	public void setTask(Task task) {
-		this.task = task;
-	}
+	
 	public UserExecution getNextUserExecution() {
 		return nextUserExecution;
 	}
@@ -95,5 +90,11 @@ public class UserExecution {
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	public TaskNode getTaskNode() {
+		return taskNode;
+	}
+	public void setTaskNode(TaskNode taskNode) {
+		this.taskNode = taskNode;
 	}
 }

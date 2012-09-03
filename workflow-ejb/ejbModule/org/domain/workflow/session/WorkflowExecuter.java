@@ -9,7 +9,7 @@ import org.domain.model.User;
 import org.domain.model.processDefinition.EndState;
 import org.domain.model.processDefinition.Join;
 import org.domain.model.processDefinition.ProcessDefinition;
-import org.domain.model.processDefinition.Task;
+import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Transition;
 import org.domain.model.processDefinition.UserExecution;
 import org.jboss.seam.ScopeType;
@@ -20,7 +20,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.security.Restrict;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage.Severity;
 
 @Name("executer")
 @Restrict("#{identity.loggedIn}")
@@ -29,6 +28,7 @@ public class WorkflowExecuter {
 	@In("processDao") protected ProcessDefinitionDAO processDao;
 	@In("seamDao") protected SeamDAO seamDao;
 	@In("user") protected User user;
+	@SuppressWarnings("unused")
 	@In
 	private FacesMessages facesMessages;
 	
@@ -37,14 +37,14 @@ public class WorkflowExecuter {
 	private List<ProcessDefinition> entities;
 	
 	private ProcessDefinition currentProcess;
-	private Task currentTask;
+	private TaskNode currentTaskNode;
 	private UserExecution currentUserExecution;
 	private Join currentJoin;
 	private EndState endState;
 	
 	public String init(ProcessDefinition process){
 		this.setCurrentProcess(process);
-		this.setCurrentTask(process.getStartState().getTask());
+		this.setCurrentTaskNode(process.getStartState().getTaskNode());
 		setCurrentJoin(null);
 		setEndState(null);
 		setCurrentUserExecution(null);
@@ -60,13 +60,11 @@ public class WorkflowExecuter {
 	
 	public List<Transition> getTransitions(){
 		List<Transition> transitions = new ArrayList<Transition>();
-		if(currentTask != null){
-			if(currentTask.getStartState() != null){
-				transitions.addAll(currentTask.getStartState().getTransitions());
+		if(currentTaskNode != null){
+			if(currentTaskNode.getStartState() != null){
+				transitions.addAll(currentTaskNode.getStartState().getTransitions());
 			}
-			if(currentTask.getTaskNode() != null){
-				transitions.addAll(currentTask.getTaskNode().getTransitions());
-			}
+			transitions.addAll(currentTaskNode.getTransitions());
 		}
 		if(currentJoin != null){
 			transitions.addAll(currentJoin.getTransitions());			
@@ -75,35 +73,35 @@ public class WorkflowExecuter {
 	}
 	
 	public void next(Transition transition){
-		if(validateCurrentTask()){
+		if(validateCurrentTaskNode()){
 			finishUserExecution();
 			
-			currentTask = currentProcess.getTask(transition.getDestination());
-			currentJoin = currentProcess.getJoin(transition.getDestination());
-			endState = currentProcess.getEndState(transition.getDestination());
+			currentTaskNode = currentProcess.getTaskNode(transition);
+			currentJoin = currentProcess.getJoin(transition);
+			endState = currentProcess.getEndState(transition);
 			
 			startUserExecution();
 		}
 	}
 
-	private boolean validateCurrentTask() {
-		if(currentTask != null){
-			if(currentTask.getArtefacts().size() > 0){
+	private boolean validateCurrentTaskNode() {
+		if(currentTaskNode != null){
+			/*if(currentTaskNode.getOutArtefacts().size() > 0){
 				facesMessages.add(Severity.ERROR, "É preciso enviar todos os artefatos!");
 				return false;
-			}
+			}*/
 		}
 		return true;
 	}
 
 	private void startUserExecution() {
-		if(currentTask != null){
-			if(!currentTask.startedByUser(user)){
+		if(currentTaskNode != null){
+			if(!currentTaskNode.startedByUser(user)){
 					UserExecution userExecution = new UserExecution(user, true);
-					userExecution.setTask(currentTask);
+					userExecution.setTaskNode(currentTaskNode);
 					seamDao.persist(userExecution);
-					currentTask.getUserExecutions().add(userExecution);
-					seamDao.merge(currentTask);
+					currentTaskNode.getUserExecutions().add(userExecution);
+					seamDao.merge(currentTaskNode);
 					if(currentUserExecution != null){
 						currentUserExecution.setNextUserExecution(userExecution);
 						seamDao.persist(currentUserExecution);
@@ -111,14 +109,14 @@ public class WorkflowExecuter {
 					seamDao.flush();
 					currentUserExecution = userExecution;
 			} else {
-				setCurrentUserExecution(currentTask.getUserExecutionByUser(user));
+				setCurrentUserExecution(currentTaskNode.getUserExecutionByUser(user));
 			}
 		}
 	}
 
 	private void finishUserExecution() {
-		if(currentUserExecution != null && currentTask != null){
-			if(!currentTask.finishedByUser(user)){
+		if(currentUserExecution != null && currentTaskNode != null){
+			if(!currentTaskNode.finishedByUser(user)){
 				currentUserExecution.finish();			
 				seamDao.merge(currentUserExecution);
 				seamDao.flush();
@@ -147,14 +145,6 @@ public class WorkflowExecuter {
 		this.currentProcess = currentProcess;
 	}
 
-	public Task getCurrentTask() {
-		return currentTask;
-	}
-
-	public void setCurrentTask(Task currentTask) {
-		this.currentTask = currentTask;
-	}
-
 	public Join getCurrentJoin() {
 		return currentJoin;
 	}
@@ -177,5 +167,13 @@ public class WorkflowExecuter {
 
 	public void setCurrentUserExecution(UserExecution currentUserExecution) {
 		this.currentUserExecution = currentUserExecution;
+	}
+
+	public TaskNode getCurrentTaskNode() {
+		return currentTaskNode;
+	}
+
+	public void setCurrentTaskNode(TaskNode currentTaskNode) {
+		this.currentTaskNode = currentTaskNode;
 	}
 }

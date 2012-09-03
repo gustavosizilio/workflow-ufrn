@@ -19,6 +19,8 @@ public class Artefact {
 	@Enumerated(EnumType.STRING)
 	private ArtefactType artefactType;
 	@ManyToOne
+	private TaskNode taskNode;
+	@ManyToOne
 	private Task task;
 	
 	public Long getId() {
@@ -44,11 +46,16 @@ public class Artefact {
 	public String toString() {
 		return "{name='"+this.name+"', type='"+this.getArtefactType().getName()+"'}";
 	}
+	public TaskNode getTaskNode() {
+		return taskNode;
+	}
+	public void setTaskNode(TaskNode taskNode) {
+		this.taskNode = taskNode;
+	}
 	public Task getTask() {
 		return task;
 	}
 	public void setTask(Task task) {
 		this.task = task;
-	}
-	
+	}	
 }

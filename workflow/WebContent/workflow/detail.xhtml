@@ -52,8 +52,8 @@
 						<h:outputText value="#{processDefinition.startState.name}" />
 						
 						<h:outputText value="Task: " />
-						<h:panelGroup rendered="#{processDefinition.startState.task ne null}">
-							<h:outputText value="#{processDefinition.startState.task}" />
+						<h:panelGroup rendered="#{processDefinition.startState.taskNode ne null}">
+							<h:outputText value="#{processDefinition.startState.taskNode}" />
 						</h:panelGroup>
 						
 						<h:outputText value="Transitions: " />
@@ -71,13 +71,6 @@
 							<h:panelGrid columns="2" >
 								<h:outputText value="Name: " />
 								<h:outputText value="#{taskNode.name}" />
-								
-								<h:outputText value="Tasks: " />
-								<h:panelGroup rendered="#{taskNode.tasks.size() > 0}">
-									<rich:dataList var="task" value="#{taskNode.tasks}" >
-										<h:outputText value="#{task}" />
-									</rich:dataList>	
-								</h:panelGroup>
 								
 								<h:outputText value="Transitions: " />
 								<h:panelGroup rendered="#{taskNode.transitions.size() > 0}">
@@ -202,20 +195,22 @@
 	       </rich:simpleTogglePanel>
 	       
 	       <rich:simpleTogglePanel switchType="client" label="Configuração dos Artefatos" opened="true"
-	       						   rendered="#{crudWorkflow.entity.allArtefacts.size() gt 0}">	
+	       						   rendered="#{crudWorkflow.entity.inArtefacts.size() gt 0}">	
 
-				<rich:dataTable	value="#{crudWorkflow.entity.allArtefacts}" var="artefact" >
+				<rich:dataTable	value="#{crudWorkflow.entity.inArtefacts}" var="artefact" >
 					<h:column>
 						<f:facet name="header">Artefato</f:facet>
 						<h:outputText value="#{artefact.name}" />
 					</h:column>
 					<h:column>
 						<f:facet name="header">Tratamento</f:facet>
-						<h:outputText value="#{artefact.task.taskNode.processDefinition.name}" />
+						<h:outputText value="#{artefact.taskNode.processDefinition.name}" rendered="#{artefact.taskNode != null}" />
+						<h:outputText value="#{artefact.task.taskNode.processDefinition.name}" rendered="#{artefact.task != null}" />
 					</h:column>
 					<h:column>
-						<f:facet name="header">Tarefa</f:facet>
-						<h:outputText value="#{artefact.task.name}" />
+						<f:facet name="header">Atividade > Tarefa</f:facet>
+						<h:outputText value="#{artefact.task.taskNode.name} > #{artefact.task.name}" rendered="#{artefact.task != null}" />
+						<h:outputText value="#{artefact.taskNode.name}" rendered="#{artefact.taskNode != null}" />
 					</h:column>
 				</rich:dataTable>
 	       </rich:simpleTogglePanel>

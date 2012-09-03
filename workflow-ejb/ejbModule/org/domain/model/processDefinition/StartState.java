@@ -18,7 +18,7 @@ public class StartState {
 	private Long id;
 	private String name;
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="startState")
-	private Task task;
+	private TaskNode taskNode;
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Transition> transitions;
 	@OneToOne
@@ -40,12 +40,7 @@ public class StartState {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Task getTask() {
-		return task;
-	}
-	public void setTask(Task task) {
-		this.task = task;
-	}
+
 	public List<Transition> getTransitions() {
 		return transitions;
 	}
@@ -58,6 +53,14 @@ public class StartState {
 
 	public void setProcessDefinition(ProcessDefinition processDefinition) {
 		this.processDefinition = processDefinition;
+	}
+
+	public TaskNode getTaskNode() {
+		return taskNode;
+	}
+
+	public void setTaskNode(TaskNode taskNode) {
+		this.taskNode = taskNode;
 	}
 	
 	/*public String toString(){

@@ -10,6 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import org.domain.model.User;
+import org.domain.model.processDefinition.dataType.ArtefactType;
 
 @Entity
 public class TaskNode {
@@ -17,16 +21,25 @@ public class TaskNode {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	private String description;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
-	private List<Task> tasks;
-	@OneToMany(cascade=CascadeType.ALL)
 	private List<Transition> transitions;
 	@ManyToOne
 	private ProcessDefinition processDefinition;
+	@OneToOne(cascade=CascadeType.REFRESH)
+	private StartState startState;
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
+	private List<Artefact> artefacts;
+	@OneToMany(mappedBy="taskNode",cascade=CascadeType.ALL)
+	private List<UserExecution> userExecutions;
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
+	private List<Task> tasks;
 		
 	public TaskNode() {
-		transitions = new ArrayList<Transition>();
-		tasks = new ArrayList<Task>();
+		this.userExecutions = new ArrayList<UserExecution>();
+		this.artefacts = new ArrayList<Artefact>();
+		this.tasks = new ArrayList<Task>();
+		this.transitions = new ArrayList<Transition>();
 	}
 	
 	public Long getId() {
@@ -48,19 +61,90 @@ public class TaskNode {
 		this.transitions = transitions;
 	}
 
-	public List<Task> getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(List<Task> tasks) {
-		this.tasks = tasks;
-	}
-
 	public ProcessDefinition getProcessDefinition() {
 		return processDefinition;
 	}
 
 	public void setProcessDefinition(ProcessDefinition processDefinition) {
 		this.processDefinition = processDefinition;
+	}
+
+	public StartState getStartState() {
+		return startState;
+	}
+
+	public void setStartState(StartState startState) {
+		this.startState = startState;
+	}
+
+	public List<Artefact> getOutArtefacts() {
+		List<Artefact> outArtefacts = new ArrayList<Artefact>();
+		for (Artefact artefact : artefacts) {
+			if(artefact.getArtefactType().equals(ArtefactType.OUT)){
+				outArtefacts.add(artefact);
+			}
+		}
+		return outArtefacts;
+	}
+	public List<Artefact> getInArtefacts() {
+		List<Artefact> inArtefacts = new ArrayList<Artefact>();
+		for (Artefact artefact : artefacts) {
+			if(artefact.getArtefactType().equals(ArtefactType.IN)){
+				inArtefacts.add(artefact);
+			}
+		}
+		return inArtefacts;
+	}
+	public List<Artefact> getArtefacts() {
+		return artefacts;
+	}
+	public void setArtefacts(List<Artefact> artefacts) {
+		this.artefacts = artefacts;
+	}
+	public List<UserExecution> getUserExecutions() {
+		return userExecutions;
+	}
+	public void setUserExecutions(List<UserExecution> userExecutions) {
+		this.userExecutions = userExecutions;
+	}
+	
+	public boolean startedByUser(User user){
+		if(getUserExecutionByUser(user) != null){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public boolean finishedByUser(User user){
+		UserExecution userExecution = getUserExecutionByUser(user);
+		if(userExecution != null && userExecution.getFinishedAt() != null){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public UserExecution getUserExecutionByUser(User user){
+		for (UserExecution userExecution : userExecutions) {
+			if(userExecution.getUser().equals(user)){
+				return userExecution;
+			}
+		}
+		return null;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
 	}
 }

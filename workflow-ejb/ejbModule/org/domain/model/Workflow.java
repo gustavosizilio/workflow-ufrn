@@ -72,10 +72,17 @@ public class Workflow extends GenericEntity {
 		return swimlanes;
 	}
 	
-	public ArrayList<Artefact> getAllArtefacts() {
+	/*public ArrayList<Artefact> getAllArtefacts() {
 		ArrayList<Artefact> artefacts = new ArrayList<Artefact>();
 		for (ProcessDefinition process: getProcessDefinitions()) {
 			artefacts.addAll(process.getArtefacts());
+		}
+		return artefacts;
+	}*/
+	public ArrayList<Artefact> getInArtefacts() {
+		ArrayList<Artefact> artefacts = new ArrayList<Artefact>();
+		for (ProcessDefinition process: getProcessDefinitions()) {
+			artefacts.addAll(process.getInArtefacts());
 		}
 		return artefacts;
 	}

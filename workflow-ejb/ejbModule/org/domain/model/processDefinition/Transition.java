@@ -14,6 +14,8 @@ public class Transition {
 	private String name;
 	private String destination; //Replace for TO attribute... conflict with JPA
 	@ManyToOne
+	private TaskNode taskNode;
+	@ManyToOne
 	private Join join;
 	public Long getId() {
 		return id;
@@ -41,5 +43,11 @@ public class Transition {
 	}
 	public void setJoin(Join join) {
 		this.join = join;
+	}
+	public TaskNode getTaskNode() {
+		return taskNode;
+	}
+	public void setTaskNode(TaskNode taskNode) {
+		this.taskNode = taskNode;
 	}
 }

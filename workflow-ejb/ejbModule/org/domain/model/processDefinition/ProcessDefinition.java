@@ -148,37 +148,40 @@ public class ProcessDefinition extends GenericEntity{
 		this.workflow = workflow;
 	}
 	
-	public ArrayList<Task> getTasks() {
-		ArrayList<Task> tasks = new ArrayList<Task>();
+	public List<Artefact> getArtefacts() {
+		List<Artefact> artefacts = new ArrayList<Artefact>();
+		List<TaskNode> taskNodes = getTaskNodes();
 		for (TaskNode taskNode : taskNodes) {
-			tasks.addAll(taskNode.getTasks());
-		}
-		return tasks;
-	}
-	
-	public ArrayList<Artefact> getArtefacts() {
-		ArrayList<Artefact> artefacts = new ArrayList<Artefact>();
-		ArrayList<Task> tasks = getTasks();
-		for (Task task : tasks) {
-			artefacts.addAll(task.getArtefacts());
+			artefacts.addAll(taskNode.getArtefacts());
 		}
 		return artefacts;
 	}
-	public Task getTask(String destination) {
+	public List<Artefact> getInArtefacts() {
+		List<Artefact> artefacts = new ArrayList<Artefact>();
+		List<TaskNode> taskNodes = getTaskNodes();
 		for (TaskNode taskNode : taskNodes) {
+			artefacts.addAll(taskNode.getInArtefacts());
 			for (Task task : taskNode.getTasks()) {
-				if(task.getName().equals(destination)){
-					return task;
+				artefacts.addAll(task.getInArtefacts());
+			}
+		}
+		return artefacts;
+	}
+	public TaskNode getTaskNode(Transition transition) {
+		if(transition != null){
+			for (TaskNode taskNode : taskNodes) {
+				if(taskNode.getName().equals(transition.getDestination())){
+					return taskNode;
 				}
 			}
 		}
 		return null;
 	}
 	
-	public Transition getTransitionFor(Task task) {
+	public Transition getTransitionFor(TaskNode taskNodeFor) {
 		for (TaskNode taskNode : taskNodes) {
 			for (Transition transition : taskNode.getTransitions()) {
-				if(task.getName().equals(transition.getDestination())){
+				if(taskNodeFor.getName().equals(transition.getDestination())){
 					return transition;
 				}
 			}
@@ -186,18 +189,22 @@ public class ProcessDefinition extends GenericEntity{
 		return null;
 	}
 	
-	public Join getJoin(String destination) {
-		for (Join join : joins) {
-			if(join.getName().equals(destination)){
-				return join;
+	public Join getJoin(Transition transition) {
+		if(transition != null){
+			for (Join join : joins) {
+				if(join.getName().equals(transition.getDestination())){
+					return join;
+				}
 			}
 		}
 		return null;
 	}
-	public EndState getEndState(String destination) {
-		for (EndState endState : endStates) {
-			if(endState.getName().equals(destination)){
-				return endState;
+	public EndState getEndState(Transition transition) {
+		if(transition != null){
+			for (EndState endState : endStates) {
+				if(endState.getName().equals(transition.getDestination())){
+					return endState;
+				}
 			}
 		}
 		return null;

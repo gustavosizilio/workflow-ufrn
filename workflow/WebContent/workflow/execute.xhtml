@@ -12,28 +12,54 @@
 			<h:outputText value="#{executer.currentProcess.workflow.description}" />
 		</rich:simpleTogglePanel>
 		<br />
-		<rich:panel header="#{executer.currentTask.name}" rendered="#{executer.currentTask != null}">
-			<h:outputText value="#{executer.currentTask.description}" />
+		<rich:panel header="#{executer.currentTaskNode.name}" rendered="#{executer.currentTaskNode != null}">
+			<h:outputText value="#{executer.currentTaskNode.description}" />
+			<rich:dataList value="#{executer.currentTaskNode.inArtefacts}" var="artefact" rendered="#{executer.currentTaskNode.inArtefacts.size() gt 0}">
+				<h:outputText value="#{artefact.name}" /> - <h:commandLink action="#" value="Download" />
+			</rich:dataList>
 			<br /><br />
 			
-			<h:panelGrid columns="2" rendered="#{executer.currentUserExecution != null}">
-				<h:outputLabel value="Artefatos:" rendered="#{executer.currentTask.artefacts.size() gt 0}"/>
-				<rich:dataTable value="#{executer.currentTask.artefacts}" var="artefact" rendered="#{executer.currentTask.artefacts.size() gt 0}">
-					<h:column>
-						<f:facet name="header">Nome</f:facet>
-						<h:outputText value="#{artefact.name}" />
-					</h:column>
-					<h:column>
-						<f:facet name="header"></f:facet>
-						<h:commandLink action="#" value="Download" />
-					</h:column>
-				</rich:dataTable>
-				
-				<h:outputLabel value="Comentário:" for="userExecutionComment"/>
-				<h:inputTextarea id="userExecutionComment" value="#{executer.currentUserExecution.comment}"
-				 disabled="#{executer.currentUserExecution.finishedAt != null}"
-				 rendered="#{executer.currentUserExecution != null}" />
-			</h:panelGrid>
+			<h:panelGroup rendered="#{executer.currentUserExecution != null}">
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Enviar Artefatos:" rendered="#{executer.currentTaskNode.outArtefacts.size() gt 0}"/>
+					<rich:dataTable value="#{executer.currentTaskNode.outArtefacts}" var="artefact" rendered="#{executer.currentTaskNode.outArtefacts.size() gt 0}">
+						<h:column>
+							<f:facet name="header">Nome</f:facet>
+							<h:outputText value="#{artefact.name}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header"></f:facet>
+							<h:commandLink action="#" value="Enviar" />
+						</h:column>
+					</rich:dataTable>
+					
+					<h:outputLabel value="Comentário:" for="userExecutionComment"/>
+					<h:inputTextarea id="userExecutionComment" value="#{executer.currentUserExecution.comment}"
+					 disabled="#{executer.currentUserExecution.finishedAt != null}"
+					 rendered="#{executer.currentUserExecution != null}" />
+				</h:panelGrid>
+				<ui:repeat var="task" value="#{executer.currentTaskNode.tasks}">
+					<br />
+					<rich:simpleTogglePanel switchType="client" label="#{task.name}" opened="true">
+						<h:outputText value="#{task.description}" />
+						<rich:dataList value="#{task.inArtefacts}" var="artefact" rendered="#{task.inArtefacts.size() gt 0}">
+							<h:outputText value="#{artefact.name}" /> - <h:commandLink action="#" value="Download" />
+						</rich:dataList>
+						<br /><br />
+						<h:outputLabel value="Enviar Artefatos:" rendered="#{task.outArtefacts.size() gt 0}"/>
+						<rich:dataTable value="#{task.outArtefacts}" var="artefact" rendered="#{task.outArtefacts.size() gt 0}">
+							<h:column>
+								<f:facet name="header">Nome</f:facet>
+								<h:outputText value="#{artefact.name}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header"></f:facet>
+								<h:commandLink action="#" value="Enviar" />
+							</h:column>
+						</rich:dataTable>
+					</rich:simpleTogglePanel>
+				</ui:repeat>
+			</h:panelGroup>
 		</rich:panel>
 		
 		<rich:panel header="#{executer.currentJoin.name}" rendered="#{executer.currentJoin != null}">
@@ -46,10 +72,14 @@
 		
 		<h:panelGroup>
 			<ui:repeat var="transition" value="#{executer.transitions}">
-				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTask == null) ? transition.name : 'Pular tarefa já executada')}"
-								 onclick="#{((executer.currentUserExecution.finishedAt == null and executer.currentTask != null) ? 'javascript:return confirm(\'Você tem certeza?\')' : '')}"
+				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? transition.name : 'Pular tarefa já executada')}"
+								 onclick="#{((executer.currentUserExecution.finishedAt == null and executer.currentTaskNode != null) ? 'javascript:return confirm(\'Você tem certeza?\')' : '')}"
 								 styleClass="executeButton"/>
 			</ui:repeat>
+			<h:commandButton action="#{executer.next(null)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? 'Finalizar' : 'Pular tarefa já executada')}"
+							 styleClass="executeButton"
+							 rendered="#{executer.currentTaskNode != null and executer.transitions.size eq 0}"	 
+							 />
 		</h:panelGroup>
 	</ui:define>
 </ui:composition>

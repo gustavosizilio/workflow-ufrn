@@ -1,17 +1,23 @@
 package org.domain.workflow.session;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.domain.dao.ProcessDefinitionDAO;
 import org.domain.dao.SeamDAO;
 import org.domain.model.User;
+import org.domain.model.processDefinition.Artefact;
+import org.domain.model.processDefinition.ArtefactFile;
 import org.domain.model.processDefinition.EndState;
 import org.domain.model.processDefinition.Join;
 import org.domain.model.processDefinition.ProcessDefinition;
+import org.domain.model.processDefinition.StartState;
+import org.domain.model.processDefinition.Task;
 import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Transition;
 import org.domain.model.processDefinition.UserExecution;
+import org.domain.utils.ReadPropertiesFile;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.FlushModeType;
@@ -20,6 +26,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.security.Restrict;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
+import org.richfaces.event.UploadEvent;
 
 @Name("executer")
 @Restrict("#{identity.loggedIn}")
@@ -28,7 +36,6 @@ public class WorkflowExecuter {
 	@In("processDao") protected ProcessDefinitionDAO processDao;
 	@In("seamDao") protected SeamDAO seamDao;
 	@In("user") protected User user;
-	@SuppressWarnings("unused")
 	@In
 	private FacesMessages facesMessages;
 	
@@ -39,12 +46,16 @@ public class WorkflowExecuter {
 	private ProcessDefinition currentProcess;
 	private TaskNode currentTaskNode;
 	private UserExecution currentUserExecution;
+	private StartState startState;
 	private Join currentJoin;
 	private EndState endState;
+	private ArtefactFile currentArtefactFile;
+	private Artefact currentArtefact;
 	
 	public String init(ProcessDefinition process){
 		this.setCurrentProcess(process);
-		this.setCurrentTaskNode(process.getStartState().getTaskNode());
+		this.setStartState(process.getStartState());
+		this.setCurrentTaskNode(null);
 		setCurrentJoin(null);
 		setEndState(null);
 		setCurrentUserExecution(null);
@@ -60,10 +71,11 @@ public class WorkflowExecuter {
 	
 	public List<Transition> getTransitions(){
 		List<Transition> transitions = new ArrayList<Transition>();
-		if(currentTaskNode != null){
-			if(currentTaskNode.getStartState() != null){
-				transitions.addAll(currentTaskNode.getStartState().getTransitions());
+		if(currentTaskNode == null){
+			if(this.startState != null){
+				transitions.addAll(this.startState.getTransitions());
 			}
+		} else {
 			transitions.addAll(currentTaskNode.getTransitions());
 		}
 		if(currentJoin != null){
@@ -74,6 +86,7 @@ public class WorkflowExecuter {
 	
 	public void next(Transition transition){
 		if(validateCurrentTaskNode()){
+			this.startState = null;
 			finishUserExecution();
 			
 			currentTaskNode = currentProcess.getTaskNode(transition);
@@ -86,14 +99,62 @@ public class WorkflowExecuter {
 
 	private boolean validateCurrentTaskNode() {
 		if(currentTaskNode != null){
-			/*if(currentTaskNode.getOutArtefacts().size() > 0){
-				facesMessages.add(Severity.ERROR, "É preciso enviar todos os artefatos!");
-				return false;
-			}*/
+			List<Artefact> artefacts = new ArrayList<Artefact>();
+			artefacts.addAll(currentTaskNode.getOutArtefacts());
+			
+			for (Task task : currentTaskNode.getTasks()) {
+				artefacts.addAll(task.getOutArtefacts());
+			}
+
+			for (Artefact artefact : artefacts) {
+				if(artefact.get(currentUserExecution) == null){
+					facesMessages.add(Severity.ERROR, "É preciso enviar todos os artefatos!");
+					return false;
+				}
+			}
+			
 		}
 		return true;
 	}
-
+	
+	public void setCurrentArtefact(Artefact artefact){
+		this.currentArtefact = artefact;
+	}
+	
+	public void removeArtefact(Artefact artefact) throws Exception {
+		List<ArtefactFile> artefactsFiles = new ArrayList<ArtefactFile>(artefact.getArtefactFiles());
+		for (ArtefactFile artefactFile : artefactsFiles) {
+			if(artefactFile.getUserExecution().equals(currentUserExecution)){
+				seamDao.remove(artefactFile);
+				artefact.getArtefactFiles().remove(artefactFile);
+			}
+		}
+		seamDao.merge(artefact);
+		seamDao.flush();
+	}
+	
+	public void uploadArtefact(UploadEvent event) throws Exception {
+		ArtefactFile artefactfile = new ArtefactFile();
+		seamDao.persist(artefactfile);
+		
+		String path = ReadPropertiesFile.getProperty("components", "artefactPath");
+		path = path + this.currentArtefact.getId() + "/" + artefactfile.getId() + "/";
+		File upload = new File(path);
+		upload.mkdirs();
+		
+		path = path + event.getUploadItem().getFileName();
+	    if(event.getUploadItem().getFile().renameTo(new File(path))){
+	    	artefactfile.setFile(path);		
+	    	artefactfile.setArtefact(this.currentArtefact);
+	    	artefactfile.setUserExecution(currentUserExecution);
+	    	seamDao.merge(artefactfile);
+	    	this.currentArtefact.getArtefactFiles().add(artefactfile);
+	    	seamDao.merge(this.currentArtefact);
+	    	seamDao.flush();
+	    }
+	}
+	
+	
 	private void startUserExecution() {
 		if(currentTaskNode != null){
 			if(!currentTaskNode.startedByUser(user)){
@@ -175,5 +236,21 @@ public class WorkflowExecuter {
 
 	public void setCurrentTaskNode(TaskNode currentTaskNode) {
 		this.currentTaskNode = currentTaskNode;
+	}
+
+	public ArtefactFile getCurrentArtefactFile() {
+		return currentArtefactFile;
+	}
+
+	public void setCurrentArtefactFile(ArtefactFile currentArtefactFile) {
+		this.currentArtefactFile = currentArtefactFile;
+	}
+
+	public StartState getStartState() {
+		return startState;
+	}
+
+	public void setStartState(StartState startState) {
+		this.startState = startState;
 	}
 }

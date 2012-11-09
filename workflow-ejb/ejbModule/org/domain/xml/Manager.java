@@ -198,7 +198,9 @@ public class Manager {
 	private Swimlane extractSwimlane(Node item, ProcessDefinition processDefinition) {
 		Swimlane swimlane = new Swimlane();
 		swimlane.setProcessDefinition(processDefinition);
-		swimlane.setName(item.getAttributes().getNamedItem(Elements.NAME).getNodeValue());
+		if(item.getAttributes().getNamedItem(Elements.NAME) != null) {
+			swimlane.setName(item.getAttributes().getNamedItem(Elements.NAME).getNodeValue());
+		}
 		
 		List<Node> node = getElements(item.getChildNodes());
 		if(node.size() > 0){

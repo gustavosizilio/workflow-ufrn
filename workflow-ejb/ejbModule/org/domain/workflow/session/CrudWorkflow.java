@@ -1,5 +1,6 @@
 package org.domain.workflow.session;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 
@@ -10,8 +11,11 @@ import org.domain.dao.WorkflowDAO;
 import org.domain.exception.ValidationException;
 import org.domain.model.User;
 import org.domain.model.Workflow;
+import org.domain.model.processDefinition.Artefact;
+import org.domain.model.processDefinition.ArtefactFile;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.Swimlane;
+import org.domain.utils.ReadPropertiesFile;
 import org.domain.workflow.session.generic.CrudAction;
 import org.domain.xml.Manager;
 import org.jboss.seam.ScopeType;
@@ -31,6 +35,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	@In("workflowDAO") WorkflowDAO workflowDAO;
 	private User userProperty;
 	private Swimlane swimlaneProperty;
+	private Artefact currentArtefact;
 	
 	public CrudWorkflow() {
 		super(Workflow.class);
@@ -112,6 +117,38 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		seamDao.flush();
 	}
 	
+	public void setCurrentArtefact(Artefact artefact){
+		this.currentArtefact = artefact;
+	}
+	public void uploadArtefact(UploadEvent event) throws Exception {
+		ArtefactFile artefactfile = new ArtefactFile();
+		seamDao.persist(artefactfile);
+		
+		String path = ReadPropertiesFile.getProperty("components", "artefactPath");
+		path = path + this.currentArtefact.getId() + "/" + artefactfile.getId() + "/";
+		File upload = new File(path);
+		upload.mkdirs();
+		
+		path = path + event.getUploadItem().getFileName();
+	    if(event.getUploadItem().getFile().renameTo(new File(path))){
+	    	artefactfile.setFile(path);		
+	    	artefactfile.setArtefact(this.currentArtefact);
+	    	seamDao.merge(artefactfile);
+	    	this.currentArtefact.getArtefactFiles().add(artefactfile);
+	    	seamDao.merge(this.currentArtefact);
+	    	seamDao.flush();
+	    }
+	}
+	
+	public void removeArtefact(Artefact artefact) throws Exception {
+		List<ArtefactFile> artefactsFiles = artefact.getArtefactFiles();
+		for (ArtefactFile artefactFile : artefactsFiles) {
+			seamDao.remove(artefactFile);
+		}
+		artefact.getArtefactFiles().clear();
+		seamDao.merge(artefact);
+		seamDao.flush();
+	}
 	public List<User> getUsers(){
 		return userDAO.findAll(User.class);
 	}

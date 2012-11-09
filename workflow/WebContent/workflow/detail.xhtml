@@ -133,7 +133,7 @@
 		<br />
 		<rich:panel id="workflowConfiguratioin" header="Configuração do Experimento">
 		    <h:panelGrid columns="2" id="fileUpload" rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}">
-				<h:outputLabel value="Deploy JPDL:" for="description" />
+				<h:outputLabel value="Deploy Definition:" for="description" />
 				<rich:fileUpload
 					uploadControlLabel="Deploy"
 					immediateUpload="false"
@@ -197,7 +197,7 @@
 	       <rich:simpleTogglePanel switchType="client" label="Configuração dos Artefatos" opened="true"
 	       						   rendered="#{crudWorkflow.entity.inArtefacts.size() gt 0}">	
 
-				<rich:dataTable	value="#{crudWorkflow.entity.inArtefacts}" var="artefact" >
+				<rich:dataTable	value="#{crudWorkflow.entity.inArtefacts}" var="artefact" id="artefacts">
 					<h:column>
 						<f:facet name="header">Artefato</f:facet>
 						<h:outputText value="#{artefact.name}" />
@@ -212,6 +212,28 @@
 						<h:outputText value="#{artefact.task.taskNode.name} > #{artefact.task.name}" rendered="#{artefact.task != null}" />
 						<h:outputText value="#{artefact.taskNode.name}" rendered="#{artefact.taskNode != null}" />
 					</h:column>
+					<h:column>
+						<f:facet name="header">Ações</f:facet>
+						
+						<h:panelGroup rendered="#{artefact.artefactFiles.size() eq 0}">
+							<a4j:commandLink value="Enviar" action="#{crudWorkflow.setCurrentArtefact(artefact)}" id="enviarModal"
+							 				 status="block" reRender="uploadArtefact">
+								<rich:componentControl for="panelArtefact" attachTo="enviarModal" operation="show" event="onclick"/>
+							</a4j:commandLink>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{artefact.artefactFiles.size() gt 0}">
+							<a4j:commandLink value="Remover" action="#{crudWorkflow.removeArtefact(artefact)}"
+							 				 status="block" reRender="artefacts">
+							</a4j:commandLink>
+							<h:outputText value=" | " />
+							<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.artefactFiles.get(0))}"
+							 				 status="block" reRender="artefacts"
+							 				 target="_blank">
+							</h:commandLink>
+							
+						</h:panelGroup>
+						
+					</h:column>
 				</rich:dataTable>
 	       </rich:simpleTogglePanel>
 	    </rich:panel>
@@ -220,5 +242,39 @@
 	    <h:panelGroup id="actions">
 		    <h:commandButton value="Undeploy" action="#{crudWorkflow.undeployWorkflow()}" rendered="#{crudWorkflow.entity.processDefinitions.size() > 0}" />
 	    </h:panelGroup>
+	</ui:define>
+	
+	<ui:define name="modal">
+		 <rich:modalPanel id="panelArtefact" autosized="true">
+	        <f:facet name="header">
+	            <h:panelGroup>
+	                <h:outputText value="Upload"></h:outputText>
+	            </h:panelGroup>
+	        </f:facet>
+	        <f:facet name="controls">
+	            <h:panelGroup>
+	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelink"/>
+	                <rich:componentControl for="panelArtefact" attachTo="hidelink" operation="hide" event="onclick"/>
+	            </h:panelGroup>
+	        </f:facet>
+	        <h:panelGroup id="uploadArtefact">
+	        <h:form enctype="multipart/form-data">
+					<rich:fileUpload
+						uploadControlLabel="Enviar"
+						immediateUpload="false"
+						listHeight="70px;"
+			            noDuplicate="true" listWidth="350px;" 
+			            locale="pt-BR" 
+			            autoclear="false"
+			            maxFilesQuantity="1" 
+			            cancelEntryControlLabel="Limpar"
+			            transferErrorLabel="Erro ao importar arquivo"           
+			            fileUploadListener="#{crudWorkflow.uploadArtefact}"
+			            onfileuploadcomplete="refreshModal()">
+			        </rich:fileUpload>
+		    </h:form>
+	        </h:panelGroup>
+	    </rich:modalPanel>
+	    <a4j:jsFunction name="refreshModal" reRender="panelArtefact,artefacts" />
 	</ui:define>
 </ui:composition>

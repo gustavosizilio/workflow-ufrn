@@ -6,30 +6,56 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/template.xhtml">
 	<ui:define name="body">
 		<rich:simpleTogglePanel switchType="client" label="#{executer.currentProcess.workflow.title}" opened="false" >
 			<h:outputText value="#{executer.currentProcess.workflow.description}" />
 		</rich:simpleTogglePanel>
 		<br />
-		<rich:panel header="#{executer.currentTaskNode.name}" rendered="#{executer.currentTaskNode != null}">
+		<rich:panel header="#{executer.currentTaskNode.name}" id="panelTask" rendered="#{executer.currentTaskNode != null}">
 			<h:outputText value="#{executer.currentTaskNode.description}" />
 			<rich:dataList value="#{executer.currentTaskNode.inArtefacts}" var="artefact" rendered="#{executer.currentTaskNode.inArtefacts.size() gt 0}">
-				<h:outputText value="#{artefact.name}" /> - <h:commandLink action="#" value="Download" />
+				<h:outputText value="#{artefact.name} " />
+				<h:commandLink value="Download" rendered="#{artefact.artefactFiles.size gt 0}"
+								action="#{sendFile.sendFile(artefact.artefactFiles.get(0))}"
+				 				status="block"
+				 				target="_blank">
+				</h:commandLink>
 			</rich:dataList>
 			<br /><br />
 			
 			<h:panelGroup rendered="#{executer.currentUserExecution != null}">
 				<h:panelGrid columns="2">
 					<h:outputLabel value="Enviar Artefatos:" rendered="#{executer.currentTaskNode.outArtefacts.size() gt 0}"/>
-					<rich:dataTable value="#{executer.currentTaskNode.outArtefacts}" var="artefact" rendered="#{executer.currentTaskNode.outArtefacts.size() gt 0}">
+					<rich:dataTable value="#{executer.currentTaskNode.outArtefacts}" var="artefact"
+					id="taskNodeArtefacts" rendered="#{executer.currentTaskNode.outArtefacts.size() gt 0}">
 						<h:column>
 							<f:facet name="header">Nome</f:facet>
 							<h:outputText value="#{artefact.name}" />
 						</h:column>
 						<h:column>
 							<f:facet name="header"></f:facet>
-							<h:commandLink action="#" value="Enviar" />
+							
+							<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) == null}">
+								<a4j:commandLink value="Enviar" action="#{executer.setCurrentArtefact(artefact)}" id="enviarModal"
+								 				 status="block" reRender="uploadArtefact">
+									<rich:componentControl for="panelArtefact" attachTo="enviarModal" operation="show" event="onclick"/>
+								</a4j:commandLink>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) != null}">
+								<h:panelGroup rendered="#{executer.currentUserExecution.finishedAt == null}" >
+									<a4j:commandLink value="Remover" action="#{executer.removeArtefact(artefact)}"
+									 				 status="block" reRender="taskNodeArtefacts">
+									</a4j:commandLink>
+									<h:outputText value=" | " />
+								</h:panelGroup>
+								<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(executer.currentUserExecution))}"
+								 				 status="block"
+								 				 target="_blank">
+								</h:commandLink>							
+							</h:panelGroup>
+							
 						</h:column>
 					</rich:dataTable>
 					
@@ -38,27 +64,56 @@
 					 disabled="#{executer.currentUserExecution.finishedAt != null}"
 					 rendered="#{executer.currentUserExecution != null}" />
 				</h:panelGrid>
-				<ui:repeat var="task" value="#{executer.currentTaskNode.tasks}">
-					<br />
-					<rich:simpleTogglePanel switchType="client" label="#{task.name}" opened="true">
-						<h:outputText value="#{task.description}" />
-						<rich:dataList value="#{task.inArtefacts}" var="artefact" rendered="#{task.inArtefacts.size() gt 0}">
-							<h:outputText value="#{artefact.name}" /> - <h:commandLink action="#" value="Download" />
-						</rich:dataList>
-						<br /><br />
-						<h:outputLabel value="Enviar Artefatos:" rendered="#{task.outArtefacts.size() gt 0}"/>
-						<rich:dataTable value="#{task.outArtefacts}" var="artefact" rendered="#{task.outArtefacts.size() gt 0}">
-							<h:column>
-								<f:facet name="header">Nome</f:facet>
-								<h:outputText value="#{artefact.name}" />
-							</h:column>
-							<h:column>
-								<f:facet name="header"></f:facet>
-								<h:commandLink action="#" value="Enviar" />
-							</h:column>
-						</rich:dataTable>
-					</rich:simpleTogglePanel>
-				</ui:repeat>
+				<h:panelGroup id="tasks">
+					<ui:repeat var="task" value="#{executer.currentTaskNode.tasks}">
+						<br />
+						<rich:simpleTogglePanel switchType="client" label="#{task.name}" opened="true">
+							<h:outputText value="#{task.description}" />
+							<rich:dataList value="#{task.inArtefacts}" var="artefact" rendered="#{task.inArtefacts.size() gt 0}">
+								<h:outputText value="#{artefact.name} " /> 
+								<h:commandLink value="Download" rendered="#{artefact.artefactFiles.size gt 0}"
+												action="#{sendFile.sendFile(artefact.artefactFiles.get(0))}"
+								 				status="block"
+								 				target="_blank">
+								</h:commandLink>
+							</rich:dataList>
+							<br /><br />
+							<h:panelGrid columns="2">
+								<h:outputLabel value="Enviar Artefatos:" rendered="#{task.outArtefacts.size() gt 0}"/>
+								<rich:dataTable value="#{task.outArtefacts}"
+								 style="width:500px" var="artefact" rendered="#{task.outArtefacts.size() gt 0}">
+									<h:column>
+										<f:facet name="header">Nome</f:facet>
+										<h:outputText value="#{artefact.name}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header"></f:facet>
+										
+										<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) == null}">
+											<a4j:commandLink value="Enviar" action="#{executer.setCurrentArtefact(artefact)}" id="enviarModal"
+											 				 status="block" reRender="uploadArtefact">
+												<rich:componentControl for="panelArtefact" attachTo="enviarModal" operation="show" event="onclick"/>
+											</a4j:commandLink>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) != null}">
+											<h:panelGroup rendered="#{executer.currentUserExecution.finishedAt == null}" >
+												<a4j:commandLink value="Remover" action="#{executer.removeArtefact(artefact)}"
+												 				 status="block" reRender="tasks">
+												</a4j:commandLink>
+												<h:outputText value=" | " />
+											</h:panelGroup>
+											<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(executer.currentUserExecution))}"
+											 				 status="block"
+											 				 target="_blank">
+											</h:commandLink>							
+										</h:panelGroup>
+										
+									</h:column>
+								</rich:dataTable>
+							</h:panelGrid>
+						</rich:simpleTogglePanel>
+					</ui:repeat>
+				</h:panelGroup>
 			</h:panelGroup>
 		</rich:panel>
 		
@@ -81,5 +136,49 @@
 							 rendered="#{executer.currentTaskNode != null and executer.transitions.size eq 0}"	 
 							 />
 		</h:panelGroup>
+	</ui:define>
+	<ui:define name="modal">
+		<rich:modalPanel id="modalUpload" width="400">
+			<f:facet name="header">
+				<h:outputText value="Upload" />
+			</f:facet>
+			<h:panelGroup id="uploadContainer">
+				
+			</h:panelGroup>
+		</rich:modalPanel>
+	</ui:define>
+	
+	<ui:define name="modal">
+		 <rich:modalPanel id="panelArtefact" autosized="true">
+	        <f:facet name="header">
+	            <h:panelGroup>
+	                <h:outputText value="Upload"></h:outputText>
+	            </h:panelGroup>
+	        </f:facet>
+	        <f:facet name="controls">
+	            <h:panelGroup>
+	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelink"/>
+	                <rich:componentControl for="panelArtefact" attachTo="hidelink" operation="hide" event="onclick"/>
+	            </h:panelGroup>
+	        </f:facet>
+	        <h:panelGroup id="uploadArtefact">
+	        <h:form enctype="multipart/form-data">
+					<rich:fileUpload
+						uploadControlLabel="Enviar"
+						immediateUpload="false"
+						listHeight="70px;"
+			            noDuplicate="true" listWidth="350px;" 
+			            locale="pt-BR" 
+			            autoclear="false"
+			            maxFilesQuantity="1" 
+			            cancelEntryControlLabel="Limpar"
+			            transferErrorLabel="Erro ao importar arquivo"           
+			            fileUploadListener="#{executer.uploadArtefact}"
+			            onfileuploadcomplete="refreshModal()">
+			        </rich:fileUpload>
+		    </h:form>
+	        </h:panelGroup>
+	    </rich:modalPanel>
+	    <a4j:jsFunction name="refreshModal" reRender="panelArtefact,tasks,taskNodeArtefacts" />
 	</ui:define>
 </ui:composition>

@@ -18,6 +18,16 @@
       <ui:insert name="head"/>
    </head>
    <body>
+  	<a4j:region>
+ 			<a4j:status id="block" name="block">
+		         <f:facet name="start">
+		         	<div id="block">
+			            Aguarde...
+		         	</div>
+		         </f:facet>
+	    </a4j:status>
+    </a4j:region>
+	    
       <ui:include src="menu.xhtml" />
       <div class="body">
          <h:messages id="messages" globalOnly="true" styleClass="message"
@@ -27,6 +37,7 @@
         <h:form enctype="multipart/form-data">
          <ui:insert name="body"/>
         </h:form>
+        <ui:insert name="modal"/>
       </div>
       <p class="clear" />
       <div class="footer">

@@ -16,7 +16,7 @@
 					<rich:simpleTogglePanel switchType="client" label="#{taskNode.name}" opened="true"
 											rendered="#{taskNode.startState eq null}" >	
 						<ui:repeat value="#{taskNode.userExecutions}" var="userExecution" >
-							<rich:panel header="#{userExecution.user.name}" style="width: 300px; float: left;" >
+							<rich:panel header="#{userExecution.user.name}" style="width: 300px; height: 150px; float: left;" >
 								<h:panelGrid columns="2">
 									<h:outputLabel value="Tempo gasto" />
 									<h:outputText rendered="#{userExecution.wastedTime != null}"  value="#{userExecution.wastedTime} Segundos" ></h:outputText>
@@ -35,6 +35,61 @@
 									<h:outputLabel value="Tempo de pausa" />
 									<h:outputText value="Ainda nao implementado" />
 									
+									<rich:spacer></rich:spacer>
+									 <h:outputLink value="#" id="artefacts">
+									        Artefatos de Saída 
+									        <rich:componentControl for="artefactsModal" attachTo="artefacts" operation="show" event="onclick"/>
+									 </h:outputLink>
+									 <rich:modalPanel id="artefactsModal" width="650" >
+								        <f:facet name="header">
+								            <h:panelGroup>
+								                <h:outputText value="Artefatos de Saída"></h:outputText>
+								            </h:panelGroup>
+								        </f:facet>
+								        <f:facet name="controls">
+								            <h:panelGroup>
+								                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkArtefacts"/>
+								                <rich:componentControl for="artefactsModal" attachTo="hidelinkArtefacts" operation="hide" event="onclick"/>
+								            </h:panelGroup>
+								        </f:facet>
+								          <h:panelGrid columns="2">
+								           <h:outputLabel value="Artefatos da Atividade: #{taskNode.name}" rendered="#{taskNode.outArtefacts.size() gt 0}" />
+									       <rich:dataTable style="width: 700px;" rendered="#{taskNode.outArtefacts.size() gt 0}" value="#{taskNode.outArtefacts}" var="artefact" id="taskNodeArtefacts">
+													<h:column>
+														<f:facet name="header">Nome</f:facet>
+														<h:outputText value="#{artefact.name}" />
+													</h:column>
+													<h:column>
+														<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(userExecution))}"
+														 rendered="#{artefact.get(userExecution) != null}"
+										 				 status="block"
+										 				 target="_blank">
+							 				 			</h:commandLink>
+							 				 		</h:column>
+									       </rich:dataTable>
+								          </h:panelGrid>
+									       <ui:repeat var="task" value="#{taskNode.tasks}">
+  										     <h:panelGrid columns="2">
+										       <h:outputLabel value="Artefatos da Tarefa: #{task.name}" rendered="#{task.outArtefacts.size() gt 0}" />
+										       <rich:dataTable style="width: 500px;" rendered="#{task.outArtefacts.size() gt 0}" value="#{task.outArtefacts}" var="artefact" id="taskArtefacts">
+														<h:column>
+															<f:facet name="header">Nome</f:facet>
+															<h:outputText value="#{artefact.name}" />
+														</h:column>
+														<h:column>
+															<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(userExecution))}"
+															 rendered="#{artefact.get(userExecution) != null}"
+											 				 status="block"
+											 				 target="_blank">
+								 				 			</h:commandLink>
+								 				 		</h:column>
+										       </rich:dataTable>
+										     </h:panelGrid>
+									       </ui:repeat>
+								    </rich:modalPanel>
+									
+									
+									<rich:spacer></rich:spacer>
 									<rich:spacer></rich:spacer>
 									 <h:outputLink value="#" id="comment" rendered="#{userExecution.comment.length() > 0}">
 									        Comentário 

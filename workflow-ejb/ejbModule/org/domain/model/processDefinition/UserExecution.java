@@ -1,6 +1,8 @@
 package org.domain.model.processDefinition;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,10 +33,14 @@ public class UserExecution {
 	@OneToOne
 	private UserExecution nextUserExecution;
 	private String comment;
+	@OneToMany(mappedBy="userExecution")
+	private List<ArtefactFile> artefactFiles;
 
 	public UserExecution() {
+		this.artefactFiles = new ArrayList<ArtefactFile>();
 	}
 	public UserExecution(User user, boolean start) {
+		this();
 		this.user = user;
 		if(start){
 			startedAt = Calendar.getInstance();
@@ -96,5 +103,20 @@ public class UserExecution {
 	}
 	public void setTaskNode(TaskNode taskNode) {
 		this.taskNode = taskNode;
+	}
+	public List<ArtefactFile> getArtefactFiles() {
+		return artefactFiles;
+	}
+	public void setArtefactFiles(List<ArtefactFile> artefactFiles) {
+		this.artefactFiles = artefactFiles;
+	}
+	
+	public boolean equals(Object obj){
+		if(obj instanceof UserExecution){
+			if(((UserExecution)obj).getId().equals(this.getId())){
+				return true;
+			}
+		}
+		return false;
 	}
 }

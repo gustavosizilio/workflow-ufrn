@@ -1,5 +1,9 @@
 package org.domain.model.processDefinition;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -7,7 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
+import org.domain.model.User;
 import org.domain.model.processDefinition.dataType.ArtefactType;
 
 @Entity
@@ -22,6 +28,21 @@ public class Artefact {
 	private TaskNode taskNode;
 	@ManyToOne
 	private Task task;
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="artefact")
+	private List<ArtefactFile> artefactFiles;
+	
+	public Artefact() {
+		this.artefactFiles = new ArrayList<ArtefactFile>();
+	}
+	
+	public ArtefactFile getUserArtefactFile(User currentUser){
+		for (ArtefactFile artefactFile : artefactFiles) {
+			if(artefactFile.getUserExecution() != null && artefactFile.getUserExecution().getUser().equals(currentUser)){
+				return artefactFile;
+			}
+		}
+		return null;
+	}
 	
 	public Long getId() {
 		return id;
@@ -57,5 +78,19 @@ public class Artefact {
 	}
 	public void setTask(Task task) {
 		this.task = task;
-	}	
+	}
+	public List<ArtefactFile> getArtefactFiles() {
+		return artefactFiles;
+	}
+	public void setArtefactFiles(List<ArtefactFile> artefactFiles) {
+		this.artefactFiles = artefactFiles;
+	}
+	public ArtefactFile get(UserExecution currentUserExecution){
+		for (ArtefactFile artefactFile : artefactFiles) {
+			if(artefactFile.getUserExecution().equals(currentUserExecution)){
+				return artefactFile;
+			}
+		}		
+		return null;
+	}
 }

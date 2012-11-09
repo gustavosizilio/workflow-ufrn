@@ -1,8 +1,8 @@
 package org.domain.model.processDefinition.dataType;
 
 public enum ArtefactType {
-		IN("in"),
-		OUT("out");
+		IN("input"),
+		OUT("output");
 		
 		private String name;
 		private ArtefactType(String name) {
@@ -24,5 +24,9 @@ public enum ArtefactType {
 			} else {
 				return defaultValue;
 			}
+		}
+		
+		public String toString() {
+			return this.getName();
 		}
 }

@@ -3,7 +3,7 @@ package org.domain.initializer;
 import org.domain.dao.SeamDAO;
 import org.domain.exception.ValidationException;
 import org.domain.model.User;
-import org.domain.model.Workflow;
+import org.domain.model.processDefinition.Workflow;
 import org.domain.utils.BasicPasswordEncryptor;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
@@ -20,13 +20,19 @@ public class Seed {
 	@Transactional
 	public void popula() throws ValidationException {
 		User u = new User("gustavosizilio@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Gustavo Sizílio Nery");
-		seamDao.persist(u);
+		persist(u);
 		
 		User u2 = new User("marilia.freire@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Marília Freire");
-		seamDao.persist(u2);
+		persist(u2);
 		
 		Workflow w = new Workflow(u, "Experimento Test");
-		seamDao.persist(w);
+		persist(w);
+	}
+
+	private void persist(Object u) {
+		if(seamDao.findByExample(u).size() == 0){
+			seamDao.persist(u);
+		}
 	}
 
 }

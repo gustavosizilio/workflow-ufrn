@@ -2,6 +2,7 @@ package org.domain.workflow.session;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.domain.dao.ProcessDefinitionDAO;
@@ -9,6 +10,7 @@ import org.domain.dao.SeamDAO;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Artefact;
 import org.domain.model.processDefinition.ArtefactFile;
+import org.domain.model.processDefinition.Break;
 import org.domain.model.processDefinition.EndState;
 import org.domain.model.processDefinition.Join;
 import org.domain.model.processDefinition.ProcessDefinition;
@@ -94,6 +96,25 @@ public class WorkflowExecuter {
 			endState = currentProcess.getEndState(transition);
 			
 			startUserExecution();
+		}
+	}
+	
+	public void startBreak(){
+		if(this.currentUserExecution.getFinishedAt() == null) {
+			Break newBreak = new Break(this.currentUserExecution, true);
+			this.seamDao.persist(newBreak);
+			this.currentUserExecution.getBreakes().add(newBreak);
+			this.seamDao.merge(this.currentUserExecution);
+			this.seamDao.flush();
+		}
+	}
+	
+	public void stopBreak(){
+		if(this.currentUserExecution.isBreak()) {
+			Break openedBreak = this.currentUserExecution.getOpenedBreak();
+			openedBreak.setFinishedAt(Calendar.getInstance());
+			this.seamDao.merge(openedBreak);
+			this.seamDao.flush();
 		}
 	}
 

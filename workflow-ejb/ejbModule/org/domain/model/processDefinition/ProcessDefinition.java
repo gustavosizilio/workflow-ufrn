@@ -15,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.domain.model.User;
-import org.domain.model.Workflow;
 import org.domain.model.generic.GenericEntity;
 
 @Entity

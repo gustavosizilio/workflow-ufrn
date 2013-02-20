@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.domain.model.User;
-import org.domain.model.Workflow;
+import org.domain.model.processDefinition.Workflow;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;

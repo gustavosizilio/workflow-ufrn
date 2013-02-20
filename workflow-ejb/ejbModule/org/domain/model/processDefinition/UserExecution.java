@@ -35,9 +35,12 @@ public class UserExecution {
 	private String comment;
 	@OneToMany(mappedBy="userExecution")
 	private List<ArtefactFile> artefactFiles;
+	@OneToMany(mappedBy="userExecution")
+	private List<Break> breakes;
 
 	public UserExecution() {
 		this.artefactFiles = new ArrayList<ArtefactFile>();
+		this.breakes = new ArrayList<Break>();
 	}
 	public UserExecution(User user, boolean start) {
 		this();
@@ -67,10 +70,34 @@ public class UserExecution {
 	
 	public Double getWastedTime(){
 		if(getFinishedAt() != null && getStartedAt() != null){
-			return Math.ceil(((float)(getFinishedAt().getTimeInMillis() - getStartedAt().getTimeInMillis())/1000));
+			Double wastedTime = Math.ceil(((float)(getFinishedAt().getTimeInMillis() - getStartedAt().getTimeInMillis())/1000));
+			wastedTime-=getWastedBreakTime();
+			return wastedTime;
 		}else{
 			return null;
 		}
+	}
+	
+	public Double getWastedBreakTime(){
+		Double breakTimes = 0.0;
+		for (Break b : this.breakes) {
+			breakTimes+=b.getWastedTime();
+		}
+		
+		return breakTimes;
+	}
+	
+	public boolean isBreak(){
+		return (getOpenedBreak() == null) ? false : true;  
+	}
+	
+	public Break getOpenedBreak(){
+		for (Break b : this.breakes) {
+			if(b.getFinishedAt() == null){
+				return b;
+			}
+		}
+		return null;
 	}
 	
 	public Calendar getStartedAt() {
@@ -118,5 +145,11 @@ public class UserExecution {
 			}
 		}
 		return false;
+	}
+	public List<Break> getBreakes() {
+		return breakes;
+	}
+	public void setBreakes(List<Break> breakes) {
+		this.breakes = breakes;
 	}
 }

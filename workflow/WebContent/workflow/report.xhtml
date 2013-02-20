@@ -6,8 +6,16 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/template.xhtml">
 	<ui:define name="body">
+	<h:panelGroup>
+		<a4j:commandButton action="#" value="Comentários" id="observationModal" >
+			<rich:componentControl for="panelObservation" attachTo="observationModal" operation="show" event="onclick"/>
+		</a4j:commandButton>
+	</h:panelGroup>
+	<br />
+	
 		<ui:repeat var="process" value="#{report.workflow.processDefinitions}">
 			<rich:simpleTogglePanel switchType="client" label="#{process.name}" opened="false">	
 				<h:outputText value="Não Iniciado..." rendered="#{process.startedAt == null}"/>
@@ -33,88 +41,156 @@
 									</h:outputText>
 									
 									<h:outputLabel value="Tempo de pausa" />
-									<h:outputText value="Ainda nao implementado" />
-									
-									<rich:spacer></rich:spacer>
-									 <h:outputLink value="#" id="artefacts">
-									        Artefatos de Saída 
+									<h:outputText value="" rendered="#{userExecution.wastedBreakTime eq 0}"/>
+									<h:outputLink id="breakLink" rendered="#{userExecution.wastedBreakTime gt 0}"  value="#" >
+										<h:outputText value="#{userExecution.wastedBreakTime} Segundos" />
+										<rich:componentControl for="breakModal" attachTo="breakLink" operation="show" event="onclick"/>
+									</h:outputLink>
+								    
+									<h:outputLabel value="Artefatos de Saída" />
+									<h:outputLink value="#" id="artefacts">
+									        Download 
 									        <rich:componentControl for="artefactsModal" attachTo="artefacts" operation="show" event="onclick"/>
 									 </h:outputLink>
-									 <rich:modalPanel id="artefactsModal" width="650" >
-								        <f:facet name="header">
-								            <h:panelGroup>
-								                <h:outputText value="Artefatos de Saída"></h:outputText>
-								            </h:panelGroup>
-								        </f:facet>
-								        <f:facet name="controls">
-								            <h:panelGroup>
-								                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkArtefacts"/>
-								                <rich:componentControl for="artefactsModal" attachTo="hidelinkArtefacts" operation="hide" event="onclick"/>
-								            </h:panelGroup>
-								        </f:facet>
-								          <h:panelGrid columns="2">
-								           <h:outputLabel value="Artefatos da Atividade: #{taskNode.name}" rendered="#{taskNode.outArtefacts.size() gt 0}" />
-									       <rich:dataTable style="width: 700px;" rendered="#{taskNode.outArtefacts.size() gt 0}" value="#{taskNode.outArtefacts}" var="artefact" id="taskNodeArtefacts">
-													<h:column>
-														<f:facet name="header">Nome</f:facet>
-														<h:outputText value="#{artefact.name}" />
-													</h:column>
-													<h:column>
-														<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(userExecution))}"
-														 rendered="#{artefact.get(userExecution) != null}"
-										 				 status="block"
-										 				 target="_blank">
-							 				 			</h:commandLink>
-							 				 		</h:column>
-									       </rich:dataTable>
-								          </h:panelGrid>
-									       <ui:repeat var="task" value="#{taskNode.tasks}">
-  										     <h:panelGrid columns="2">
-										       <h:outputLabel value="Artefatos da Tarefa: #{task.name}" rendered="#{task.outArtefacts.size() gt 0}" />
-										       <rich:dataTable style="width: 500px;" rendered="#{task.outArtefacts.size() gt 0}" value="#{task.outArtefacts}" var="artefact" id="taskArtefacts">
-														<h:column>
-															<f:facet name="header">Nome</f:facet>
-															<h:outputText value="#{artefact.name}" />
-														</h:column>
-														<h:column>
-															<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(userExecution))}"
-															 rendered="#{artefact.get(userExecution) != null}"
-											 				 status="block"
-											 				 target="_blank">
-								 				 			</h:commandLink>
-								 				 		</h:column>
-										       </rich:dataTable>
-										     </h:panelGrid>
-									       </ui:repeat>
-								    </rich:modalPanel>
 									
-									
-									<rich:spacer></rich:spacer>
-									<rich:spacer></rich:spacer>
-									 <h:outputLink value="#" id="comment" rendered="#{userExecution.comment.length() > 0}">
-									        Comentário 
+									<h:outputLabel value="Comentário" />
+									<h:outputLink value="#" id="comment" rendered="#{userExecution.comment.length() > 0}">
+									        Visualizar
 									        <rich:componentControl for="commentModal" attachTo="comment" operation="show" event="onclick"/>
 									 </h:outputLink>
-									 <rich:modalPanel id="commentModal" width="500">
-								        <f:facet name="header">
-								            <h:panelGroup>
-								                <h:outputText value="Comentário"></h:outputText>
-								            </h:panelGroup>
-								        </f:facet>
-								        <f:facet name="controls">
-								            <h:panelGroup>
-								                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelink"/>
-								                <rich:componentControl for="commentModal" attachTo="hidelink" operation="hide" event="onclick"/>
-								            </h:panelGroup>
-								        </f:facet>
-								        <h:outputText value="#{userExecution.comment}" />
-								    </rich:modalPanel>
 								</h:panelGrid>
 							</rich:panel>
+							
+							<rich:modalPanel id="commentModal" width="500">
+						        <f:facet name="header">
+						            <h:panelGroup>
+						                <h:outputText value="Comentário"></h:outputText>
+						            </h:panelGroup>
+						        </f:facet>
+						        <f:facet name="controls">
+						            <h:panelGroup>
+						                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelink"/>
+						                <rich:componentControl for="commentModal" attachTo="hidelink" operation="hide" event="onclick"/>
+						            </h:panelGroup>
+						        </f:facet>
+						        <h:outputText value="#{userExecution.comment}" />
+						    </rich:modalPanel>
+						    
+							<rich:modalPanel id="artefactsModal" width="710" >
+						        <f:facet name="header">
+						            <h:panelGroup>
+						                <h:outputText value="Artefatos de Saída"></h:outputText>
+						            </h:panelGroup>
+						        </f:facet>
+						        <f:facet name="controls">
+						            <h:panelGroup>
+						                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkArtefacts"/>
+						                <rich:componentControl for="artefactsModal" attachTo="hidelinkArtefacts" operation="hide" event="onclick"/>
+						            </h:panelGroup>
+						        </f:facet>
+						          <h:panelGrid columns="2">
+						           <h:outputLabel value="Artefatos da Atividade: #{taskNode.name}" rendered="#{taskNode.outArtefacts.size() gt 0}" />
+							       <rich:dataTable style="width: 650px;" rendered="#{taskNode.outArtefacts.size() gt 0}" value="#{taskNode.outArtefacts}" var="artefact" id="taskNodeArtefacts">
+											<h:column>
+												<f:facet name="header">Nome</f:facet>
+												<h:outputText value="#{artefact.name}" />
+											</h:column>
+											<h:column>
+												<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(userExecution))}"
+												 rendered="#{artefact.get(userExecution) != null}"
+								 				 status="block"
+								 				 target="_blank">
+					 				 			</h:commandLink>
+					 				 		</h:column>
+							       </rich:dataTable>
+						          </h:panelGrid>
+							       <ui:repeat var="task" value="#{taskNode.tasks}">
+										     <h:panelGrid columns="2">
+								       <h:outputLabel value="Artefatos da Tarefa: #{task.name}" rendered="#{task.outArtefacts.size() gt 0}" />
+								       <rich:dataTable style="width: 500px;" rendered="#{task.outArtefacts.size() gt 0}" value="#{task.outArtefacts}" var="artefact" id="taskArtefacts">
+												<h:column>
+													<f:facet name="header">Nome</f:facet>
+													<h:outputText value="#{artefact.name}" />
+												</h:column>
+												<h:column>
+													<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(userExecution))}"
+													 rendered="#{artefact.get(userExecution) != null}"
+									 				 status="block"
+									 				 target="_blank">
+						 				 			</h:commandLink>
+						 				 		</h:column>
+								       </rich:dataTable>
+								     </h:panelGrid>
+							       </ui:repeat>
+						    </rich:modalPanel>
+								    
+							<rich:modalPanel id="breakModal" width="500">
+						        <f:facet name="header">
+						            <h:panelGroup>
+						                <h:outputText value="Comentário"></h:outputText>
+						            </h:panelGroup>
+						        </f:facet>
+						        <f:facet name="controls">
+						            <h:panelGroup>
+						                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkBreakes"/>
+						                <rich:componentControl for="breakModal" attachTo="hidelinkBreakes" operation="hide" event="onclick"/>
+						            </h:panelGroup>
+						        </f:facet>
+						        <rich:dataTable rendered="#{userExecution.breakes.size() gt 0}" value="#{userExecution.breakes}" var="break" id="userExecutionBreakes">
+											<h:column>
+												<f:facet name="header">Tempo</f:facet>
+												<h:outputText value="#{break.wastedTime} segundos" />
+											</h:column>
+											<h:column>
+												<f:facet name="header">Motivo</f:facet>
+												<h:outputText value="#{break.reason}" />
+					 				 		</h:column>
+							       </rich:dataTable>
+						    </rich:modalPanel>
 						</ui:repeat>
 					</rich:simpleTogglePanel>
 				</ui:repeat>
 			</rich:simpleTogglePanel>
 		</ui:repeat>
+	</ui:define>
+	
+	<ui:define name="modal">
+		<rich:modalPanel id="panelObservation" width="700" height="500"  autosized="true" >
+	        <f:facet name="header">
+	            <h:panelGroup>
+	                <h:outputText value="Observações"></h:outputText>
+	            </h:panelGroup>
+	        </f:facet>
+	        <f:facet name="controls">
+	            <h:panelGroup>
+	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelink"/>
+	                <rich:componentControl for="panelObservation" attachTo="hidelink" operation="hide" event="onclick"/>
+	            </h:panelGroup>
+	        </f:facet>
+	        <h:panelGroup>
+		        <h:form name="observationForm" id="observationForm">
+		        	<h:panelGrid columns="2">
+			         	<h:inputTextarea value="#{report.observation.comment}" />
+			         	<a4j:commandButton action="#{report.saveObservation()}" value="Salvar" reRender="observationForm"></a4j:commandButton>
+		        	</h:panelGrid>
+		    
+		        	<rich:dataTable value="#{report.workflow.observations}" var="observation" rows="5">
+		        		<h:column>
+		        			<h:outputText value="#{observation.createdAt.time}" >
+		        				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+		        			</h:outputText>
+		        			<br /><br />
+		        			<h:outputText value="#{observation.comment}" />
+		        		</h:column>
+		        		<h:column>
+		        			<a4j:commandLink value="Remover" action="#{report.removeObservation(observation)}" reRender="observationForm" />
+		        		</h:column>
+		        		<f:facet name="footer">
+			                <rich:datascroller id="ds" renderIfSinglePage="true"></rich:datascroller>
+			            </f:facet>
+		        	</rich:dataTable>
+			    </h:form>
+	        </h:panelGroup>
+	     </rich:modalPanel>
 	</ui:define>
 </ui:composition>

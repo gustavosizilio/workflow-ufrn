@@ -13,6 +13,7 @@
 			<h:outputText value="#{executer.currentProcess.workflow.description}" />
 		</rich:simpleTogglePanel>
 		<br />
+								 
 		<rich:panel header="#{executer.currentTaskNode.name}" id="panelTask" rendered="#{executer.currentTaskNode != null}">
 			<h:outputText value="#{executer.currentTaskNode.description}" />
 			<rich:dataList value="#{executer.currentTaskNode.inArtefacts}" var="artefact" rendered="#{executer.currentTaskNode.inArtefacts.size() gt 0}">
@@ -90,9 +91,9 @@
 										<f:facet name="header"></f:facet>
 										
 										<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) == null}">
-											<a4j:commandLink value="Enviar" action="#{executer.setCurrentArtefact(artefact)}" id="enviarModal"
+											<a4j:commandLink value="Enviar" action="#{executer.setCurrentArtefact(artefact)}" id="sendModal"
 											 				 status="block" reRender="uploadArtefact">
-												<rich:componentControl for="panelArtefact" attachTo="enviarModal" operation="show" event="onclick"/>
+												<rich:componentControl for="panelArtefact" attachTo="sendModal" operation="show" event="onclick"/>
 											</a4j:commandLink>
 										</h:panelGroup>
 										<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) != null}">
@@ -126,29 +127,45 @@
 		</rich:panel>
 		
 		<h:panelGroup>
+		
 			<ui:repeat var="transition" value="#{executer.transitions}">
 				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? transition.name : 'Pular tarefa já executada')}"
 								 onclick="#{((executer.currentUserExecution.finishedAt == null and executer.currentTaskNode != null) ? 'javascript:return confirm(\'Você tem certeza?\')' : '')}"
 								 styleClass="executeButton"/>
 			</ui:repeat>
+
+			<h:commandButton action="#{executer.startBreak}" value="Pausar" 
+								 rendered="#{executer.currentUserExecution.finishedAt == null and executer.currentTaskNode != null}"
+								 onclick="javascript:return confirm('Você tem certeza?')"
+								 styleClass="executeButton">
+			</h:commandButton>
+
 			<h:commandButton action="#{executer.next(null)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? 'Finalizar' : 'Pular tarefa já executada')}"
 							 styleClass="executeButton"
 							 rendered="#{executer.currentTaskNode != null and executer.transitions.size eq 0}"	 
 							 />
 		</h:panelGroup>
 	</ui:define>
-	<ui:define name="modal">
-		<rich:modalPanel id="modalUpload" width="400">
-			<f:facet name="header">
-				<h:outputText value="Upload" />
-			</f:facet>
-			<h:panelGroup id="uploadContainer">
-				
-			</h:panelGroup>
-		</rich:modalPanel>
-	</ui:define>
 	
 	<ui:define name="modal">
+		<rich:modalPanel id="panelBreak" showWhenRendered="true" rendered="#{executer.currentUserExecution.break}" autosized="true" >
+	        <f:facet name="header">
+	            <h:panelGroup>
+	                <h:outputText value="Break"></h:outputText>
+	            </h:panelGroup>
+	        </f:facet>
+	        <h:panelGroup>
+		        <h:form name="breakForm">
+					<h:outputLabel value="Motivo da pausa:" for="breakReason"/>
+					<h:inputTextarea id="breakReason" value="#{executer.currentUserExecution.openedBreak.reason}" >
+						<a4j:support event="onkeyup" reRender="stopBreakButton" ajaxSingle="true" ignoreDupResponses="true"/>
+					</h:inputTextarea>
+					<h:commandButton id="stopBreakButton" reRender="panelBreak" action="#{executer.stopBreak}" value="Continuar"
+						styleClass="executeButton" disabled="#{executer.currentUserExecution.openedBreak.reason.isEmpty()}"/>
+			    </h:form>
+	        </h:panelGroup>
+	     </rich:modalPanel>
+	
 		 <rich:modalPanel id="panelArtefact" autosized="true">
 	        <f:facet name="header">
 	            <h:panelGroup>

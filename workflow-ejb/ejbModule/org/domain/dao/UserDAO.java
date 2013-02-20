@@ -32,7 +32,6 @@ public class UserDAO extends SeamDAO {
 			return users.get(0);
 		}else{
 			return null;
-		}
-		
+		}	
 	}
 }

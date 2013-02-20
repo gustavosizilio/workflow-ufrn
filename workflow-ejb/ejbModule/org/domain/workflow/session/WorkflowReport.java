@@ -1,8 +1,12 @@
 package org.domain.workflow.session;
 
+import java.util.GregorianCalendar;
+
 import org.domain.dao.SeamDAO;
+import org.domain.exception.ValidationException;
 import org.domain.model.User;
-import org.domain.model.Workflow;
+import org.domain.model.processDefinition.Observation;
+import org.domain.model.processDefinition.Workflow;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.FlushModeType;
@@ -20,10 +24,17 @@ public class WorkflowReport {
 	@In("user") protected User user;
 	private Workflow workflow;
 	
+	private Observation observation;
+	
 	@Begin(join=true, flushMode=FlushModeType.MANUAL)	
 	public String init(Workflow workflow){
 		this.setWorkflow(workflow);
+		cleanObservation();		
 		return WORKFLOW_REPORT_XHTML;
+	}
+
+	private void cleanObservation() {
+		this.setObservation(new Observation(this.workflow));
 	}
 	
 	public void wire(){
@@ -36,5 +47,35 @@ public class WorkflowReport {
 
 	public void setWorkflow(Workflow workflow) {
 		this.workflow = workflow;
+	}
+
+	public Observation getObservation() {
+		return observation;
+	}
+
+	public void setObservation(Observation observation) {
+		this.observation = observation;
+	}
+	
+	public void saveObservation(){
+		try {
+			this.observation.setCreatedAt(new GregorianCalendar());
+			seamDao.persist(this.observation);
+			this.workflow.getObservations().add(this.observation);
+			seamDao.merge(this.workflow);
+			seamDao.flush();
+			cleanObservation();
+		} catch (ValidationException e) {
+		}
+	}
+	public void removeObservation(Observation o){
+		try {
+			this.workflow.getObservations().remove(o);
+			seamDao.remove(o);
+			seamDao.merge(this.workflow);
+			seamDao.flush();
+			cleanObservation();
+		} catch (ValidationException e) {
+		}
 	}
 }

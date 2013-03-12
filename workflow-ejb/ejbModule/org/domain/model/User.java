@@ -70,5 +70,8 @@ public class User {
 		}
 		return false;
 	}
+	public int hashCode(){
+		return getId().hashCode();
+	}
 	 
 }

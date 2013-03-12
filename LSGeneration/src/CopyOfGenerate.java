@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -28,6 +27,7 @@ public class CopyOfGenerate {
 		generate(linhas, colunas, celulas);
 	}
 	
+	@SuppressWarnings("unused")
 	private static void generate(List<String> linhas, List<String> colunas, List<String> celulas){
 		Collections.shuffle(celulas);//a validação do tamanho do quadrado será validada na DSL
 
@@ -113,10 +113,10 @@ public class CopyOfGenerate {
 	}
 	
 	class LatinSquare{
-		private List<String> cells;
+		/*private List<String> cells;
 		private List<String> lines;
 		private List<String> columns;
-		
+		*/
 		
 	}
 

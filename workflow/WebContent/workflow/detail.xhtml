@@ -25,27 +25,6 @@
 					<h:outputLabel value="name: #{processDefinition.name}" />
 				</rich:simpleTogglePanel>
 				
-				<rich:simpleTogglePanel switchType="client" label="swimlanes" opened="false">				
-					<rich:dataTable var="swimlane" value="#{processDefinition.swimlanes}">
-						<rich:column>
-							<f:facet name="header">Name</f:facet>
-							<b><h:outputText value="#{swimlane.name}"/></b>
-						</rich:column>
-						<rich:column>
-							 <f:facet name="header">actor-id</f:facet>
-							 <h:outputText value="#{swimlane.assignment.actorId}" /><br />
-						</rich:column>
-						<rich:column>
-							 <f:facet name="header">expression</f:facet>
-							 <h:outputText value="#{swimlane.assignment.expression}" /><br />
-						</rich:column>
-						<rich:column>
-							 <f:facet name="header">pooled-actors</f:facet>
-							 <h:outputText value="#{swimlane.assignment.pooledActors}" />
-						</rich:column>
-					</rich:dataTable>
-				</rich:simpleTogglePanel>
-				
 				<rich:simpleTogglePanel switchType="client" label="start-state" opened="false">			
 					<h:panelGrid columns="2" >
 						<h:outputText value="Name: " />
@@ -149,49 +128,28 @@
 		        </rich:fileUpload>    
 	       </h:panelGrid>
 	       
-	       <rich:simpleTogglePanel switchType="client" label="Configuração dos Participantes" opened="true"
-	       						   rendered="#{crudWorkflow.entity.processDefinitions.size() gt 0}">	
-				
-				<h:panelGrid columns="2" id="userConfigutarionForm">
-					<h:outputLabel value="Usuário:" />
-					<h:selectOneMenu value="#{crudWorkflow.userProperty}">
-						<s:selectItems value="#{crudWorkflow.users}" var="user" 
-					                  label="#{user.name} - #{user.email}" 
-					                  noSelectionLabel=""/>
-						<s:convertEntity />
-					</h:selectOneMenu>
-					
-					<h:outputLabel value="Grupo:" />
-					<h:selectOneMenu value="#{crudWorkflow.swimlaneProperty}">
-						<s:selectItems value="#{crudWorkflow.entity.allSwimlanes}" var="swimlane" 
-					                  label="#{swimlane.name} - #{swimlane.processDefinition.name}" 
-					                  noSelectionLabel=""/>
-						<s:convertEntity />
-					</h:selectOneMenu>
-					
-					<rich:spacer />
-					<a4j:commandButton value="Adicionar" actionListener="#{crudWorkflow.addUserParticipant}"
-						reRender="userConfigutarionForm,userConfigurations" />
-				</h:panelGrid>
-				<br />
-		       <rich:dataTable value="#{crudWorkflow.entity.allSwimlanes}" id="userConfigurations" var="swimlane" >
-		       	<rich:column>
-		       		<f:facet name="header">Grupo</f:facet>
-		       		<h:outputText value="#{swimlane.name}" />
-		       	</rich:column>
-		       	<rich:column>
-		       		<f:facet name="header">Tratamento</f:facet>
-		       		<h:outputText value="#{swimlane.processDefinition.name}" />
-		       	</rich:column>
-		       	<rich:column>
-		       		<f:facet name="header">Participantes</f:facet>
-		       		<rich:dataList value="#{swimlane.users}" var="user" >
-						<h:outputText value="#{user.name} (#{user.email}) " />		       		
-			       		<a4j:commandLink action="#{crudWorkflow.removeUserParticipant(swimlane, user)}" reRender="userConfigurations"
-			       			value="[Remover]" />
-		       		</rich:dataList>
-		       	</rich:column>
-		       </rich:dataTable>
+	       <rich:simpleTogglePanel switchType="client" label="Design do Experimento" opened="true"
+	       						   rendered="#{crudWorkflow.entity.processDefinitions.size() gt 0}">
+	       		<h:panelGroup id="designConfigurationLinks">
+		       		<h:panelGroup rendered="#{crudWorkflow.entity.emptyDesign }">
+			       		<a4j:commandLink action="#" id="panelDesignConfigurationLink" reRender="designDefinition,designConfigurationLinks" value="[Upload de arquivo de configuração]">
+			       			<rich:componentControl for="panelDesignConfiguration" attachTo="panelDesignConfigurationLink" operation="show" event="onclick"/>
+			       		</a4j:commandLink>
+			       		<h:outputText value="&nbsp; | &nbsp;" />
+			       		<a4j:commandLink action="#{crudWorkflow.updateDesignTypeToManual}" reRender="designDefinition,designConfigurationLinks">[Manual]</a4j:commandLink>	
+		       		</h:panelGroup>
+		       		<h:panelGroup rendered="#{not crudWorkflow.entity.emptyDesign }">
+			       		<a4j:commandLink action="#{crudWorkflow.clearDesign}" onclick="confirm('Você tem certeza?')" reRender="designDefinition,designConfigurationLinks">[Clear Design]</a4j:commandLink>	
+		       		</h:panelGroup>
+	       		</h:panelGroup>
+	       		
+       			<br />
+       			<rich:separator></rich:separator>
+       			<br />
+				<h:panelGroup id="designDefinition">
+					<ui:include src="designConfiguration/MANUAL.xhtml" />
+					<ui:include src="designConfiguration/RCBD.xhtml" />
+				</h:panelGroup>		       
 	       </rich:simpleTogglePanel>
 	       
 	       <rich:simpleTogglePanel switchType="client" label="Configuração dos Artefatos" opened="true"
@@ -245,6 +203,38 @@
 	</ui:define>
 	
 	<ui:define name="modal">
+		<rich:modalPanel id="panelDesignConfiguration" autosized="true">
+	        <f:facet name="header">
+	            <h:panelGroup>
+	                <h:outputText value="Upload Design Configuration"></h:outputText>
+	            </h:panelGroup>
+	        </f:facet>
+	        <f:facet name="controls">
+	            <h:panelGroup>
+	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkpanelDesignConfiguration"/>
+	                <rich:componentControl for="panelDesignConfiguration" attachTo="hidelinkpanelDesignConfiguration" operation="hide" event="onclick"/>
+	            </h:panelGroup>
+	        </f:facet>
+	        <h:panelGroup id="uploadDesignConfiguration">
+	        <h:form enctype="multipart/form-data">
+					<rich:fileUpload
+						uploadControlLabel="Enviar"
+						immediateUpload="false"
+						listHeight="70px;"
+			            noDuplicate="true" listWidth="350px;" 
+			            locale="pt-BR" 
+			            autoclear="false"
+			            maxFilesQuantity="1" 
+			            cancelEntryControlLabel="Limpar"
+			            transferErrorLabel="Erro ao importar arquivo"           
+			            fileUploadListener="#{crudWorkflow.uploadDesignConfiguration}"
+			            onfileuploadcomplete="refreshModalDesignConfiguration()">
+			        </rich:fileUpload>
+		    </h:form>
+	        </h:panelGroup>
+	    </rich:modalPanel>
+	    <a4j:jsFunction name="refreshModalDesignConfiguration" reRender="panelDesignConfiguration,designConfigurationLinks,designDefinition" />
+	
 		 <rich:modalPanel id="panelArtefact" autosized="true">
 	        <f:facet name="header">
 	            <h:panelGroup>

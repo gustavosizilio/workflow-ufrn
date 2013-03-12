@@ -1,11 +1,14 @@
 package org.domain.model.processDefinition;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,6 +31,9 @@ public class Workflow extends GenericEntity {
 	private String title;
 	
 	private String description;
+	
+	@Enumerated(EnumType.STRING)
+	private DesignType designType;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="workflow")
 	private List<ProcessDefinition> processDefinitions;
@@ -66,12 +72,12 @@ public class Workflow extends GenericEntity {
 		}
 		return users;
 	}
-	public List<Swimlane> getAllSwimlanes(){
-		List<Swimlane> swimlanes= new ArrayList<Swimlane>();
+	public List<UserAssignment> getAllUserAssignments(){
+		List<UserAssignment> userAssignments = new ArrayList<UserAssignment>();
 		for (ProcessDefinition processDefinition : processDefinitions) {
-			swimlanes.addAll(processDefinition.getSwimlanes());
+			userAssignments.addAll(processDefinition.getUserAssignments());
 		}
-		return swimlanes;
+		return userAssignments;
 	}
 	
 	/*public ArrayList<Artefact> getAllArtefacts() {
@@ -87,6 +93,54 @@ public class Workflow extends GenericEntity {
 			artefacts.addAll(process.getInArtefacts());
 		}
 		return artefacts;
+	}
+	
+	public boolean isManualDesign(){
+		return this.getDesignType() != null && this.getDesignType().equals(DesignType.MANUAL);
+	}
+	public boolean isRCBDDesign(){
+		return this.getDesignType() != null && this.getDesignType().equals(DesignType.RCBD);
+	}
+	public Set<String> getGroups(){
+		Set<String> blocks = new HashSet<String>();
+		if(isRCBDDesign()){
+			for (UserAssignment ua : this.getAllUserAssignments()) {
+				blocks.add(ua.getGroupValue());
+			}
+		}
+		return blocks;
+	}
+	public List<UserAssignment> getUserAssignments(String group){
+		List<UserAssignment> userAssignments = new ArrayList<UserAssignment>();
+		for (UserAssignment userAssignment : getAllUserAssignments()) {
+			if(userAssignment.getGroupValue().equals(group)){
+				userAssignments.add(userAssignment);
+			}
+		}
+		return userAssignments;
+	}
+	
+	public boolean addUserToGroup(String group, User u){
+		for (UserAssignment ua : getUserAssignments(group)) {
+			if(ua.getUser()==null){
+				ua.setUser(u);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isDesignComplete(){
+		for (UserAssignment uAssignment : getAllUserAssignments()) {
+			if(uAssignment.getUser()==null){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean isEmptyDesign(){
+		return this.getDesignType() == null;
 	}
 	
 	@Override
@@ -129,6 +183,12 @@ public class Workflow extends GenericEntity {
 	}
 	public void setObservations(List<Observation> observations) {
 		this.observations = observations;
+	}
+	public DesignType getDesignType() {
+		return designType;
+	}
+	public void setDesignType(DesignType designType) {
+		this.designType = designType;
 	}
 
 }

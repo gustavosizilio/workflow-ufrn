@@ -2,14 +2,15 @@ package org.domain.model.processDefinition;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -26,9 +27,10 @@ public class ProcessDefinition extends GenericEntity{
 	private Date startedAt;
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private Workflow workflow;
-
+	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")
-	private List<Swimlane> swimlanes;
+	private List<UserAssignment> userAssignments;
+	
 	
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="processDefinition")
 	private StartState startState;
@@ -45,11 +47,7 @@ public class ProcessDefinition extends GenericEntity{
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")
 	private List<EndState> endStates;
 	
-	@ManyToMany
-	private List<User> users;
-	
 	public ProcessDefinition() {
-		swimlanes = new ArrayList<Swimlane>();
 		taskNodes = new ArrayList<TaskNode>();
 		joins = new ArrayList<Join>();
 		forks = new ArrayList<Fork>();
@@ -58,13 +56,6 @@ public class ProcessDefinition extends GenericEntity{
 	public ProcessDefinition(String name){
 		this();
 		this.name = name;
-	}
-	
-	public void updatelUsers(){
-		this.users.clear();
-		for (Swimlane swimlane : swimlanes) {
-			users.addAll(swimlane.getUsers());
-		}
 	}
 	
 	public Long getId() {
@@ -91,12 +82,6 @@ public class ProcessDefinition extends GenericEntity{
 	@Override
 	public void validateDeletable() {
 		
-	}
-	public List<Swimlane> getSwimlanes() {
-		return swimlanes;
-	}
-	public void setSwimlanes(List<Swimlane> swimlanes) {
-		this.swimlanes = swimlanes;
 	}
 	public StartState getStartState() {
 		return startState;
@@ -128,17 +113,14 @@ public class ProcessDefinition extends GenericEntity{
 	public void setEndStates(List<EndState> endStates) {
 		this.endStates = endStates;
 	}
-	public List<User> getUsers() {
-		return users;
-	}
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
 	public Date getStartedAt() {
 		return startedAt;
 	}
 	public void setStartedAt(Date startedAt) {
 		this.startedAt = startedAt;
+	}
+	public boolean isStarted(){
+		return this.startedAt != null;
 	}
 	public Workflow getWorkflow() {
 		return workflow;
@@ -217,6 +199,20 @@ public class ProcessDefinition extends GenericEntity{
 			}
 		}
 		return false;
+	}
+	
+	public Set<User> getUsers() {
+		Set<User> users = new HashSet<User>();
+		for (UserAssignment userAssignment : getUserAssignments()) {
+			users.add(userAssignment.getUser());
+		}
+		return users;
+	}
+	public List<UserAssignment> getUserAssignments() {
+		return userAssignments;
+	}
+	public void setUserAssignments(List<UserAssignment> userAssignments) {
+		this.userAssignments = userAssignments;
 	}
 	
 }

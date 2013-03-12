@@ -16,19 +16,22 @@
 		 	<f:facet name="header">
             	<h:outputText value="Experimento"/>
             </f:facet>
-			<h:outputText value="#{entity.workflow.title}" />
+			<h:outputText value="#{entity.processDefinition.workflow.title}" />
 		</rich:column>   
 		<rich:column>
 		 	<f:facet name="header">
             	<h:outputText value="Tratamento"/>
             </f:facet>
-			<h:outputText value="#{entity.name}" />
+			<h:outputText value="#{entity.processDefinition.name}" />
 		</rich:column>    	
     </ui:define>
     
     <ui:define name="actions"> 
-    	<h:commandLink action="#{executer.init(entity)}" title="play" >
+    	<h:commandLink action="#{executer.init(entity.processDefinition)}" title="play" rendered="#{entity.processDefinition.started}">
     		<h:graphicImage value="/img/play.png" />
+    	</h:commandLink>
+    	<h:commandLink action="#" title="play" rendered="#{not entity.processDefinition.started}">
+    		<h:graphicImage value="/img/noplay.png" />
     	</h:commandLink>
     </ui:define>
 </ui:composition>

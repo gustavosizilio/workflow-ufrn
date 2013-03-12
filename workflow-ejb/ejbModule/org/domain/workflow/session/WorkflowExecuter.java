@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.domain.dao.ProcessDefinitionDAO;
 import org.domain.dao.SeamDAO;
+import org.domain.dao.UserAssignmentDAO;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Artefact;
 import org.domain.model.processDefinition.ArtefactFile;
@@ -18,6 +18,7 @@ import org.domain.model.processDefinition.StartState;
 import org.domain.model.processDefinition.Task;
 import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Transition;
+import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.UserExecution;
 import org.domain.utils.ReadPropertiesFile;
 import org.jboss.seam.ScopeType;
@@ -35,7 +36,7 @@ import org.richfaces.event.UploadEvent;
 @Restrict("#{identity.loggedIn}")
 @Scope(ScopeType.CONVERSATION)
 public class WorkflowExecuter {
-	@In("processDao") protected ProcessDefinitionDAO processDao;
+	@In("userAssignmentDao") protected UserAssignmentDAO userAssignmentDao;
 	@In("seamDao") protected SeamDAO seamDao;
 	@In("user") protected User user;
 	@In
@@ -43,7 +44,7 @@ public class WorkflowExecuter {
 	
 	private static final String WORKFLOW_LIST_EXECUTE_XHTML = "/workflow/listExecute.xhtml";
 	private static final String WORKFLOW_EXECUTE_XHTML = "/workflow/execute.xhtml";
-	private List<ProcessDefinition> entities;
+	private List<UserAssignment> entities;
 	
 	private ProcessDefinition currentProcess;
 	private TaskNode currentTaskNode;
@@ -55,14 +56,19 @@ public class WorkflowExecuter {
 	private Artefact currentArtefact;
 	
 	public String init(ProcessDefinition process){
-		this.setCurrentProcess(process);
-		this.setStartState(process.getStartState());
-		this.setCurrentTaskNode(null);
-		setCurrentJoin(null);
-		setEndState(null);
-		setCurrentUserExecution(null);
-		
-		return WORKFLOW_EXECUTE_XHTML;
+		if(process.isStarted()){
+			this.setCurrentProcess(process);
+			this.setStartState(process.getStartState());
+			this.setCurrentTaskNode(null);
+			setCurrentJoin(null);
+			setEndState(null);
+			setCurrentUserExecution(null);
+			
+			return WORKFLOW_EXECUTE_XHTML;
+		}else{
+			facesMessages.add("Workflow ainda não iniciado.");
+			return WORKFLOW_LIST_EXECUTE_XHTML;
+		}
 	}
 	
 	@Begin(join=true, flushMode=FlushModeType.MANUAL)	
@@ -208,14 +214,14 @@ public class WorkflowExecuter {
 
 	public void findEntities()
 	{
-		setEntities(this.processDao.findAllOpened(user));
+		setEntities(this.userAssignmentDao.findAllOpened(user));
 	}
 
-	public List<ProcessDefinition> getEntities() {
+	public List<UserAssignment> getEntities() {
 		return entities;
 	}
 
-	public void setEntities(List<ProcessDefinition> entities) {
+	public void setEntities(List<UserAssignment> entities) {
 		this.entities = entities;
 	}
 

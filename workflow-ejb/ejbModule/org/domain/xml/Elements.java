@@ -1,5 +1,6 @@
 package org.domain.xml;
 
+
 public class Elements {
 	public static final String PROCESS_DEFINITION = "process-definition";
 	public static final String START_STATE = "start-state";
@@ -35,5 +36,9 @@ public class Elements {
 	public static final String FORK = "fork";
 	public static final String END_STATE = "end-state";
 	public static final String TITLE = "title";
+	public static final String EXPERIMENTAL_PAN = "experimental_plan";
+	public static final String PROCESS = "process";
+	public static final String SUBJECT = "subject";
+	public static final String BLOCK = "block";
 	
 }

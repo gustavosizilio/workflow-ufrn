@@ -120,6 +120,7 @@
 		            noDuplicate="true" listWidth="350px;" 
 		            locale="pt-BR" 
 		            autoclear="false"
+				            
 		            maxFilesQuantity="1" 
 		            cancelEntryControlLabel="Limpar"
 		            transferErrorLabel="Erro ao importar arquivo, verifique se é um arquivo JPDL válido"           
@@ -149,6 +150,8 @@
 				<h:panelGroup id="designDefinition">
 					<ui:include src="designConfiguration/MANUAL.xhtml" />
 					<ui:include src="designConfiguration/RCBD.xhtml" />
+					<ui:include src="designConfiguration/CRD.xhtml" />
+					<ui:include src="designConfiguration/LS.xhtml" />
 				</h:panelGroup>		       
 	       </rich:simpleTogglePanel>
 	       
@@ -175,17 +178,17 @@
 						
 						<h:panelGroup rendered="#{artefact.artefactFiles.size() eq 0}">
 							<a4j:commandLink value="Enviar" action="#{crudWorkflow.setCurrentArtefact(artefact)}" id="enviarModal"
-							 				 status="block" reRender="uploadArtefact">
+							 				 reRender="uploadArtefact">
 								<rich:componentControl for="panelArtefact" attachTo="enviarModal" operation="show" event="onclick"/>
 							</a4j:commandLink>
 						</h:panelGroup>
 						<h:panelGroup rendered="#{artefact.artefactFiles.size() gt 0}">
 							<a4j:commandLink value="Remover" action="#{crudWorkflow.removeArtefact(artefact)}"
-							 				 status="block" reRender="artefacts">
+							 				 reRender="artefacts">
 							</a4j:commandLink>
 							<h:outputText value=" | " />
 							<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.artefactFiles.get(0))}"
-							 				 status="block" reRender="artefacts"
+							 				 reRender="artefacts"
 							 				 target="_blank">
 							</h:commandLink>
 							
@@ -224,6 +227,7 @@
 			            noDuplicate="true" listWidth="350px;" 
 			            locale="pt-BR" 
 			            autoclear="false"
+				            
 			            maxFilesQuantity="1" 
 			            cancelEntryControlLabel="Limpar"
 			            transferErrorLabel="Erro ao importar arquivo"           
@@ -256,6 +260,7 @@
 			            noDuplicate="true" listWidth="350px;" 
 			            locale="pt-BR" 
 			            autoclear="false"
+				            
 			            maxFilesQuantity="1" 
 			            cancelEntryControlLabel="Limpar"
 			            transferErrorLabel="Erro ao importar arquivo"           

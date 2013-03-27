@@ -16,6 +16,10 @@
             	<h:outputText value="Experimento"/>
             </f:facet>
 			<h:outputText value="#{entity.title}" />
+			<h:outputText value=" - Started at " rendered="#{entity.started}" />
+			<h:outputText value="#{entity.startedAt}" rendered="#{entity.started}">
+				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+			</h:outputText>
 		</rich:column>    	
 		<rich:column>
 		 	<f:facet name="header">
@@ -23,23 +27,14 @@
             </f:facet>
 			<rich:dataList var="processDefinition" id="processDefinitions" value="#{entity.processDefinitions}" >
 				<h:outputText value="#{processDefinition.name} " />
-				<a4j:commandLink action="#{crudWorkflow.start(processDefinition)}"
-					reRender="processDefinitions" value="[Iniciar]"
-					rendered="#{processDefinition.startedAt eq null}" title="play" />
-		    		
-		    	<h:panelGroup rendered="#{processDefinition.startedAt != null}">
-			    	<h:outputText value=" - Iniciado em: " title="play" />
-			    	<h:outputText value="#{processDefinition.startedAt}" title="play">
-			    		<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-			    	</h:outputText>
-		    	</h:panelGroup>
 			</rich:dataList>
 		</rich:column>   
     </ui:define>
     
     <ui:define name="actions"> 
-    	<h:commandLink action="#{report.init(entity)}" >
-    		<h:graphicImage value="/img/report.gif" title="relatório"/>
-    	</h:commandLink>
+    	<h:commandButton action="#{crudWorkflow.start(entity)}" title="play" rendered="#{!entity.started}"  value="Iniciar" />
+    	<h:commandButton action="#{crudWorkflow.nextTurn(entity)}" title="play" rendered="#{entity.started and !entity.lastTurn}"  value="Próximo Turno" />
+    	
+    	<h:commandButton value="Acompanhar" action="#{report.init(entity)}" />
     </ui:define>
 </ui:composition>

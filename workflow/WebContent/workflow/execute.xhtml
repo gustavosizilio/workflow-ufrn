@@ -20,7 +20,6 @@
 				<h:outputText value="#{artefact.name} " />
 				<h:commandLink value="Download" rendered="#{artefact.artefactFiles.size gt 0}"
 								action="#{sendFile.sendFile(artefact.artefactFiles.get(0))}"
-				 				status="block"
 				 				target="_blank">
 				</h:commandLink>
 			</rich:dataList>
@@ -40,19 +39,18 @@
 							
 							<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) == null}">
 								<a4j:commandLink value="Enviar" action="#{executer.setCurrentArtefact(artefact)}" id="enviarModal"
-								 				 status="block" reRender="uploadArtefact">
+								 				 reRender="uploadArtefact">
 									<rich:componentControl for="panelArtefact" attachTo="enviarModal" operation="show" event="onclick"/>
 								</a4j:commandLink>
 							</h:panelGroup>
 							<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) != null}">
 								<h:panelGroup rendered="#{executer.currentUserExecution.finishedAt == null}" >
 									<a4j:commandLink value="Remover" action="#{executer.removeArtefact(artefact)}"
-									 				 status="block" reRender="taskNodeArtefacts">
+									 				 reRender="taskNodeArtefacts">
 									</a4j:commandLink>
 									<h:outputText value=" | " />
 								</h:panelGroup>
 								<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(executer.currentUserExecution))}"
-								 				 status="block"
 								 				 target="_blank">
 								</h:commandLink>							
 							</h:panelGroup>
@@ -74,7 +72,6 @@
 								<h:outputText value="#{artefact.name} " /> 
 								<h:commandLink value="Download" rendered="#{artefact.artefactFiles.size gt 0}"
 												action="#{sendFile.sendFile(artefact.artefactFiles.get(0))}"
-								 				status="block"
 								 				target="_blank">
 								</h:commandLink>
 							</rich:dataList>
@@ -92,19 +89,18 @@
 										
 										<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) == null}">
 											<a4j:commandLink value="Enviar" action="#{executer.setCurrentArtefact(artefact)}" id="sendModal"
-											 				 status="block" reRender="uploadArtefact">
+											 				 reRender="uploadArtefact">
 												<rich:componentControl for="panelArtefact" attachTo="sendModal" operation="show" event="onclick"/>
 											</a4j:commandLink>
 										</h:panelGroup>
 										<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) != null}">
 											<h:panelGroup rendered="#{executer.currentUserExecution.finishedAt == null}" >
 												<a4j:commandLink value="Remover" action="#{executer.removeArtefact(artefact)}"
-												 				 status="block" reRender="tasks">
+												 				 reRender="tasks">
 												</a4j:commandLink>
 												<h:outputText value=" | " />
 											</h:panelGroup>
 											<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(executer.currentUserExecution))}"
-											 				 status="block"
 											 				 target="_blank">
 											</h:commandLink>							
 										</h:panelGroup>
@@ -129,7 +125,7 @@
 		<h:panelGroup>
 		
 			<ui:repeat var="transition" value="#{executer.transitions}">
-				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? transition.name : 'Pular tarefa já executada')}"
+				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? transition.title : 'Pular tarefa já executada')}"
 								 onclick="#{((executer.currentUserExecution.finishedAt == null and executer.currentTaskNode != null) ? 'javascript:return confirm(\'Você tem certeza?\')' : '')}"
 								 styleClass="executeButton"/>
 			</ui:repeat>
@@ -158,7 +154,7 @@
 		        <h:form name="breakForm">
 					<h:outputLabel value="Motivo da pausa:" for="breakReason"/>
 					<h:inputTextarea id="breakReason" value="#{executer.currentUserExecution.openedBreak.reason}" >
-						<a4j:support event="onkeyup" reRender="stopBreakButton" ajaxSingle="true" ignoreDupResponses="true"/>
+						<a4j:support event="onkeyup" status="noblock" reRender="stopBreakButton" ajaxSingle="true" ignoreDupResponses="true"/>
 					</h:inputTextarea>
 					<h:commandButton id="stopBreakButton" reRender="panelBreak" action="#{executer.stopBreak}" value="Continuar"
 						styleClass="executeButton" disabled="#{executer.currentUserExecution.openedBreak.reason.isEmpty()}"/>
@@ -179,21 +175,22 @@
 	            </h:panelGroup>
 	        </f:facet>
 	        <h:panelGroup id="uploadArtefact">
-	        <h:form enctype="multipart/form-data">
-					<rich:fileUpload
-						uploadControlLabel="Enviar"
-						immediateUpload="false"
-						listHeight="70px;"
-			            noDuplicate="true" listWidth="350px;" 
-			            locale="pt-BR" 
-			            autoclear="false"
-			            maxFilesQuantity="1" 
-			            cancelEntryControlLabel="Limpar"
-			            transferErrorLabel="Erro ao importar arquivo"           
-			            fileUploadListener="#{executer.uploadArtefact}"
-			            onfileuploadcomplete="refreshModal()">
-			        </rich:fileUpload>
-		    </h:form>
+		        <h:form enctype="multipart/form-data">
+						<rich:fileUpload
+							uploadControlLabel="Enviar"
+							immediateUpload="false"
+							listHeight="70px;"
+				            noDuplicate="true" listWidth="350px;" 
+				            locale="pt-BR" 
+				            autoclear="false"
+				            
+				            maxFilesQuantity="1" 
+				            cancelEntryControlLabel="Limpar"
+				            transferErrorLabel="Erro ao importar arquivo"           
+				            fileUploadListener="#{executer.uploadArtefact}"
+				            onfileuploadcomplete="refreshModal()">
+				        </rich:fileUpload>
+			    </h:form>
 	        </h:panelGroup>
 	    </rich:modalPanel>
 	    <a4j:jsFunction name="refreshModal" reRender="panelArtefact,tasks,taskNodeArtefacts" />

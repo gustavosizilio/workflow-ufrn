@@ -7,7 +7,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:a4j="http://richfaces.org/a4j">
-<h:panelGroup rendered="#{crudWorkflow.entity.RCBDDesign}">
+<h:panelGroup rendered="#{crudWorkflow.entity.LSDesign}">
 	<h:panelGrid columns="2" rendered="#{ not crudWorkflow.entity.designComplete}" >
 		<h:outputLabel value="Usuário:" />
 		<h:selectOneMenu value="#{crudWorkflow.userProperty}">
@@ -15,7 +15,7 @@
 				label="#{user.name} - #{user.email}" noSelectionLabel="" />
 			<s:convertEntity />
 		</h:selectOneMenu>
-		<h:outputLabel value="Bloco:" />
+		<h:outputLabel value="Latin Square:" />
 		<h:selectOneMenu value="#{crudWorkflow.groupProperty}">
 			<s:selectItems value="#{crudWorkflow.entity.groups}" 
 				var="b"
@@ -30,7 +30,7 @@
 	<br />
 	<rich:dataTable value="#{crudWorkflow.groupValues}" var="key" rendered="#{not crudWorkflow.entity.designComplete}">
 		<rich:column>
-			<f:facet name="header">Block</f:facet>
+			<f:facet name="header">Latin Square</f:facet>
 			<h:outputText value="#{key}" />
 		</rich:column>
 		<rich:column>
@@ -43,21 +43,19 @@
 			</rich:dataList>
 		</rich:column>	
 	</rich:dataTable>
-	<h:commandButton action="#{crudWorkflow.shuffleUsersRCDB}" value="Sortear" rendered="#{not crudWorkflow.entity.designComplete}" />
+	<h:commandButton action="#{crudWorkflow.shuffleUsersLS}" value="Sortear" rendered="#{not crudWorkflow.entity.designComplete}" />
 	
+	<h:panelGroup  rendered="#{crudWorkflow.entity.designComplete}">
+		<ui:repeat var="key" value="#{crudWorkflow.groupValues}">
+			<rich:panel header="#{key}">
+				<rich:dataTable value="#{crudWorkflow.entity.getUserAssignments(key)}" var="ua" >
+					<rich:column>
+						<h:outputText value="#{ua.user.name} -> (#{ua.executionOrder}) #{ua.processDefinition.name}" />
+					</rich:column>	
+				</rich:dataTable>
+			</rich:panel>
+		</ui:repeat>
+	</h:panelGroup>
 	
-	
-	<rich:dataTable value="#{crudWorkflow.groupValues}" var="key"  rendered="#{crudWorkflow.entity.designComplete}">
-		<rich:column>
-			<f:facet name="header">Block</f:facet>
-			<h:outputText value="#{key}" />
-		</rich:column>
-		<rich:column>
-			<f:facet name="header">Usuários</f:facet>
-			<rich:dataList value="#{crudWorkflow.entity.getUserAssignments(key)}" var="ua">
-				<h:outputText value="#{ua.processDefinition.name} -> #{ua.user.name} (#{ua.user.email})" />
-			</rich:dataList>
-		</rich:column>	
-	</rich:dataTable>
 </h:panelGroup>
 </ui:fragment>

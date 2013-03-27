@@ -13,10 +13,12 @@ public class Transition {
 	private Long id;
 	private String name;
 	private String destination; //Replace for TO attribute... conflict with JPA
+	private String description;
 	@ManyToOne
 	private TaskNode taskNode;
 	@ManyToOne
 	private Join join;
+	
 	public Long getId() {
 		return id;
 	}
@@ -24,6 +26,12 @@ public class Transition {
 		this.id = id;
 	}
 	public String getName() {
+		return name;
+	}
+	public String getTitle() {
+		if(this.getDescription() == null || this.getDescription().isEmpty()){
+			return "Próximo";
+		}
 		return name;
 	}
 	public void setName(String name) {
@@ -49,5 +57,11 @@ public class Transition {
 	}
 	public void setTaskNode(TaskNode taskNode) {
 		this.taskNode = taskNode;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

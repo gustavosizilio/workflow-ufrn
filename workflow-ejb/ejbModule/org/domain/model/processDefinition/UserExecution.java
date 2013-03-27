@@ -35,7 +35,7 @@ public class UserExecution {
 	private String comment;
 	@OneToMany(mappedBy="userExecution")
 	private List<ArtefactFile> artefactFiles;
-	@OneToMany(mappedBy="userExecution")
+	@OneToMany(mappedBy="userExecution", cascade=CascadeType.ALL)
 	private List<Break> breakes;
 
 	public UserExecution() {

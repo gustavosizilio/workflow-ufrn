@@ -3,6 +3,7 @@ package org.domain.workflow.session;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import org.domain.dao.SeamDAO;
@@ -55,8 +56,8 @@ public class WorkflowExecuter {
 	private ArtefactFile currentArtefactFile;
 	private Artefact currentArtefact;
 	
-	public String init(ProcessDefinition process){
-		if(process.isStarted()){
+	public String init(ProcessDefinition process, UserAssignment ua){
+		if(process.canExecute(ua)){
 			this.setCurrentProcess(process);
 			this.setStartState(process.getStartState());
 			this.setCurrentTaskNode(null);
@@ -214,7 +215,9 @@ public class WorkflowExecuter {
 
 	public void findEntities()
 	{
-		setEntities(this.userAssignmentDao.findAllOpened(user));
+		List<UserAssignment> userAssignments = this.userAssignmentDao.findAllOpened(user);
+		Collections.sort(userAssignments);
+		setEntities(userAssignments);
 	}
 
 	public List<UserAssignment> getEntities() {

@@ -1,3 +1,4 @@
+package org.domain.xml.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,13 +31,13 @@ public class LatinSquare{
 
 	private void loadTuples() {
 		this.tuples = new ArrayList<Tuple>();
-		for (int i = 0; i < this.lines.size(); i++) {
+		for (int i = 0; i < this.getLines().size(); i++) {
 			this.tuples.add(new Tuple(this.cells, i));
 		}
 	}
 
 	private void shuffleData() {
-		Collections.shuffle(this.lines);
+		Collections.shuffle(this.getLines());
 		Collections.shuffle(this.columns);
 		Collections.shuffle(this.cells);
 	}
@@ -48,11 +49,7 @@ public class LatinSquare{
 		}
 	}
 	
-	/* TO-DO se for necessário
-	public String[][] getMatrix(){
-		
-	}
-	*/
+	
 	
 	public String toString(){
 		StringBuilder s = new StringBuilder();
@@ -61,7 +58,7 @@ public class LatinSquare{
 			s.append(collumn + "|");
 		}
 		s.append("\n");
-		for (String line : this.lines) {
+		for (String line : this.getLines()) {
 			s.append(line + "|");
 			s.append("\n");
 		}
@@ -76,7 +73,17 @@ public class LatinSquare{
 		return s.toString();
 	}
 	
-	class Tuple{
+	public List<String> getLines() {
+		return lines;
+	}
+	public List<String> getColumns() {
+		return columns;
+	}
+	public List<Tuple> getTuples() {
+		return tuples;
+	}
+
+	public class Tuple{
 		private List<String> cells;
 		public Tuple(List<String> cells, int i) {
 			this.cells = new ArrayList<String>(cells);
@@ -89,6 +96,9 @@ public class LatinSquare{
 		}
 		public List<String> getCells() {
 			return cells;
+		}
+		public String get(int j) {
+			return this.cells.get(j);
 		}
 	}
 }

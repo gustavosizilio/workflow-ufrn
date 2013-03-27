@@ -1,6 +1,8 @@
 package org.domain.model.processDefinition;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +40,11 @@ public class Workflow extends GenericEntity {
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="workflow")
 	private List<ProcessDefinition> processDefinitions;
 	
+	private Date startedAt;
+	
+	private Integer turnQuantity;
+	private Integer currentTurn;
+	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="workflow")
 	private List<Observation> observations;
 	
@@ -46,6 +53,7 @@ public class Workflow extends GenericEntity {
 	}
 	public Workflow(User user) {
 		this();
+		this.turnQuantity = 1;
 		this.user = user;
 	}
 	public Workflow(User user, String title) {
@@ -101,9 +109,15 @@ public class Workflow extends GenericEntity {
 	public boolean isRCBDDesign(){
 		return this.getDesignType() != null && this.getDesignType().equals(DesignType.RCBD);
 	}
+	public boolean isCRDesign(){
+		return this.getDesignType() != null && this.getDesignType().equals(DesignType.CRD);
+	}
+	public boolean isLSDesign(){
+		return this.getDesignType() != null && this.getDesignType().equals(DesignType.LS);
+	}
 	public Set<String> getGroups(){
 		Set<String> blocks = new HashSet<String>();
-		if(isRCBDDesign()){
+		if(isRCBDDesign() || isLSDesign()){
 			for (UserAssignment ua : this.getAllUserAssignments()) {
 				blocks.add(ua.getGroupValue());
 			}
@@ -117,13 +131,31 @@ public class Workflow extends GenericEntity {
 				userAssignments.add(userAssignment);
 			}
 		}
+		Collections.sort(userAssignments);
 		return userAssignments;
+	}
+	
+	public int getQuantityOfSubjectsNeeds(String group){
+		int quantityOfSubjectsNeeds = 0;
+		List<String> foundSubjects = new ArrayList<String>();
+		for (UserAssignment userAssignment : getAllUserAssignments()) {
+			if(userAssignment.getGroupValue().equals(group) && !foundSubjects.contains(userAssignment.getSubjectDescription())){
+				quantityOfSubjectsNeeds++;
+				foundSubjects.add(userAssignment.getSubjectDescription());
+			}
+		}
+		return quantityOfSubjectsNeeds;
 	}
 	
 	public boolean addUserToGroup(String group, User u){
 		for (UserAssignment ua : getUserAssignments(group)) {
 			if(ua.getUser()==null){
 				ua.setUser(u);
+				for (UserAssignment ua2 : getUserAssignments(group)) {
+					if(ua2.getUser() == null && ua2.getSubjectDescription().equals(ua.getSubjectDescription())){
+						ua2.setUser(u);
+					}
+				}
 				return true;
 			}
 		}
@@ -139,6 +171,16 @@ public class Workflow extends GenericEntity {
 		return true;
 	}
 	
+	public Date getStartedAt() {
+		return startedAt;
+	}
+	public void setStartedAt(Date startedAt) {
+		this.startedAt = startedAt;
+	}
+	public boolean isStarted(){
+		return this.startedAt != null;
+	}
+
 	public boolean isEmptyDesign(){
 		return this.getDesignType() == null;
 	}
@@ -190,5 +232,33 @@ public class Workflow extends GenericEntity {
 	public void setDesignType(DesignType designType) {
 		this.designType = designType;
 	}
-
+	public Integer getTurnQuantity() {
+		return turnQuantity;
+	}
+	public void setTurnQuantity(Integer turnQuantity) {
+		this.turnQuantity = turnQuantity;
+	}
+	public Integer getCurrentTurn() {
+		return currentTurn;
+	}
+	public void setCurrentTurn(Integer currentTurn) {
+		this.currentTurn = currentTurn;
+	}
+	public void nextTurn() {
+		if(this.currentTurn == null){
+			this.currentTurn = 0;
+		}else{
+			this.currentTurn++;	
+		}
+	}
+	public boolean isLastTurn(){
+		if(this.getCurrentTurn() == null){
+			return false;
+		}
+		if((this.turnQuantity-1) > this.getCurrentTurn()){
+			return false;
+		}else{
+			return true;
+		}
+	}
 }

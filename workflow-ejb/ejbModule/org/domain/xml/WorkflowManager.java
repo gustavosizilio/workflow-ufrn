@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.domain.model.processDefinition.Artefact;
@@ -18,7 +16,6 @@ import org.domain.model.processDefinition.Task;
 import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Transition;
 import org.domain.model.processDefinition.dataType.ArtefactType;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -26,17 +23,9 @@ import org.xml.sax.SAXException;
 
 public class WorkflowManager extends XMLManager{
 	
-	private String file;
-	
 	public WorkflowManager(String file) {
 		super();
 		this.file = file;
-	}
-	
-	public Document getDOM() throws ParserConfigurationException, SAXException, IOException{
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		return db.parse(this.file);
 	}
 	
 	public List<ProcessDefinition> executeTransformations() throws ParserConfigurationException, SAXException, IOException{
@@ -166,6 +155,7 @@ public class WorkflowManager extends XMLManager{
 		Transition transition = new Transition();
 		transition.setName(getAttribute(item, Elements.NAME));
 		transition.setDestination(getAttribute(item, Elements.TO));
+		transition.setDescription(getAttribute(item, Elements.DESCRIPTION));
 		return transition;
 	}
 
@@ -191,7 +181,5 @@ public class WorkflowManager extends XMLManager{
 		artefact.setArtefactType(ArtefactType.getValue(getAttribute(item, Elements.TYPE), ArtefactType.OUT));
 		return artefact;
 	}
-	
-	
-	
+
 }

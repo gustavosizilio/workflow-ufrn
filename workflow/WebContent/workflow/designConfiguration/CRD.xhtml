@@ -7,19 +7,13 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:a4j="http://richfaces.org/a4j">
-<h:panelGroup rendered="#{crudWorkflow.entity.RCBDDesign}">
+<h:panelGroup rendered="#{crudWorkflow.entity.CRDesign}">
 	<h:panelGrid columns="2" rendered="#{ not crudWorkflow.entity.designComplete}" >
 		<h:outputLabel value="Usuário:" />
 		<h:selectOneMenu value="#{crudWorkflow.userProperty}">
 			<s:selectItems value="#{crudWorkflow.users}" var="user"
 				label="#{user.name} - #{user.email}" noSelectionLabel="" />
 			<s:convertEntity />
-		</h:selectOneMenu>
-		<h:outputLabel value="Bloco:" />
-		<h:selectOneMenu value="#{crudWorkflow.groupProperty}">
-			<s:selectItems value="#{crudWorkflow.entity.groups}" 
-				var="b"
-				label="#{b}" noSelectionLabel="" />
 		</h:selectOneMenu>
 		<rich:spacer />
 		<a4j:commandButton value="Adicionar para sorteio"
@@ -43,7 +37,7 @@
 			</rich:dataList>
 		</rich:column>	
 	</rich:dataTable>
-	<h:commandButton action="#{crudWorkflow.shuffleUsersRCDB}" value="Sortear" rendered="#{not crudWorkflow.entity.designComplete}" />
+	<h:commandButton action="#{crudWorkflow.shuffleUsersCRD}" value="Sortear" rendered="#{not crudWorkflow.entity.designComplete}" />
 	
 	
 	

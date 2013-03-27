@@ -40,5 +40,11 @@ public class Elements {
 	public static final String PROCESS = "process";
 	public static final String SUBJECT = "subject";
 	public static final String BLOCK = "block";
+	public static final Object FACTOR = "factor";
+	public static final String LEVEL = "level";
+	public static final String IS_DESIRED_VARIATION = "isDesiredVariation";
+	public static final Object LINK = "link";
+	public static final String TREATMENT = "treatment";
+	public static final String INTERNAL_REPLICATION = "internalReplication";
 	
 }

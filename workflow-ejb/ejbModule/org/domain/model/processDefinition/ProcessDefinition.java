@@ -1,7 +1,6 @@
 package org.domain.model.processDefinition;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,7 +23,6 @@ public class ProcessDefinition extends GenericEntity{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private Date startedAt;
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private Workflow workflow;
 	
@@ -113,15 +111,6 @@ public class ProcessDefinition extends GenericEntity{
 	public void setEndStates(List<EndState> endStates) {
 		this.endStates = endStates;
 	}
-	public Date getStartedAt() {
-		return startedAt;
-	}
-	public void setStartedAt(Date startedAt) {
-		this.startedAt = startedAt;
-	}
-	public boolean isStarted(){
-		return this.startedAt != null;
-	}
 	public Workflow getWorkflow() {
 		return workflow;
 	}
@@ -157,6 +146,18 @@ public class ProcessDefinition extends GenericEntity{
 			}
 		}
 		return null;
+	}
+	
+	public boolean canExecute(UserAssignment ua){
+		if(!this.workflow.isStarted())
+			return false;
+		
+		if(this.workflow.getTurnQuantity() > 1){
+			if(ua.getExecutionOrder() > this.workflow.getCurrentTurn()){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public Transition getTransitionFor(TaskNode taskNodeFor) {

@@ -15,7 +15,13 @@
 				label="#{u.name} - #{u.email}" noSelectionLabel="" />
 			<s:convertEntity />
 		</h:selectOneMenu>
-
+		<h:outputLabel value="Tratamento:" />
+		<h:selectOneMenu value="#{crudWorkflow.processDefinitionProperty}">
+			<s:selectItems value="#{crudWorkflow.entity.processDefinitions}" 
+				var="p"
+				label="#{p.name}" noSelectionLabel="" />
+			<s:convertEntity />
+		</h:selectOneMenu>
 		<rich:spacer />
 		<a4j:commandButton value="Adicionar"
 			actionListener="#{crudWorkflow.addUserManual}"

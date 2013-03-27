@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import org.domain.model.User;
 
 @Entity
-public class UserAssignment{
+public class UserAssignment implements Comparable<UserAssignment>{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -24,13 +24,23 @@ public class UserAssignment{
 	private String subjectDescription;
 	
 	
+	public UserAssignment(Integer executionOrder,
+						  ProcessDefinition processDefinition,
+						  String subjectDescription,
+						  String groupValue) {
+		super();
+		this.executionOrder = executionOrder;
+		this.processDefinition = processDefinition;
+		this.groupValue = groupValue;
+		this.subjectDescription = subjectDescription;
+	}
 	public UserAssignment() {
+		this.executionOrder = 0;
 	}
 	public UserAssignment(String subjectDescription, ProcessDefinition process) {
 		this();
 		this.subjectDescription = subjectDescription;
 		this.processDefinition = process;
-		this.executionOrder = 0;
 	}
 	public UserAssignment(User user, ProcessDefinition process) {
 		this();
@@ -73,5 +83,20 @@ public class UserAssignment{
 	}
 	public void setSubjectDescription(String subjectDescription) {
 		this.subjectDescription = subjectDescription;
+	}
+	public String toString(){
+		return this.executionOrder +"-"+ 
+				this.processDefinition.getName() + "-" + 
+				this.groupValue + "-" +
+				this.subjectDescription;
+	}
+	public int compareTo(UserAssignment o) {
+		if(this.executionOrder > o.getExecutionOrder()){
+			return 1;
+		}
+		if(this.executionOrder < o.getExecutionOrder()){
+			return -1;
+		}
+		return 0;
 	}
 }

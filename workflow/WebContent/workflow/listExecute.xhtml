@@ -27,10 +27,10 @@
     </ui:define>
     
     <ui:define name="actions"> 
-    	<h:commandLink action="#{executer.init(entity.processDefinition)}" title="play" rendered="#{entity.processDefinition.started}">
+    	<h:commandLink action="#{executer.init(entity.processDefinition, entity)}" title="play" rendered="#{entity.processDefinition.canExecute(entity)}">
     		<h:graphicImage value="/img/play.png" />
     	</h:commandLink>
-    	<h:commandLink action="#" title="play" rendered="#{not entity.processDefinition.started}">
+    	<h:commandLink action="#" title="play" rendered="#{not entity.processDefinition.canExecute(entity)}">
     		<h:graphicImage value="/img/noplay.png" />
     	</h:commandLink>
     </ui:define>

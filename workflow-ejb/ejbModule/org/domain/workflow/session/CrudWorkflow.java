@@ -32,6 +32,7 @@ import org.jboss.seam.annotations.security.Restrict;
 import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
 
+
 @Name("crudWorkflow")
 @Restrict("#{identity.loggedIn}")
 @Scope(ScopeType.CONVERSATION)
@@ -85,6 +86,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	}
 	
 	public String undeployWorkflow() {
+		clearDesign();
 		for (ProcessDefinition process : entity.getProcessDefinitions()) {
 			seamDao.remove(process);
 		}
@@ -96,13 +98,33 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	}
 	
 	public void addUserToShuffle(ActionEvent evt) throws ValidationException{
+		if(this.entity.isRCBDDesign()){
+			addUserToShuffleRCBD();
+		}else if(this.entity.isLSDesign()){
+			addUserToShuffleLS();
+		}else if (this.entity.isCRDesign()){
+			addUserToShuffleCRD();
+		}
+		this.userProperty = null;
+	}
+	private void addUserToShuffleCRD() {
+		if(this.groupProperty ==null)
+			this.groupProperty = "Subjects";
+		addUserToShuffleBlock();
+	}
+	private void addUserToShuffleRCBD(){
+		addUserToShuffleBlock();
+	}
+	private void addUserToShuffleLS(){
+		addUserToShuffleBlock();
+	}
+	private void addUserToShuffleBlock() {
 		if(this.userProperty != null && this.groupProperty != null && !isUserPresentToShuffle(this.userProperty)){
 			if(!this.getUsersSelectedToShuffle().containsKey(this.groupProperty)){
 				this.getUsersSelectedToShuffle().put(this.groupProperty, new ArrayList<User>());
 			}
 			this.getUsersSelectedToShuffle().get(this.groupProperty).add(this.userProperty);
 		}
-		this.userProperty = null;
 	}
 	private boolean isUserPresentToShuffle(User user) {
 		for (List<User> users : this.getUsersSelectedToShuffle().values()) {
@@ -119,16 +141,17 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		this.usersSelectedToShuffle.get(group).remove(u);
 	}
 	public List<String> getGroupValues(){
-		List<String> groups = new ArrayList<String>();
-		for (String string : this.getUsersSelectedToShuffle().keySet()) {
-			groups.add(string);
-		}
-		return groups;
+//		List<String> groups = new ArrayList<String>();
+//		for (String string : this.getUsersSelectedToShuffle().keySet()) {
+//			groups.add(string);
+//		}
+//		return groups;
+		return new ArrayList<String>(entity.getGroups());
 	}
-	public void suffleUsersRCDB() throws ValidationException{
+	public void suffleUsersBlock() throws ValidationException{
 		boolean hasError = false;
 		for (String groupValue : getGroupValues()) {
-			if(this.getUsersSelectedToShuffle().get(groupValue).size() < this.entity.getUserAssignments(groupValue).size()){
+			if(this.getUsersSelectedToShuffle().get(groupValue).size() < this.entity.getQuantityOfSubjectsNeeds(groupValue)){
 				getFacesMessages().add("Quantidade de usuários insuficiente no grupo "+groupValue);
 				hasError = true;
 			}
@@ -145,6 +168,33 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		
 		seamDao.merge(this.entity);
 		seamDao.flush();
+	}
+	public void shuffleUsersRCDB() throws ValidationException{
+		suffleUsersBlock();
+	}
+	public void shuffleUsersLS() throws ValidationException{
+		boolean hasError = false;
+		for (String groupValue : getGroupValues()) {
+			if(this.getUsersSelectedToShuffle().get(groupValue) == null || this.getUsersSelectedToShuffle().get(groupValue).size() < this.entity.getQuantityOfSubjectsNeeds(groupValue)){
+				getFacesMessages().add("Quantidade de usuários insuficiente no grupo "+groupValue);
+				hasError = true;
+			}
+		}
+		if(!hasError){
+			for (String groupValue : getGroupValues()) {
+				List<User> users = this.getUsersSelectedToShuffle().get(groupValue);
+				Collections.shuffle(users);
+				for (User user : users) {
+					this.entity.addUserToGroup(groupValue, user);
+				}
+			}
+		}
+		
+		seamDao.merge(this.entity);
+		seamDao.flush();
+	}
+	public void shuffleUsersCRD() throws ValidationException{
+		suffleUsersBlock();
 	}
 	
 	public void addUserManual(ActionEvent evt) throws ValidationException{
@@ -179,10 +229,17 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		}
 	}
 	
-	public void start(ProcessDefinition processDefinition) throws ValidationException{
-		seamDao.refresh(processDefinition);
-		processDefinition.setStartedAt(Calendar.getInstance().getTime());
-		seamDao.merge(processDefinition);
+	public void start(Workflow w) throws ValidationException{
+		seamDao.refresh(w);
+		w.setStartedAt(Calendar.getInstance().getTime());
+		w.nextTurn();
+		seamDao.merge(w);
+		seamDao.flush();
+	}
+	public void nextTurn(Workflow w) throws ValidationException{
+		seamDao.refresh(w);
+		w.nextTurn();
+		seamDao.merge(w);
 		seamDao.flush();
 	}
 	
@@ -200,6 +257,8 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		this.usersSelectedToShuffle.clear();
 		try {
 			seamDao.refresh(entity);
+			this.entity.setCurrentTurn(null);
+			this.entity.setTurnQuantity(null);
 			this.entity.setDesignType(null);
 			for (ProcessDefinition p : entity.getProcessDefinitions()) {
 				for (UserAssignment ua : p.getUserAssignments()) {
@@ -236,17 +295,20 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	    	seamDao.flush();
 	    }
 	}
-	public void uploadDesignConfiguration(UploadEvent event) throws Exception {
-		seamDao.refresh(this.entity);
-		UploadItem item = event.getUploadItem();
-		DesignConfigurationManager design = new DesignConfigurationManager(item.getFile().getAbsolutePath(), this.entity);
-		this.entity = design.executeTransformations(this.entity);
+	public void uploadDesignConfiguration(UploadEvent event) {
+		try{
+			seamDao.refresh(this.entity);
+			UploadItem item = event.getUploadItem();
+			DesignConfigurationManager design = new DesignConfigurationManager(item.getFile().getAbsolutePath(), this.entity);
+			this.entity = design.executeTransformations(this.entity);
 		
-		for (UserAssignment ua : this.entity.getAllUserAssignments()) {
-			seamDao.persist(ua);
+			for (UserAssignment ua : this.entity.getAllUserAssignments()) {
+				seamDao.persist(ua);
+			}
+			seamDao.merge(this.entity);
+		} catch(Exception e){
+			getFacesMessages().add("Erro ao importar design");
 		}
-		
-		seamDao.merge(this.entity);
 	}
 	
 	public void removeArtefact(Artefact artefact) throws Exception {

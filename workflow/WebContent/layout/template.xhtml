@@ -18,18 +18,26 @@
       <ui:insert name="head"/>
    </head>
    <body>
-  	<a4j:region>
- 			<a4j:status id="block" name="block">
-		         <f:facet name="start">
-		         	<div id="block">
-			            Aguarde...
-		         	</div>
-		         </f:facet>
-	    </a4j:status>
-    </a4j:region>
+  	
 	    
       <ui:include src="menu.xhtml" />
       <div class="body">
+	  <a4j:status>
+	       <f:facet name="start">
+	       		<div class="rich-mpnl-mask-div-opaque rich-mpnl-mask-div" style="z-index: 1000000;">
+			       	<div class="rich-mp-container" id="waitCDiv" style="position: absolute; left: 643px; top: 365px; z-index: 9;"><div class="rich-mpnl-shadow" id="waitShadowDiv" style="width: 74px; height: 38px;"></div>
+				       	<div class=" rich-mpnl-content" id="waitContentDiv">
+				       	<table border="0" cellpadding="0" cellspacing="0" class="rich-mp-content-table" id="waitContentTable" style="width: 1px;height: 1px;"><tbody><tr style="height: 99%"><td class="rich-mpnl-body" valign="top">
+				       		<span>
+				        		Aguarde...
+				        	</span>
+				        </td></tr></tbody></table>
+				        </div>
+			       	</div>
+	       		</div>
+	       </f:facet>
+	  </a4j:status>
+    
          <h:messages id="messages" globalOnly="true" styleClass="message"
             errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
             rendered="#{showGlobalMessages != 'false'}"/>

@@ -16,23 +16,18 @@
                     <h:outputText value="Ações"/>
                 </f:facet>
 				<h:panelGroup rendered="#{defautlActions == null ? true : defautlActions}">
-					<h:commandLink action="#{action.detail(entity)}" >
-						<h:graphicImage value="/img/detail.png" alt="detalhes" title="detalhes"/>
-					</h:commandLink>
+					<h:commandButton value="Detalhes" action="#{action.detail(entity)}" />
 					
 					<h:outputText value="   " />
 					
-					<h:commandLink action="#{action.edit(entity)}">
-						<h:graphicImage value="/img/edit.jpg" alt="detalhes" title="detalhes"/>
-					</h:commandLink>
+					<h:commandButton value="Editar" action="#{action.edit(entity)}" />
 					
 					<h:outputText value="   " />
 					
-					<h:commandLink action="#{action.delete(entity)}" onclick="return confirm('Você tem certeza?');" >
-						<h:graphicImage value="/img/delete.png" alt="detalhes" title="detalhes"/>
-					</h:commandLink>
+					<h:commandButton value="Remover" action="#{action.delete(entity)}" onclick="return confirm('Você tem certeza?');" />
 					
-					<h:graphicImage value="/img/space.png" />
+					<h:outputText value="   " />
+					
 				</h:panelGroup>
 				<ui:insert name="actions"/>
 			</rich:column>

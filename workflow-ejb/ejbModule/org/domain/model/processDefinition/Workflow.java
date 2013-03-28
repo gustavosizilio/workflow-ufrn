@@ -252,7 +252,7 @@ public class Workflow extends GenericEntity {
 		}
 	}
 	public boolean isLastTurn(){
-		if(this.getCurrentTurn() == null){
+		if(this.getCurrentTurn() == null  || this.turnQuantity == null){
 			return false;
 		}
 		if((this.turnQuantity-1) > this.getCurrentTurn()){

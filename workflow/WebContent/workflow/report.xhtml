@@ -18,7 +18,7 @@
 	
 		<ui:repeat var="process" value="#{report.workflow.processDefinitions}">
 			<rich:simpleTogglePanel switchType="client" label="#{process.name}" opened="false">	
-				<h:outputText value="Não Iniciado..." rendered="#{process.startedAt == null}"/>
+				<h:outputText value="Não Iniciado..." rendered="#{!process.workflow.started}"/>
 				
 				<ui:repeat var="taskNode" value="#{process.taskNodes}">
 					<rich:simpleTogglePanel switchType="client" label="#{taskNode.name}" opened="true"

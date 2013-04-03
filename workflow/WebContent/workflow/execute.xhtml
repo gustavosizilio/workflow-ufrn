@@ -15,7 +15,7 @@
 		<br />
 								 
 		<rich:panel header="#{executer.currentTaskNode.name}" id="panelTask" rendered="#{executer.currentTaskNode != null}">
-			<h:outputText value="#{executer.currentTaskNode.description}" />
+			<h:outputText value="#{executer.currentTaskNode.description}" style="font-size: 13px;"  />
 			<rich:dataList value="#{executer.currentTaskNode.inArtefacts}" var="artefact" rendered="#{executer.currentTaskNode.inArtefacts.size() gt 0}">
 				<h:outputText value="#{artefact.name} " />
 				<h:commandLink value="Download" rendered="#{artefact.artefactFiles.size gt 0}"
@@ -64,10 +64,11 @@
 					 rendered="#{executer.currentUserExecution != null}" />
 				</h:panelGrid>
 				<h:panelGroup id="tasks">
+					<br />
 					<ui:repeat var="task" value="#{executer.currentTaskNode.tasks}">
-						<br />
-						<rich:simpleTogglePanel switchType="client" label="#{task.name}" opened="true">
-							<h:outputText value="#{task.description}" />
+						<a4j:commandButton action="#{executer.startTask(task)}" value="#{task.name}" reRender="tasks" styleClass="rich-stglpanel-header" style="width: 100%;" />
+						<rich:panel bodyClass="rich-laguna-panel-no-header"	id="${task.id}Panel" rendered="#{executer.isCurrentTask(task)}">
+							<h:outputText value="#{task.description}" style="font-size: 13px;" />
 							<rich:dataList value="#{task.inArtefacts}" var="artefact" rendered="#{task.inArtefacts.size() gt 0}">
 								<h:outputText value="#{artefact.name} " /> 
 								<h:commandLink value="Download" rendered="#{artefact.artefactFiles.size gt 0}"
@@ -94,7 +95,7 @@
 											</a4j:commandLink>
 										</h:panelGroup>
 										<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) != null}">
-											<h:panelGroup rendered="#{executer.currentUserExecution.finishedAt == null}" >
+											<h:panelGroup rendered="#{not executer.currentTaskExecution.finished}" >
 												<a4j:commandLink value="Remover" action="#{executer.removeArtefact(artefact)}"
 												 				 reRender="tasks">
 												</a4j:commandLink>
@@ -108,7 +109,11 @@
 									</h:column>
 								</rich:dataTable>
 							</h:panelGrid>
-						</rich:simpleTogglePanel>
+							<h:commandButton action="#{executer.finishTaskExecution()}" 
+								value="#{(executer.currentTaskExecution.finished) ? 'Tarefa Finalizada' : 'Finalizar Tarefa'}" 
+								disabled="#{executer.currentTaskExecution.finished}"
+								onclick="confirm('Você tem certeza? A ação não poderá ser desfeita!')" />
+						</rich:panel>
 					</ui:repeat>
 				</h:panelGroup>
 			</h:panelGroup>

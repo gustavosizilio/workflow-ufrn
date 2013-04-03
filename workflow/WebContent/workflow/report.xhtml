@@ -24,11 +24,10 @@
 					<rich:simpleTogglePanel switchType="client" label="#{taskNode.name}" opened="true"
 											rendered="#{taskNode.startState eq null}" >	
 						<ui:repeat value="#{taskNode.userExecutions}" var="userExecution" >
-							<rich:panel header="#{userExecution.user.name}" style="width: 300px; height: 150px; float: left;" >
+							<rich:panel header="#{userExecution.user.name}" style="width: 300px; height: 180px; float: left;" >
 								<h:panelGrid columns="2">
 									<h:outputLabel value="Tempo gasto" />
-									<h:outputText rendered="#{userExecution.wastedTime != null}"  value="#{userExecution.wastedTime} Segundos" ></h:outputText>
-									<h:outputText rendered="#{userExecution.wastedTime == null}" value="Em andamento..." ></h:outputText>
+									<h:outputText value="#{userExecution.wastedTimeString}" ></h:outputText>
 								
 									<h:outputLabel value="Inicio" />
 									<h:outputText value="#{userExecution.startedAt.time}" >
@@ -43,10 +42,16 @@
 									<h:outputLabel value="Tempo de pausa" />
 									<h:outputText value="" rendered="#{userExecution.wastedBreakTime eq 0}"/>
 									<h:outputLink id="breakLink" rendered="#{userExecution.wastedBreakTime gt 0}"  value="#" >
-										<h:outputText value="#{userExecution.wastedBreakTime} Segundos" />
+										<h:outputText value="#{userExecution.wastedBreakTimeString}" />
 										<rich:componentControl for="breakModal" attachTo="breakLink" operation="show" event="onclick"/>
 									</h:outputLink>
 								    
+								    <h:outputLabel value="Tempo das atividades" />
+									<h:outputLink value="#" id="taskTime">
+									        Visualizar 
+									        <rich:componentControl for="taskTimeModal" attachTo="taskTime" operation="show" event="onclick"/>
+									 </h:outputLink>
+									 
 									<h:outputLabel value="Artefatos de Saída" />
 									<h:outputLink value="#" id="artefacts">
 									        Download 
@@ -123,7 +128,35 @@
 								     </h:panelGrid>
 							       </ui:repeat>
 						    </rich:modalPanel>
-								    
+							
+							<rich:modalPanel id="taskTimeModal" width="500">
+						        <f:facet name="header">
+						            <h:panelGroup>
+						                <h:outputText value="Tempo das atividades"></h:outputText>
+						            </h:panelGroup>
+						        </f:facet>
+						        <f:facet name="controls">
+						            <h:panelGroup>
+						                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinktaskTimeModal"/>
+						                <rich:componentControl for="taskTimeModal" attachTo="hidelinktaskTimeModal" operation="hide" event="onclick"/>
+						            </h:panelGroup>
+						        </f:facet>
+						        <rich:dataTable rendered="#{userExecution.taskNode.tasks.size() gt 0}" value="#{userExecution.taskNode.tasks}" var="task" id="taskTimeTable">
+											<h:column>
+												<f:facet name="header">Tarefa</f:facet>
+												<h:outputText value="#{task.name}" />
+											</h:column>
+											<h:column>
+												<f:facet name="header">Tempo</f:facet>
+												<h:outputText value="#{userExecution.getTaskExecution(task).wastedTimeString}" />
+					 				 		</h:column>
+					 				 		<h:column>
+												<f:facet name="header">Tempo em Espera</f:facet>
+												<h:outputText value="#{userExecution.getTaskExecution(task).wastedBreakTimeString}" />
+					 				 		</h:column>
+							    </rich:dataTable>
+						    </rich:modalPanel>
+						    
 							<rich:modalPanel id="breakModal" width="500">
 						        <f:facet name="header">
 						            <h:panelGroup>
@@ -139,7 +172,7 @@
 						        <rich:dataTable rendered="#{userExecution.breakes.size() gt 0}" value="#{userExecution.breakes}" var="break" id="userExecutionBreakes">
 											<h:column>
 												<f:facet name="header">Tempo</f:facet>
-												<h:outputText value="#{break.wastedTime} segundos" />
+												<h:outputText value="#{break.wastedTimeString}" />
 											</h:column>
 											<h:column>
 												<f:facet name="header">Motivo</f:facet>

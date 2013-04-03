@@ -19,51 +19,30 @@ import javax.persistence.TemporalType;
 import org.domain.model.User;
 
 @Entity
-public class UserExecution {
+public class TaskExecution {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@OneToOne(cascade=CascadeType.REFRESH)
 	private User user;
 	@ManyToOne
-	private TaskNode taskNode;
+	private Task task;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar startedAt;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar finishedAt;
-	@OneToOne
-	private UserExecution nextUserExecution;
-	private String comment;
-	@OneToMany(mappedBy="userExecution")
-	private List<ArtefactFile> artefactFiles;
-	@OneToMany(mappedBy="userExecution", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="taskExecution", cascade=CascadeType.ALL)
 	private List<Break> breakes;
 
-	public UserExecution() {
-		this.artefactFiles = new ArrayList<ArtefactFile>();
+	public TaskExecution() {
 		this.breakes = new ArrayList<Break>();
 	}
-	public UserExecution(User user, boolean start) {
+	public TaskExecution(User user, boolean start) {
 		this();
-		this.user = user;
+		this.setUser(user);
 		if(start){
 			startedAt = Calendar.getInstance();
 		}
-	}
-	
-	public List<TaskExecution> getTasksExecutions(){
-		List<TaskExecution> taskExecutions = new ArrayList<TaskExecution>();
-		for (Task task : this.getTaskNode().getTasks()) {
-			TaskExecution te = task.getTaskExecutionByUser(this.user);
-			if(te!=null){
-				taskExecutions.add(te);
-			}
-		}
-		return taskExecutions;
-	}
-	public TaskExecution getTaskExecution(Task task){
-		TaskExecution te = task.getTaskExecutionByUser(this.user);
-		return te;
 	}
 	public void finish(){
 		finishedAt = Calendar.getInstance();
@@ -72,7 +51,6 @@ public class UserExecution {
 	public boolean isFinished(){
 		return this.finishedAt != null;
 	}
-	
 	public Long getId() {
 		return id;
 	}
@@ -81,14 +59,6 @@ public class UserExecution {
 		this.id = id;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
 	public Long getWastedTime(){
 		if(getFinishedAt() != null && getStartedAt() != null){
 			long wastedTime = (long)(getFinishedAt().getTimeInMillis() - getStartedAt().getTimeInMillis());
@@ -159,34 +129,9 @@ public class UserExecution {
 		this.finishedAt = finishedAt;
 	}
 	
-	public UserExecution getNextUserExecution() {
-		return nextUserExecution;
-	}
-	public void setNextUserExecution(UserExecution nextUserExecution) {
-		this.nextUserExecution = nextUserExecution;
-	}
-	public String getComment() {
-		return comment;
-	}
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-	public TaskNode getTaskNode() {
-		return taskNode;
-	}
-	public void setTaskNode(TaskNode taskNode) {
-		this.taskNode = taskNode;
-	}
-	public List<ArtefactFile> getArtefactFiles() {
-		return artefactFiles;
-	}
-	public void setArtefactFiles(List<ArtefactFile> artefactFiles) {
-		this.artefactFiles = artefactFiles;
-	}
-	
 	public boolean equals(Object obj){
-		if(obj instanceof UserExecution){
-			if(((UserExecution)obj).getId().equals(this.getId())){
+		if(obj instanceof TaskExecution){
+			if(((TaskExecution)obj).getId().equals(this.getId())){
 				return true;
 			}
 		}
@@ -197,5 +142,17 @@ public class UserExecution {
 	}
 	public void setBreakes(List<Break> breakes) {
 		this.breakes = breakes;
+	}
+	public Task getTask() {
+		return task;
+	}
+	public void setTask(Task task) {
+		this.task = task;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

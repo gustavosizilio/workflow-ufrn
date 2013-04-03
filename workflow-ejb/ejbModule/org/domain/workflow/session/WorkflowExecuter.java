@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.domain.dao.SeamDAO;
@@ -17,6 +18,7 @@ import org.domain.model.processDefinition.Join;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.StartState;
 import org.domain.model.processDefinition.Task;
+import org.domain.model.processDefinition.TaskExecution;
 import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Transition;
 import org.domain.model.processDefinition.UserAssignment;
@@ -50,11 +52,13 @@ public class WorkflowExecuter {
 	private ProcessDefinition currentProcess;
 	private TaskNode currentTaskNode;
 	private UserExecution currentUserExecution;
+	private TaskExecution currentTaskExecution;
 	private StartState startState;
 	private Join currentJoin;
 	private EndState endState;
 	private ArtefactFile currentArtefactFile;
 	private Artefact currentArtefact;
+	private Task currentTask;
 	
 	public String init(ProcessDefinition process, UserAssignment ua){
 		if(process.canExecute(ua)){
@@ -103,14 +107,137 @@ public class WorkflowExecuter {
 			endState = currentProcess.getEndState(transition);
 			
 			startUserExecution();
+			loadTaskExecution();
 		}
+	}
+	
+	private void loadTaskExecution() {
+		setCurrentTask(null);
+		setCurrentTaskExecution(null);
+		for (Task task : currentTaskNode.getTasks()) {
+			if(task.startedByUser(user) && !task.finishedByUser(user)){
+				setCurrentTask(task);
+				setCurrentTaskExecution(currentTask.getTaskExecutionByUser(user));
+				stopBreakCurrentTask();
+				stopBreakOthersTasks();
+				break;
+			}
+		}		
+	}
+
+	public void startTask(Task task){
+		this.currentTask = task;
+		startTaskExecution();
+		stopBreakCurrentTask();
+		breakOthersTasks();
+	}
+	
+	private void stopBreakCurrentTask() {
+		TaskExecution taskExecution = this.currentTask.getTaskExecutionByUser(user);
+		for (Break break1 : taskExecution.getBreakes()) {
+			if(break1.getFinishedAt() == null){
+				break1.setFinishedAt(new GregorianCalendar());
+				this.seamDao.merge(break1);
+				this.seamDao.flush();
+			}
+		}
+		
+	}
+	
+	private void stopBreakOthersTasks() {
+		for (Task task : this.currentTaskNode.getTasks()) {
+			if(!task.equals(this.currentTask)){
+				TaskExecution taskExecution = task.getTaskExecutionByUser(user);
+				if(taskExecution != null){
+					for (Break break1 : taskExecution.getBreakes()) {
+						if(break1.getFinishedAt() == null){
+							break1.setFinishedAt(new GregorianCalendar());
+							this.seamDao.merge(break1);
+							this.seamDao.flush();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void breakOthersTasks() {
+		for (Task task : currentTaskNode.getTasks()) {
+			TaskExecution taskExecution = task.getTaskExecutionByUser(user);
+			if(taskExecution != null && !taskExecution.equals(currentTaskExecution) && !taskExecution.isFinished()){
+				Break newBreak = new Break(task.getTaskExecutionByUser(user), true);
+				newBreak.setReason("Iniciando execução de outra tarefa");
+				this.seamDao.persist(newBreak);
+				
+				taskExecution.getBreakes().add(newBreak);
+				this.seamDao.merge(newBreak);
+				this.seamDao.flush();
+			}
+		}
+	}
+
+	private void startTaskExecution() {
+		if(this.currentTask != null){
+			if(!this.currentTask.startedByUser(user)){
+					TaskExecution taskExecution = new TaskExecution(user, true);
+					taskExecution.setTask(currentTask);
+					seamDao.persist(taskExecution);
+					currentTask.getTaskExecutions().add(taskExecution);
+					seamDao.merge(currentTask);
+					seamDao.flush();
+					setCurrentTaskExecution(taskExecution);
+			} else {
+				setCurrentTaskExecution(currentTask.getTaskExecutionByUser(user));
+			}
+		}
+	}
+	
+	public void finishTaskExecution() {
+		if(currentTaskExecution != null && currentTask != null){
+			if(!currentTask.finishedByUser(user)){
+				if(validateCurrentTask()){
+					currentTaskExecution.finish();			
+					seamDao.merge(currentTaskExecution);
+					seamDao.flush();
+				}
+			}
+		}
+	}
+	
+	private boolean validateCurrentTask() {
+		if(currentTask != null){
+			List<Artefact> artefacts = currentTask.getOutArtefacts();
+
+			for (Artefact artefact : artefacts) {
+				if(artefact.get(currentUserExecution) == null){
+					facesMessages.add(Severity.ERROR, "É preciso enviar todos os artefatos!");
+					return false;
+				}
+			}
+			
+		}
+		return true;
+	}
+	
+	public boolean isCurrentTask(Task task){
+		if(currentTask == null || task == null)
+			return false;
+		return task.equals(currentTask);
 	}
 	
 	public void startBreak(){
 		if(this.currentUserExecution.getFinishedAt() == null) {
 			Break newBreak = new Break(this.currentUserExecution, true);
+			if(currentTaskExecution != null && !currentTaskExecution.isFinished()){
+				newBreak.setTaskExecution(currentTaskExecution);
+			}
 			this.seamDao.persist(newBreak);
 			this.currentUserExecution.getBreakes().add(newBreak);
+			if(currentTaskExecution != null && !currentTaskExecution.isFinished()){
+				currentTaskExecution.getBreakes().add(newBreak);
+				this.seamDao.merge(currentTaskExecution);
+			}
+			this.seamDao.merge(this.currentUserExecution);
 			this.seamDao.merge(this.currentUserExecution);
 			this.seamDao.flush();
 		}
@@ -127,20 +254,12 @@ public class WorkflowExecuter {
 
 	private boolean validateCurrentTaskNode() {
 		if(currentTaskNode != null){
-			List<Artefact> artefacts = new ArrayList<Artefact>();
-			artefacts.addAll(currentTaskNode.getOutArtefacts());
-			
 			for (Task task : currentTaskNode.getTasks()) {
-				artefacts.addAll(task.getOutArtefacts());
-			}
-
-			for (Artefact artefact : artefacts) {
-				if(artefact.get(currentUserExecution) == null){
-					facesMessages.add(Severity.ERROR, "É preciso enviar todos os artefatos!");
+				if(!task.finishedByUser(user)){
+					facesMessages.add(Severity.ERROR, "É preciso finalizar todas as tarefas!");
 					return false;
 				}
-			}
-			
+			}			
 		}
 		return true;
 	}
@@ -282,5 +401,21 @@ public class WorkflowExecuter {
 
 	public void setStartState(StartState startState) {
 		this.startState = startState;
+	}
+
+	public Task getCurrentTask() {
+		return currentTask;
+	}
+
+	public void setCurrentTask(Task currentTask) {
+		this.currentTask = currentTask;
+	}
+
+	public TaskExecution getCurrentTaskExecution() {
+		return currentTaskExecution;
+	}
+
+	public void setCurrentTaskExecution(TaskExecution currentTaskExecution) {
+		this.currentTaskExecution = currentTaskExecution;
 	}
 }

@@ -1,6 +1,7 @@
 package org.domain.model.processDefinition;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +18,8 @@ public class Break {
 	private Long id;
 	@ManyToOne
 	private UserExecution userExecution;
+	@ManyToOne
+	private TaskExecution taskExecution;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar startedAt;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -35,14 +38,33 @@ public class Break {
 		}
 	}
 	
-	public Double getWastedTime(){
+	public Break(TaskExecution taskExecution, boolean start) {
+		this();
+		this.taskExecution = taskExecution;
+		if(start){
+			this.startedAt = Calendar.getInstance();
+		}
+	}
+
+	public Long getWastedTime(){
 		if(getFinishedAt() != null && getStartedAt() != null){
-			return Math.ceil(((float)(getFinishedAt().getTimeInMillis() - getStartedAt().getTimeInMillis())/1000));
+			return (Long)(getFinishedAt().getTimeInMillis() - getStartedAt().getTimeInMillis());
 		}else{
 			return null;
 		}
 	}
-	
+	public String getWastedTimeString(){
+		String result = "";
+		Long d = getWastedTime();
+		if(d!=null){
+			result = String.format("%d min, %d sec", 
+				    TimeUnit.MILLISECONDS.toMinutes(d),
+				    TimeUnit.MILLISECONDS.toSeconds(d) - 
+				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(d))
+				);
+		}
+		return result;
+	}
 	
 	public Long getId() {
 		return id;
@@ -89,6 +111,14 @@ public class Break {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public TaskExecution getTaskExecution() {
+		return taskExecution;
+	}
+
+	public void setTaskExecution(TaskExecution taskExecution) {
+		this.taskExecution = taskExecution;
 	}
 
 }

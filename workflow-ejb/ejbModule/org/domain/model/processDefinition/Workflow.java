@@ -171,6 +171,16 @@ public class Workflow extends GenericEntity {
 		return true;
 	}
 	
+	public boolean canStart(){
+		if(!isDesignComplete())
+			return false;
+					
+		if(getAllUserAssignments().size() == 0)
+			return false;
+		
+		return true;
+	}
+	
 	public Date getStartedAt() {
 		return startedAt;
 	}

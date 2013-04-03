@@ -32,9 +32,10 @@
     </ui:define>
     
     <ui:define name="actions"> 
-    	<h:commandButton action="#{crudWorkflow.start(entity)}" title="play" rendered="#{!entity.started}"  value="Iniciar" />
-    	<h:commandButton action="#{crudWorkflow.nextTurn(entity)}" title="play" rendered="#{entity.started and !entity.lastTurn}"  value="Próximo Turno" />
-    	
-    	<h:commandButton value="Acompanhar" action="#{report.init(entity)}" />
+    	<h:panelGroup rendered="#{entity.canStart()}">
+	    	<h:commandButton action="#{crudWorkflow.start(entity)}" title="play" rendered="#{!entity.started}"  value="Iniciar" />
+	    	<h:commandButton action="#{crudWorkflow.nextTurn(entity)}" title="play" rendered="#{entity.started and !entity.lastTurn}"  value="Próximo Turno" />
+	    	<h:commandButton value="Acompanhar" action="#{report.init(entity)}" />
+    	</h:panelGroup>
     </ui:define>
 </ui:composition>

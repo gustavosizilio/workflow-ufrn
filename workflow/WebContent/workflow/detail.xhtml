@@ -18,40 +18,41 @@
 			<h:outputText id="description" value="#{crudWorkflow.entity.description}" />
 		</h:panelGrid>
 		<br />
-		<rich:panel id="processDefinition" header="Experimentos">
+		<rich:panel id="processDefinition" header="Processos">
 			<ui:repeat var="processDefinition" value="#{crudWorkflow.entity.processDefinitions}">
 			  <rich:simpleTogglePanel switchType="client" label="#{processDefinition.name}" opened="false">
-				<rich:simpleTogglePanel switchType="client" label="process-definition" opened="true">
+				<rich:simpleTogglePanel switchType="client" label="Processo" opened="true">
 					<h:outputLabel value="name: #{processDefinition.name}" />
 				</rich:simpleTogglePanel>
 				
-				<rich:simpleTogglePanel switchType="client" label="start-state" opened="false">			
-					<h:panelGrid columns="2" >
-						<h:outputText value="Name: " />
-						<h:outputText value="#{processDefinition.startState.name}" />
-						
-						<h:outputText value="Task: " />
-						<h:panelGroup rendered="#{processDefinition.startState.taskNode ne null}">
-							<h:outputText value="#{processDefinition.startState.taskNode}" />
-						</h:panelGroup>
-						
-						<h:outputText value="Transitions: " />
-						<h:panelGroup rendered="#{processDefinition.startState.transitions.size() > 0}">
-							<rich:dataList var="transition" value="#{processDefinition.startState.transitions}" >
-								<h:outputText value="#{transition}" />
-							</rich:dataList>
-						</h:panelGroup>
-					</h:panelGrid>
-				</rich:simpleTogglePanel>
+				<rich:simpleTogglePanel switchType="client" label="Início" opened="false">                 
+                         <h:panelGrid columns="2" >
+                                 <h:outputText value="Nome: " />
+                                 <h:outputText value="#{processDefinition.startState.name}" />
+                                 
+                                 <h:outputText value="Atividade: " />
+                                 <h:panelGroup rendered="#{processDefinition.startState.taskNode ne null}">
+                                         <h:outputText value="#{processDefinition.startState.taskNode}" />
+                                 </h:panelGroup>
+                                 
+                                 <h:outputText value="Transições: " />
+                                 <h:panelGroup rendered="#{processDefinition.startState.transitions.size() > 0}">
+                                         <rich:dataList var="transition" value="#{processDefinition.startState.transitions}" >
+                                                 <h:outputText value="#{transition}" />
+                                         </rich:dataList>
+                                 </h:panelGroup>
+                         </h:panelGrid>
+                 </rich:simpleTogglePanel>
 				
-				<rich:simpleTogglePanel switchType="client" label="Task-nodes" opened="false">
+				
+				<rich:simpleTogglePanel switchType="client" label="Atividades" opened="false">
 					<ui:repeat var="taskNode" value="#{processDefinition.taskNodes}">
-						<rich:simpleTogglePanel switchType="client" label="task-node (#{taskNode.name})" opened="false">			
+						<rich:simpleTogglePanel switchType="client" label="Atividade (#{taskNode.name})" opened="false">			
 							<h:panelGrid columns="2" >
-								<h:outputText value="Name: " />
+								<h:outputText value="Nome: " />
 								<h:outputText value="#{taskNode.name}" />
 								
-								<h:outputText value="Transitions: " />
+								<h:outputText value="Transições: " />
 								<h:panelGroup rendered="#{taskNode.transitions.size() > 0}">
 									<rich:dataList var="transition" value="#{taskNode.transitions}" >
 										<h:outputText value="#{transition}" />
@@ -62,43 +63,9 @@
 					</ui:repeat>
 				</rich:simpleTogglePanel>
 				
-				<rich:simpleTogglePanel switchType="client" label="Joins" opened="false">
-					<ui:repeat var="join" value="#{processDefinition.joins}">
-						<rich:simpleTogglePanel switchType="client" label="task-node (#{join.name})" opened="false">			
-							<h:panelGrid columns="2" >
-								<h:outputText value="Name: " />
-								<h:outputText value="#{join.name}" />
-								
-								<h:outputText value="Transitions: " />
-								<h:panelGroup rendered="#{join.transitions.size() > 0}">
-									<rich:dataList var="transition" value="#{join.transitions}" >
-										<h:outputText value="#{transition}" />
-									</rich:dataList>
-								</h:panelGroup>
-							</h:panelGrid>
-						</rich:simpleTogglePanel>
-					</ui:repeat>
-				</rich:simpleTogglePanel>
 				
-				<rich:simpleTogglePanel switchType="client" label="Forks" opened="false">
-					<ui:repeat var="fork" value="#{processDefinition.forks}">
-						<rich:simpleTogglePanel switchType="client" label="fork (#{fork.name})" opened="false">			
-							<h:panelGrid columns="2" >
-								<h:outputText value="Name: " />
-								<h:outputText value="#{fork.name}" />
-								
-								<h:outputText value="Transitions: " />
-								<h:panelGroup rendered="#{fork.transitions.size() > 0}">
-									<rich:dataList var="transition" value="#{fork.transitions}" >
-										<h:outputText value="#{transition}" />
-									</rich:dataList>
-								</h:panelGroup>
-							</h:panelGrid>
-						</rich:simpleTogglePanel>
-					</ui:repeat>
-				</rich:simpleTogglePanel>
 				
-				<rich:simpleTogglePanel switchType="client" label="End-states" opened="false">	
+				<rich:simpleTogglePanel switchType="client" label="Finalização" opened="false">	
 					<rich:dataList var="endState" value="#{processDefinition.endStates}" >
 						<h:outputText value="#{endState}" />
 					</rich:dataList>

@@ -1,4 +1,4 @@
-package org.domain.xml;
+package org.domain.dataManager;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

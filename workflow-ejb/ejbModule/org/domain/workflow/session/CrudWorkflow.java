@@ -12,6 +12,8 @@ import javax.faces.event.ActionEvent;
 
 import org.domain.dao.UserDAO;
 import org.domain.dao.WorkflowDAO;
+import org.domain.dataManager.DesignConfigurationManager;
+import org.domain.dataManager.WorkflowManager;
 import org.domain.exception.ValidationException;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Artefact;
@@ -22,8 +24,6 @@ import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.Workflow;
 import org.domain.utils.ReadPropertiesFile;
 import org.domain.workflow.session.generic.CrudAction;
-import org.domain.xml.DesignConfigurationManager;
-import org.domain.xml.WorkflowManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;

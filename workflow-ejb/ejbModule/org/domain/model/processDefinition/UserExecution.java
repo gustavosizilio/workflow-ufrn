@@ -99,7 +99,7 @@ public class UserExecution {
 		}
 	}
 	public String getWastedTimeString(){
-		String result = "Em execução";
+		String result = "In progress";
 		Long d = getWastedTime();
 		if(d!=null){
 			result = String.format("%d min, %d sec", 
@@ -112,7 +112,7 @@ public class UserExecution {
 	}
 	
 	public String getWastedBreakTimeString(){
-		String result = "Em execução";
+		String result = "In progress";
 		Long d = getWastedBreakTime();
 		if(d!=null && d > 0){
 			result = String.format("%d min, %d sec", 

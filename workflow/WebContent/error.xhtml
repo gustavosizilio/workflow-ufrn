@@ -10,8 +10,8 @@
     <ui:param name="showGlobalMessages" value="false"/>
     <ui:define name="body">
 
-        <h1>Error</h1>
-        <p>Something bad happened :-(</p>
+        <h1>#{messages['layout.messages.error']}</h1>
+        <p>#{messages['layout.messages.genericError']}</p>
 
         <h:messages id="errorMessage" styleClass="message"/>
 

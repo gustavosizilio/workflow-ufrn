@@ -10,7 +10,7 @@
     template="/layout/template.xhtml">
 	<ui:define name="body">
 	<h:panelGroup>
-		<a4j:commandButton action="#" value="Comentários" id="observationModal" >
+		<a4j:commandButton action="#" value="#{messages['layout.text.workflow.comments']}" id="observationModal" >
 			<rich:componentControl for="panelObservation" attachTo="observationModal" operation="show" event="onclick"/>
 		</a4j:commandButton>
 	</h:panelGroup>
@@ -18,7 +18,7 @@
 	
 		<ui:repeat var="process" value="#{report.workflow.processDefinitions}">
 			<rich:simpleTogglePanel switchType="client" label="#{process.name}" opened="false">	
-				<h:outputText value="Não Iniciado..." rendered="#{!process.workflow.started}"/>
+				<h:outputText value="#{messages['layout.text.workflow.notStarted']}..." rendered="#{!process.workflow.started}"/>
 				
 				<ui:repeat var="taskNode" value="#{process.taskNodes}">
 					<rich:simpleTogglePanel switchType="client" label="#{taskNode.name}" opened="true"
@@ -26,41 +26,41 @@
 						<ui:repeat value="#{taskNode.userExecutions}" var="userExecution" >
 							<rich:panel header="#{userExecution.user.name}" style="width: 300px; height: 180px; float: left;" >
 								<h:panelGrid columns="2">
-									<h:outputLabel value="Tempo gasto" />
+									<h:outputLabel value="#{messages['layout.text.workflow.wastedTime']}" />
 									<h:outputText value="#{userExecution.wastedTimeString}" ></h:outputText>
 								
-									<h:outputLabel value="Inicio" />
+									<h:outputLabel value="#{messages['layout.text.workflow.startedAt']}" />
 									<h:outputText value="#{userExecution.startedAt.time}" >
-										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+										<f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
 									</h:outputText>
 									
-									<h:outputLabel value="Fim" />
+									<h:outputLabel value="#{messages['layout.text.workflow.finishedAt']}" />
 									<h:outputText value="#{userExecution.finishedAt.time}" >
-										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+										<f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
 									</h:outputText>
 									
-									<h:outputLabel value="Tempo de pausa" />
+									<h:outputLabel value="#{messages['layout.text.workflow.pauseTime']}" />
 									<h:outputText value="" rendered="#{userExecution.wastedBreakTime eq 0}"/>
 									<h:outputLink id="breakLink" rendered="#{userExecution.wastedBreakTime gt 0}"  value="#" >
 										<h:outputText value="#{userExecution.wastedBreakTimeString}" />
 										<rich:componentControl for="breakModal" attachTo="breakLink" operation="show" event="onclick"/>
 									</h:outputLink>
 								    
-								    <h:outputLabel value="Tempo das atividades" />
+								    <h:outputLabel value="#{messages['layout.text.workflow.timeActivities']}" />
 									<h:outputLink value="#" id="taskTime">
-									        Visualizar 
+									        #{messages['layout.text.show']} 
 									        <rich:componentControl for="taskTimeModal" attachTo="taskTime" operation="show" event="onclick"/>
 									 </h:outputLink>
 									 
-									<h:outputLabel value="Artefatos de Saída" />
+									<h:outputLabel value="#{messages['layout.text.workflow.outputArtifacts']}" />
 									<h:outputLink value="#" id="artefacts">
-									        Download 
+									        #{messages['layout.text.download']} 
 									        <rich:componentControl for="artefactsModal" attachTo="artefacts" operation="show" event="onclick"/>
 									 </h:outputLink>
 									
-									<h:outputLabel value="Comentário" />
+									<h:outputLabel value="#{messages['layout.text.workflow.comment']}" />
 									<h:outputLink value="#" id="comment" rendered="#{userExecution.comment.length() > 0}">
-									        Visualizar
+									        #{messages['layout.text.show']}
 									        <rich:componentControl for="commentModal" attachTo="comment" operation="show" event="onclick"/>
 									 </h:outputLink>
 								</h:panelGrid>
@@ -69,7 +69,7 @@
 							<rich:modalPanel id="commentModal" width="500">
 						        <f:facet name="header">
 						            <h:panelGroup>
-						                <h:outputText value="Comentário"></h:outputText>
+						                <h:outputText value="#{messages['layout.text.workflow.comment']}"></h:outputText>
 						            </h:panelGroup>
 						        </f:facet>
 						        <f:facet name="controls">
@@ -84,7 +84,7 @@
 							<rich:modalPanel id="artefactsModal" width="710" >
 						        <f:facet name="header">
 						            <h:panelGroup>
-						                <h:outputText value="Artefatos de Saída"></h:outputText>
+						                <h:outputText value="#{messages['layout.text.workflow.outputArtifacts']}"></h:outputText>
 						            </h:panelGroup>
 						        </f:facet>
 						        <f:facet name="controls">
@@ -94,14 +94,14 @@
 						            </h:panelGroup>
 						        </f:facet>
 						          <h:panelGrid columns="2">
-						           <h:outputLabel value="Artefatos da Atividade: #{taskNode.name}" rendered="#{taskNode.outArtefacts.size() gt 0}" />
+						           <h:outputLabel value="#{messages['layout.text.workflow.activity']}: #{taskNode.name}" rendered="#{taskNode.outArtefacts.size() gt 0}" />
 							       <rich:dataTable style="width: 650px;" rendered="#{taskNode.outArtefacts.size() gt 0}" value="#{taskNode.outArtefacts}" var="artefact" id="taskNodeArtefacts">
 											<h:column>
-												<f:facet name="header">Nome</f:facet>
+												<f:facet name="header">#{messages['layout.text.workflow.name']}</f:facet>
 												<h:outputText value="#{artefact.name}" />
 											</h:column>
 											<h:column>
-												<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(userExecution))}"
+												<h:commandLink value="#{messages['layout.text.download']}" action="#{sendFile.sendFile(artefact.get(userExecution))}"
 												 rendered="#{artefact.get(userExecution) != null}"
 								 				 status="block"
 								 				 target="_blank">
@@ -111,14 +111,14 @@
 						          </h:panelGrid>
 							       <ui:repeat var="task" value="#{taskNode.tasks}">
 										     <h:panelGrid columns="2">
-								       <h:outputLabel value="Artefatos da Tarefa: #{task.name}" rendered="#{task.outArtefacts.size() gt 0}" />
+								       <h:outputLabel value="#{messages['layout.text.workflow.task']}: #{task.name}" rendered="#{task.outArtefacts.size() gt 0}" />
 								       <rich:dataTable style="width: 500px;" rendered="#{task.outArtefacts.size() gt 0}" value="#{task.outArtefacts}" var="artefact" id="taskArtefacts">
 												<h:column>
-													<f:facet name="header">Nome</f:facet>
+													<f:facet name="header">#{messages['layout.text.workflow.name']}</f:facet>
 													<h:outputText value="#{artefact.name}" />
 												</h:column>
 												<h:column>
-													<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(userExecution))}"
+													<h:commandLink value="#{messages['layout.text.download']}" action="#{sendFile.sendFile(artefact.get(userExecution))}"
 													 rendered="#{artefact.get(userExecution) != null}"
 									 				 status="block"
 									 				 target="_blank">
@@ -132,7 +132,7 @@
 							<rich:modalPanel id="taskTimeModal" width="500">
 						        <f:facet name="header">
 						            <h:panelGroup>
-						                <h:outputText value="Tempo das atividades"></h:outputText>
+						                <h:outputText value="#{messages['layout.text.workflow.timeActivities']}"></h:outputText>
 						            </h:panelGroup>
 						        </f:facet>
 						        <f:facet name="controls">
@@ -143,15 +143,15 @@
 						        </f:facet>
 						        <rich:dataTable rendered="#{userExecution.taskNode.tasks.size() gt 0}" value="#{userExecution.taskNode.tasks}" var="task" id="taskTimeTable">
 											<h:column>
-												<f:facet name="header">Tarefa</f:facet>
+												<f:facet name="header">#{messages['layout.text.workflow.activity']}</f:facet>
 												<h:outputText value="#{task.name}" />
 											</h:column>
 											<h:column>
-												<f:facet name="header">Tempo</f:facet>
+												<f:facet name="header">#{messages['layout.text.workflow.time']}</f:facet>
 												<h:outputText value="#{userExecution.getTaskExecution(task).wastedTimeString}" />
 					 				 		</h:column>
 					 				 		<h:column>
-												<f:facet name="header">Tempo em Espera</f:facet>
+												<f:facet name="header">#{messages['layout.text.workflow.pauseTime']}</f:facet>
 												<h:outputText value="#{userExecution.getTaskExecution(task).wastedBreakTimeString}" />
 					 				 		</h:column>
 							    </rich:dataTable>
@@ -160,7 +160,7 @@
 							<rich:modalPanel id="breakModal" width="500">
 						        <f:facet name="header">
 						            <h:panelGroup>
-						                <h:outputText value="Comentário"></h:outputText>
+						                <h:outputText value="#{messages['layout.text.workflow.comment']}"></h:outputText>
 						            </h:panelGroup>
 						        </f:facet>
 						        <f:facet name="controls">
@@ -171,11 +171,11 @@
 						        </f:facet>
 						        <rich:dataTable rendered="#{userExecution.breakes.size() gt 0}" value="#{userExecution.breakes}" var="break" id="userExecutionBreakes">
 											<h:column>
-												<f:facet name="header">Tempo</f:facet>
+												<f:facet name="header">#{messages['layout.text.workflow.pauseTime']}</f:facet>
 												<h:outputText value="#{break.wastedTimeString}" />
 											</h:column>
 											<h:column>
-												<f:facet name="header">Motivo</f:facet>
+												<f:facet name="header">#{messages['layout.text.workflow.pauseReason']}</f:facet>
 												<h:outputText value="#{break.reason}" />
 					 				 		</h:column>
 							       </rich:dataTable>
@@ -191,7 +191,7 @@
 		<rich:modalPanel id="panelObservation" width="700" height="500"  autosized="true" >
 	        <f:facet name="header">
 	            <h:panelGroup>
-	                <h:outputText value="Observações"></h:outputText>
+	                <h:outputText value="#{messages['layout.text.workflow.observations']}"></h:outputText>
 	            </h:panelGroup>
 	        </f:facet>
 	        <f:facet name="controls">
@@ -204,19 +204,19 @@
 		        <h:form name="observationForm" id="observationForm">
 		        	<h:panelGrid columns="2">
 			         	<h:inputTextarea value="#{report.observation.comment}" />
-			         	<a4j:commandButton action="#{report.saveObservation()}" value="Salvar" reRender="observationForm"></a4j:commandButton>
+			         	<a4j:commandButton action="#{report.saveObservation()}" value="#{messages['layout.text.save']}" reRender="observationForm"></a4j:commandButton>
 		        	</h:panelGrid>
 		    
 		        	<rich:dataTable value="#{report.workflow.observations}" var="observation" rows="5">
 		        		<h:column>
 		        			<h:outputText value="#{observation.createdAt.time}" >
-		        				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+		        				<f:convertDateTime pattern="MM/dd/yyyy HH:mm" />
 		        			</h:outputText>
 		        			<br /><br />
 		        			<h:outputText value="#{observation.comment}" />
 		        		</h:column>
 		        		<h:column>
-		        			<a4j:commandLink value="Remover" action="#{report.removeObservation(observation)}" reRender="observationForm" />
+		        			<a4j:commandLink value="#{messages['layout.text.remove']}" action="#{report.removeObservation(observation)}" reRender="observationForm" />
 		        		</h:column>
 		        		<f:facet name="footer">
 			                <rich:datascroller id="ds" renderIfSinglePage="true"></rich:datascroller>

@@ -13,17 +13,17 @@
     <ui:define name="columns">
 		<rich:column>
 		 	<f:facet name="header">
-            	<h:outputText value="Experimento"/>
+            	<h:outputText value="#{messages['layout.text.workflow.experiment']}"/>
             </f:facet>
 			<h:outputText value="#{entity.title}" />
-			<h:outputText value=" - Started at " rendered="#{entity.started}" />
+			<h:outputText value=" - #{messages['layout.text.workflow.startedAt']} " rendered="#{entity.started}" />
 			<h:outputText value="#{entity.startedAt}" rendered="#{entity.started}">
-				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+				<f:convertDateTime pattern="MM/dd/yyyy HH:mm" />
 			</h:outputText>
 		</rich:column>    	
 		<rich:column>
 		 	<f:facet name="header">
-            	<h:outputText value="Tratamentos"/>
+            	<h:outputText value="#{messages['layout.text.workflow.treatments']}"/>
             </f:facet>
 			<rich:dataList var="processDefinition" id="processDefinitions" value="#{entity.processDefinitions}" >
 				<h:outputText value="#{processDefinition.name} " />
@@ -33,9 +33,9 @@
     
     <ui:define name="actions"> 
     	<h:panelGroup rendered="#{entity.canStart()}">
-	    	<h:commandButton action="#{crudWorkflow.start(entity)}" title="play" rendered="#{!entity.started}"  value="Iniciar" />
-	    	<h:commandButton action="#{crudWorkflow.nextTurn(entity)}" title="play" rendered="#{entity.started and !entity.lastTurn}"  value="Próximo Turno" />
-	    	<h:commandButton value="Acompanhar" action="#{report.init(entity)}" />
+	    	<h:commandButton action="#{crudWorkflow.start(entity)}" title="play" rendered="#{!entity.started}"  value="#{messages['layout.text.workflow.start']}" />
+	    	<h:commandButton action="#{crudWorkflow.nextTurn(entity)}" title="play" rendered="#{entity.started and !entity.lastTurn}"  value="#{messages['layout.text.workflow.nextTurn']}" />
+	    	<h:commandButton value="#{messages['layout.text.workflow.trackResults']}" action="#{report.init(entity)}" />
     	</h:panelGroup>
     </ui:define>
 </ui:composition>

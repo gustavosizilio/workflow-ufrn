@@ -8,17 +8,17 @@
     <rich:toolBarGroup>
         <h:form id="menuLinks">
 			<h:panelGroup rendered="#{identity.loggedIn}">
-	        	<h:commandLink action="#{crudWorkflow.list()}" value="Meus Experimentos" />
-	        	<h:commandLink action="#{executer.list()}" value="Executar Experimento" />
+	        	<h:commandLink action="#{crudWorkflow.list()}" value="#{messages['layout.text.myExperiments']}" />
+	        	<h:commandLink action="#{executer.list()}" value="#{messages['layout.text.experimentsExecution']}" />
 			</h:panelGroup>
        </h:form>
     </rich:toolBarGroup>
     <!-- @newMenuItem@ -->
     <rich:toolBarGroup location="right">
     	<h:form>
-	        <h:outputText id="menuWelcomeId" value="Bem vindo, #{user.name}! " rendered="#{identity.loggedIn}"/>
-	        <s:link id="menuLoginId" view="/login.xhtml" value="Login" rendered="#{not identity.loggedIn}" propagation="none"/>
-	        <h:commandLink id="menuLogoutId" action="#{authenticator.logout}" value="Logout" rendered="#{identity.loggedIn}" />
+	        <h:outputText id="menuWelcomeId" value="#{messages['layout.messages.wellcome']}, #{user.name}!" rendered="#{identity.loggedIn}"/>
+	        <s:link id="menuLoginId" view="/login.xhtml" value="#{messages['layout.text.login']}" rendered="#{not identity.loggedIn}" propagation="none"/>
+	        <h:commandLink id="menuLogoutId" action="#{authenticator.logout}" value="#{messages['layout.text.logout']}" rendered="#{identity.loggedIn}" />
     	</h:form>
     </rich:toolBarGroup>
 </rich:toolBar>

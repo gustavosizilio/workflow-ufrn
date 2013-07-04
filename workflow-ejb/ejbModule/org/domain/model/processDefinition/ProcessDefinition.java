@@ -215,5 +215,8 @@ public class ProcessDefinition extends GenericEntity{
 	public void setUserAssignments(List<UserAssignment> userAssignments) {
 		this.userAssignments = userAssignments;
 	}
+	public String getPathGrafico(){
+		return "../graficos_gerados/"+workflow.getId()+"_"+getId()+".png";
+	}
 	
 }

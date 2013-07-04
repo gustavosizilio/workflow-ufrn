@@ -9,11 +9,11 @@
     template="/layout/template.xhtml">
 	
 	<ui:define name="body">
-		<rich:panel header="Novo">
+		<rich:panel header="#{messages['layout.text.new']}">
 	    	<ui:insert name="create" />
-	    	<h:commandButton action="#{action.save()}" value="Salvar" styleClass="commit"/>
+	    	<h:commandButton action="#{action.save()}" value="#{messages['layout.text.save']}" styleClass="commit"/>
 		</rich:panel>
 		<rich:separator  height="4" lineType="double"/>
-    	<h:commandButton action="#{action.list()}" value="Listar" />
+    	<h:commandButton action="#{action.list()}" value="#{messages['layout.text.list']}" />
 	</ui:define>
 </ui:composition>

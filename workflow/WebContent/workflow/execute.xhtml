@@ -18,7 +18,7 @@
 			<h:outputText value="#{executer.currentTaskNode.description}" style="font-size: 13px;"  />
 			<rich:dataList value="#{executer.currentTaskNode.inArtefacts}" var="artefact" rendered="#{executer.currentTaskNode.inArtefacts.size() gt 0}">
 				<h:outputText value="#{artefact.name} " />
-				<h:commandLink value="Download" rendered="#{artefact.artefactFiles.size gt 0}"
+				<h:commandLink value="#{messages['layout.text.download']}" rendered="#{artefact.artefactFiles.size gt 0}"
 								action="#{sendFile.sendFile(artefact.artefactFiles.get(0))}"
 				 				target="_blank">
 				</h:commandLink>
@@ -27,30 +27,30 @@
 			
 			<h:panelGroup rendered="#{executer.currentUserExecution != null}">
 				<h:panelGrid columns="2">
-					<h:outputLabel value="Enviar Artefatos:" rendered="#{executer.currentTaskNode.outArtefacts.size() gt 0}"/>
+					<h:outputLabel value="#{messages['layout.text.workflow.sendArtifacts']}:" rendered="#{executer.currentTaskNode.outArtefacts.size() gt 0}"/>
 					<rich:dataTable value="#{executer.currentTaskNode.outArtefacts}" var="artefact"
 					id="taskNodeArtefacts" rendered="#{executer.currentTaskNode.outArtefacts.size() gt 0}">
 						<h:column>
-							<f:facet name="header">Nome</f:facet>
+							<f:facet name="header">#{messages['layout.text.workflow.name']}</f:facet>
 							<h:outputText value="#{artefact.name}" />
 						</h:column>
 						<h:column>
 							<f:facet name="header"></f:facet>
 							
 							<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) == null}">
-								<a4j:commandLink value="Enviar" action="#{executer.setCurrentArtefact(artefact)}" id="enviarModal"
+								<a4j:commandLink value="#{messages['layout.text.send']}" action="#{executer.setCurrentArtefact(artefact)}" id="enviarModal"
 								 				 reRender="uploadArtefact">
 									<rich:componentControl for="panelArtefact" attachTo="enviarModal" operation="show" event="onclick"/>
 								</a4j:commandLink>
 							</h:panelGroup>
 							<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) != null}">
 								<h:panelGroup rendered="#{executer.currentUserExecution.finishedAt == null}" >
-									<a4j:commandLink value="Remover" action="#{executer.removeArtefact(artefact)}"
+									<a4j:commandLink value="#{messages['layout.text.remove']}" action="#{executer.removeArtefact(artefact)}"
 									 				 reRender="taskNodeArtefacts">
 									</a4j:commandLink>
 									<h:outputText value=" | " />
 								</h:panelGroup>
-								<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(executer.currentUserExecution))}"
+								<h:commandLink value="#{messages['layout.text.download']}" action="#{sendFile.sendFile(artefact.get(executer.currentUserExecution))}"
 								 				 target="_blank">
 								</h:commandLink>							
 							</h:panelGroup>
@@ -58,7 +58,7 @@
 						</h:column>
 					</rich:dataTable>
 					
-					<h:outputLabel value="Comentário:" for="userExecutionComment"/>
+					<h:outputLabel value="#{messages['layout.text.workflow.comment']}:" for="userExecutionComment"/>
 					<h:inputTextarea id="userExecutionComment" value="#{executer.currentUserExecution.comment}"
 					 disabled="#{executer.currentUserExecution.finishedAt != null}"
 					 rendered="#{executer.currentUserExecution != null}" />
@@ -71,37 +71,37 @@
 							<h:outputText value="#{task.description}" style="font-size: 13px;" />
 							<rich:dataList value="#{task.inArtefacts}" var="artefact" rendered="#{task.inArtefacts.size() gt 0}">
 								<h:outputText value="#{artefact.name} " /> 
-								<h:commandLink value="Download" rendered="#{artefact.artefactFiles.size gt 0}"
+								<h:commandLink value="#{messages['layout.text.download']}" rendered="#{artefact.artefactFiles.size gt 0}"
 												action="#{sendFile.sendFile(artefact.artefactFiles.get(0))}"
 								 				target="_blank">
 								</h:commandLink>
 							</rich:dataList>
 							<br /><br />
 							<h:panelGrid columns="2">
-								<h:outputLabel value="Enviar Artefatos:" rendered="#{task.outArtefacts.size() gt 0}"/>
+								<h:outputLabel value="#{messages['layout.text.workflow.sendArtifacts']}:" rendered="#{task.outArtefacts.size() gt 0}"/>
 								<rich:dataTable value="#{task.outArtefacts}"
 								 style="width:500px" var="artefact" rendered="#{task.outArtefacts.size() gt 0}">
 									<h:column>
-										<f:facet name="header">Nome</f:facet>
+										<f:facet name="header">#{messages['layout.text.workflow.name']}</f:facet>
 										<h:outputText value="#{artefact.name}" />
 									</h:column>
 									<h:column>
 										<f:facet name="header"></f:facet>
 										
 										<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) == null}">
-											<a4j:commandLink value="Enviar" action="#{executer.setCurrentArtefact(artefact)}" id="sendModal"
+											<a4j:commandLink value="#{messages['layout.text.send']}" action="#{executer.setCurrentArtefact(artefact)}" id="sendModal"
 											 				 reRender="uploadArtefact">
 												<rich:componentControl for="panelArtefact" attachTo="sendModal" operation="show" event="onclick"/>
 											</a4j:commandLink>
 										</h:panelGroup>
 										<h:panelGroup rendered="#{artefact.get(executer.currentUserExecution) != null}">
 											<h:panelGroup rendered="#{not executer.currentTaskExecution.finished}" >
-												<a4j:commandLink value="Remover" action="#{executer.removeArtefact(artefact)}"
+												<a4j:commandLink value="#{messages['layout.text.remove']}" action="#{executer.removeArtefact(artefact)}"
 												 				 reRender="tasks">
 												</a4j:commandLink>
 												<h:outputText value=" | " />
 											</h:panelGroup>
-											<h:commandLink value="Download" action="#{sendFile.sendFile(artefact.get(executer.currentUserExecution))}"
+											<h:commandLink value="#{messages['layout.text.download']}" action="#{sendFile.sendFile(artefact.get(executer.currentUserExecution))}"
 											 				 target="_blank">
 											</h:commandLink>							
 										</h:panelGroup>
@@ -110,9 +110,9 @@
 								</rich:dataTable>
 							</h:panelGrid>
 							<h:commandButton action="#{executer.finishTaskExecution()}" 
-								value="#{(executer.currentTaskExecution.finished) ? 'Tarefa Finalizada' : 'Finalizar Tarefa'}" 
+								value="#{(executer.currentTaskExecution.finished) ? messages['layout.text.workflow.taskFinished'] : messages['layout.text.workflow.finishTask']}" 
 								disabled="#{executer.currentTaskExecution.finished}"
-								onclick="confirm('Você tem certeza? A ação não poderá ser desfeita!')" />
+								onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )" />
 						</rich:panel>
 					</ui:repeat>
 				</h:panelGroup>
@@ -130,18 +130,18 @@
 		<h:panelGroup>
 		
 			<ui:repeat var="transition" value="#{executer.transitions}">
-				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? transition.title : 'Pular tarefa já executada')}"
-								 onclick="#{((executer.currentUserExecution.finishedAt == null and executer.currentTaskNode != null) ? 'javascript:return confirm(\'Você tem certeza?\')' : '')}"
+				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? transition.title : messages['layout.text.skipFinishedTask'])}"
+								 onclick="#{((executer.currentUserExecution.finishedAt == null and executer.currentTaskNode != null) ? 'javascript:return confirm(\'Are you sure?\')' : '')}"
 								 styleClass="executeButton"/>
 			</ui:repeat>
 
-			<h:commandButton action="#{executer.startBreak}" value="Pausar" 
+			<h:commandButton action="#{executer.startBreak}" value="#{messages['layout.text.workflow.pause']}" 
 								 rendered="#{executer.currentUserExecution.finishedAt == null and executer.currentTaskNode != null}"
-								 onclick="javascript:return confirm('Você tem certeza?')"
+								 onclick="javascript:return confirm('#{messages['layout.messages.areYouSure?']}')"
 								 styleClass="executeButton">
 			</h:commandButton>
 
-			<h:commandButton action="#{executer.next(null)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? 'Finalizar' : 'Pular tarefa já executada')}"
+			<h:commandButton action="#{executer.next(null)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? messages['layout.text.workflow.finish'] : messages['layout.text.skipFinishedTask'])}"
 							 styleClass="executeButton"
 							 rendered="#{executer.currentTaskNode != null and executer.transitions.size eq 0}"	 
 							 />
@@ -152,16 +152,16 @@
 		<rich:modalPanel id="panelBreak" showWhenRendered="true" rendered="#{executer.currentUserExecution.break}" autosized="true" >
 	        <f:facet name="header">
 	            <h:panelGroup>
-	                <h:outputText value="Break"></h:outputText>
+	                <h:outputText value="#{messages['layout.text.workflow.pause']}"></h:outputText>
 	            </h:panelGroup>
 	        </f:facet>
 	        <h:panelGroup>
 		        <h:form name="breakForm">
-					<h:outputLabel value="Motivo da pausa:" for="breakReason"/>
+					<h:outputLabel value="#{messages['layout.text.workflow.pauseReason']}:" for="breakReason"/>
 					<h:inputTextarea id="breakReason" value="#{executer.currentUserExecution.openedBreak.reason}" >
 						<a4j:support event="onkeyup" status="noblock" reRender="stopBreakButton" ajaxSingle="true" ignoreDupResponses="true"/>
 					</h:inputTextarea>
-					<h:commandButton id="stopBreakButton" reRender="panelBreak" action="#{executer.stopBreak}" value="Continuar"
+					<h:commandButton id="stopBreakButton" reRender="panelBreak" action="#{executer.stopBreak}" value="#{messages['layout.text.workflow.continue']}"
 						styleClass="executeButton" disabled="#{executer.currentUserExecution.openedBreak.reason.isEmpty()}"/>
 			    </h:form>
 	        </h:panelGroup>
@@ -170,7 +170,7 @@
 		 <rich:modalPanel id="panelArtefact" autosized="true">
 	        <f:facet name="header">
 	            <h:panelGroup>
-	                <h:outputText value="Upload"></h:outputText>
+	                <h:outputText value="#{messages['layout.text.upload']}"></h:outputText>
 	            </h:panelGroup>
 	        </f:facet>
 	        <f:facet name="controls">
@@ -182,7 +182,7 @@
 	        <h:panelGroup id="uploadArtefact">
 		        <h:form enctype="multipart/form-data">
 						<rich:fileUpload
-							uploadControlLabel="Enviar"
+							uploadControlLabel="#{messages['layout.text.send']}"
 							immediateUpload="false"
 							listHeight="70px;"
 				            noDuplicate="true" listWidth="350px;" 
@@ -190,8 +190,8 @@
 				            autoclear="false"
 				            
 				            maxFilesQuantity="1" 
-				            cancelEntryControlLabel="Limpar"
-				            transferErrorLabel="Erro ao importar arquivo"           
+				            cancelEntryControlLabel="#{messages['layout.text.workflow.clean']}"
+				            transferErrorLabel="#{messages['layout.messages.fileUploadError']}"           
 				            fileUploadListener="#{executer.uploadArtefact}"
 				            onfileuploadcomplete="refreshModal()">
 				        </rich:fileUpload>

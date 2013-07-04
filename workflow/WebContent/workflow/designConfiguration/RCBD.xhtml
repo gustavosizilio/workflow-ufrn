@@ -9,20 +9,20 @@
     xmlns:a4j="http://richfaces.org/a4j">
 <h:panelGroup rendered="#{crudWorkflow.entity.RCBDDesign}">
 	<h:panelGrid columns="2" rendered="#{ not crudWorkflow.entity.designComplete}" >
-		<h:outputLabel value="Usuário:" />
+		<h:outputLabel value="#{messages['layout.text.user']}:" />
 		<h:selectOneMenu value="#{crudWorkflow.userProperty}">
 			<s:selectItems value="#{crudWorkflow.users}" var="user"
 				label="#{user.name} - #{user.email}" noSelectionLabel="" />
 			<s:convertEntity />
 		</h:selectOneMenu>
-		<h:outputLabel value="Bloco:" />
+		<h:outputLabel value="#{messages['layout.text.block']}:" />
 		<h:selectOneMenu value="#{crudWorkflow.groupProperty}">
 			<s:selectItems value="#{crudWorkflow.entity.groups}" 
 				var="b"
 				label="#{b}" noSelectionLabel="" />
 		</h:selectOneMenu>
 		<rich:spacer />
-		<a4j:commandButton value="Adicionar para sorteio"
+		<a4j:commandButton value="#{messages['layout.text.addToSort']}"
 			actionListener="#{crudWorkflow.addUserToShuffle}"
 			reRender="designDefinition" />
 	</h:panelGrid>
@@ -30,30 +30,30 @@
 	<br />
 	<rich:dataTable value="#{crudWorkflow.groupValues}" var="key" rendered="#{not crudWorkflow.entity.designComplete}">
 		<rich:column>
-			<f:facet name="header">Block</f:facet>
+			<f:facet name="header">#{messages['layout.text.block']}</f:facet>
 			<h:outputText value="#{key}" />
 		</rich:column>
 		<rich:column>
-			<f:facet name="header">Usuários</f:facet>
+			<f:facet name="header">#{messages['layout.text.subjects']}</f:facet>
 			<rich:dataList value="#{crudWorkflow.usersSelectedToShuffle.get(key)}" var="u">
 				<h:outputText value="#{u.name} (#{u.email})" />
 				<a4j:commandLink
 					action="#{crudWorkflow.removeUserToSuffle(u, key)}"
-					reRender="designDefinition" value="[Remover]" />
+					reRender="designDefinition" value="[#{messages['layout.text.remove']}]" />
 			</rich:dataList>
 		</rich:column>	
 	</rich:dataTable>
-	<h:commandButton action="#{crudWorkflow.shuffleUsersRCDB}" value="Sortear" rendered="#{not crudWorkflow.entity.designComplete}" />
+	<h:commandButton action="#{crudWorkflow.shuffleUsersRCDB}" value="#{messages['layout.text.sort']}" rendered="#{not crudWorkflow.entity.designComplete}" />
 	
 	
 	
 	<rich:dataTable value="#{crudWorkflow.groupValues}" var="key"  rendered="#{crudWorkflow.entity.designComplete}">
 		<rich:column>
-			<f:facet name="header">Block</f:facet>
+			<f:facet name="header">#{messages['layout.text.block']}</f:facet>
 			<h:outputText value="#{key}" />
 		</rich:column>
 		<rich:column>
-			<f:facet name="header">Usuários</f:facet>
+			<f:facet name="header">#{messages['layout.text.subjects']}</f:facet>
 			<rich:dataList value="#{crudWorkflow.entity.getUserAssignments(key)}" var="ua">
 				<h:outputText value="#{ua.processDefinition.name} -> #{ua.user.name} (#{ua.user.email})" />
 			</rich:dataList>

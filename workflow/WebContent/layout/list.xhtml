@@ -13,20 +13,25 @@
 		    <ui:insert name="columns" /> 
 		    <rich:column width="200" style="text-align: center;"  >
 			 	<f:facet name="header">
-                    <h:outputText value="Ações"/>
+                    <h:outputText value="#{messages['layout.text.actions']}"/>
                 </f:facet>
 				<h:panelGroup rendered="#{defautlActions == null ? true : defautlActions}">
-					<h:commandButton value="Detalhes" action="#{action.detail(entity)}" />
+					<h:commandButton value="#{messages['layout.text.details']}" action="#{action.detail(entity)}" />
 					
 					<h:outputText value="   " />
 					
-					<h:commandButton value="Editar" action="#{action.edit(entity)}" />
+					<h:commandButton value="#{messages['layout.text.edit']}" action="#{action.edit(entity)}" />
 					
 					<h:outputText value="   " />
 					
-					<h:commandButton value="Remover" action="#{action.delete(entity)}" onclick="return confirm('Você tem certeza?');" />
+					<h:commandButton value="#{messages['layout.text.remove']}" action="#{action.delete(entity)}" onclick="return confirm('#{messages['layout.messages.areYouSure?']}');" />
 					
 					<h:outputText value="   " />
+					
+					<h:commandLink action="#{grafico.init(entity)}" >
+    					<h:graphicImage value="/img/report.gif" title="Dispersão"/>
+    				</h:commandLink>
+    				<h:outputText value="   " />
 					
 				</h:panelGroup>
 				<ui:insert name="actions"/>
@@ -37,7 +42,7 @@
             </f:facet>
     	</rich:dataTable>
     	<rich:separator  height="4" lineType="double"/>
-    	<h:commandButton action="#{action.create()}" value="Novo" rendered="#{defautlActions == null ? true : defautlActions}" />
+    	<h:commandButton action="#{action.create()}" value="#{messages['layout.text.new']}" rendered="#{defautlActions == null ? true : defautlActions}" />
     	
 	</ui:define>
 </ui:composition>

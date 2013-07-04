@@ -13,17 +13,17 @@
     <h:form id="loginForm">
 
         <rich:panel>
-            <f:facet name="header">Login</f:facet>
+            <f:facet name="header">#{messages['layout.text.login']}</f:facet>
 
             <div class="dialog">
                 <h:panelGrid columns="2" rowClasses="prop" columnClasses="name,value">
-                    <h:outputLabel for="email">E-mail</h:outputLabel>
+                    <h:outputLabel for="email">#{messages['layout.text.email']}</h:outputLabel>
                     <h:inputText id="email"
                               value="#{credentials.username}"/>
-                    <h:outputLabel for="password">Senha</h:outputLabel>
+                    <h:outputLabel for="password">#{messages['layout.text.password']}</h:outputLabel>
                     <h:inputSecret id="password"
                                 value="#{credentials.password}"/>
-                    <h:outputLabel for="rememberMe">Remember me</h:outputLabel>
+                    <h:outputLabel for="rememberMe">#{messages['layout.text.rememberMe']}</h:outputLabel>
                     <h:selectBooleanCheckbox id="rememberMe"
                                           value="#{rememberMe.enabled}"/>
                 </h:panelGrid>

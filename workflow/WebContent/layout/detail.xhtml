@@ -9,12 +9,12 @@
     template="/layout/template.xhtml">
 	
 	<ui:define name="body">
-		<rich:panel header="Detalhes">
+		<rich:panel header="#{messages['layout.text.details']}">
 	    	<ui:insert name="detail" />
 		</rich:panel>
 		<ui:insert name="detailExtended" />
 		<rich:separator  height="4" lineType="double"/>
-    	<h:commandButton action="#{action.list()}" value="Listar" />
-    	<h:commandButton action="#{action.edit(action.entity)}" value="Editar" />
+    	<h:commandButton action="#{action.list()}" value="#{messages['layout.text.list']}" />
+    	<h:commandButton action="#{action.edit(action.entity)}" value="#{messages['layout.text.edit']}" />
 	</ui:define>
 </ui:composition>

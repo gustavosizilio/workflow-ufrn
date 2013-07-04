@@ -7,6 +7,21 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/JRI.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="workflow-ejb/libs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/JRIEngine.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="workflow-ejb/libs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/REngine.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="workflow-ejb/libs"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.generic.runtimeTarget/JBoss v5.0">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.ejb"/>

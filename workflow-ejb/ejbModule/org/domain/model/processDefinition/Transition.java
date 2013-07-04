@@ -30,7 +30,7 @@ public class Transition {
 	}
 	public String getTitle() {
 		if(this.getDescription() == null || this.getDescription().isEmpty()){
-			return "Próximo";
+			return "Next";
 		}
 		return name;
 	}

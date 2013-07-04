@@ -9,10 +9,10 @@
     xmlns:t="http://myfaces.apache.org/tomahawk">
 
 	<h:panelGrid columns="2">
-		<h:outputLabel value="Título:" for="title" />
+		<h:outputLabel value="#{messages['layout.text.workflow.title']}:" for="title" />
 		<h:inputText id="title" value="#{crudWorkflow.entity.title}" />
 		
-		<h:outputLabel value="Descrição:" for="description" />
+		<h:outputLabel value="#{messages['layout.text.workflow.description']}:" for="description" />
 		<h:inputTextarea id="description" value="#{crudWorkflow.entity.description}" />
 	</h:panelGrid>
 

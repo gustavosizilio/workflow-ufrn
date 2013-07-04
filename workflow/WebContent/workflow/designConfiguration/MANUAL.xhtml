@@ -9,13 +9,13 @@
     xmlns:a4j="http://richfaces.org/a4j">
 <h:panelGroup rendered="#{crudWorkflow.entity.manualDesign}">
 	<h:panelGrid columns="2" >
-		<h:outputLabel value="Usuário:" />
+		<h:outputLabel value="#{messages['layout.text.user']}:" />
 		<h:selectOneMenu value="#{crudWorkflow.userProperty}">
 			<s:selectItems value="#{crudWorkflow.users}" var="u"
 				label="#{u.name} - #{u.email}" noSelectionLabel="" />
 			<s:convertEntity />
 		</h:selectOneMenu>
-		<h:outputLabel value="Tratamento:" />
+		<h:outputLabel value="#{messages['layout.text.treatment']}:" />
 		<h:selectOneMenu value="#{crudWorkflow.processDefinitionProperty}">
 			<s:selectItems value="#{crudWorkflow.entity.processDefinitions}" 
 				var="p"
@@ -23,7 +23,7 @@
 			<s:convertEntity />
 		</h:selectOneMenu>
 		<rich:spacer />
-		<a4j:commandButton value="Adicionar"
+		<a4j:commandButton value="#{messages['layout.text.add']}"
 			actionListener="#{crudWorkflow.addUserManual}"
 			reRender="designDefinition" />
 	</h:panelGrid>
@@ -33,18 +33,18 @@
 	<rich:dataTable value="#{crudWorkflow.entity.processDefinitions}"
 		id="userConfigurations" var="processDefinition">
 		<rich:column>
-			<f:facet name="header">Tratamento</f:facet>
+			<f:facet name="header">#{messages['layout.text.treatment']}</f:facet>
 			<h:outputText value="#{processDefinition.name}" />
 		</rich:column>
 		<rich:column>
-			<f:facet name="header">Participantes</f:facet>
+			<f:facet name="header">#{messages['layout.text.subjects']}</f:facet>
 			<rich:dataList value="#{processDefinition.userAssignments}"
 				var="userAssignment">
 				<h:outputText
 					value="#{userAssignment.user.name} (#{userAssignment.user.email}) " />
 				<a4j:commandLink
 					action="#{crudWorkflow.removeUserManual(userAssignment)}"
-					reRender="designDefinition" value="[Remover]" />
+					reRender="designDefinition" value="[#{messages['layout.text.remove']}]" />
 			</rich:dataList>
 		</rich:column>
 	</rich:dataTable>

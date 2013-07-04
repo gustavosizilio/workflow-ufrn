@@ -14,13 +14,13 @@
     <ui:define name="columns">
 		<rich:column>
 		 	<f:facet name="header">
-            	<h:outputText value="Experimento"/>
+            	<h:outputText value="#{messages['layout.text.workflow.experiments']}"/>
             </f:facet>
 			<h:outputText value="#{entity.processDefinition.workflow.title}" />
 		</rich:column>   
 		<rich:column>
 		 	<f:facet name="header">
-            	<h:outputText value="Tratamento"/>
+            	<h:outputText value="#{messages['layout.text.workflow.treatment']}"/>
             </f:facet>
 			<h:outputText value="#{entity.processDefinition.name}" />
 		</rich:column>    	

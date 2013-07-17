@@ -108,7 +108,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		this.userProperty = null;
 	}
 	private void addUserToShuffleCRD() {
-		if(this.groupProperty ==null)
+		if(this.groupProperty == null)
 			this.groupProperty = "Subjects";
 		addUserToShuffleBlock();
 	}
@@ -146,6 +146,11 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 //			groups.add(string);
 //		}
 //		return groups;
+		if(entity.isCRDesign()){
+			ArrayList<String> r = new ArrayList<String>();
+			r.add("Subjects");
+			return r;
+		}
 		return new ArrayList<String>(entity.getGroups());
 	}
 	public void suffleUsersBlock() throws ValidationException{

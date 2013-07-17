@@ -15,7 +15,6 @@
 				label="#{user.name} - #{user.email}" noSelectionLabel="" />
 			<s:convertEntity />
 		</h:selectOneMenu>
-		<rich:spacer />
 		<a4j:commandButton value="#{messages['layout.text.addToSort']}"
 			actionListener="#{crudWorkflow.addUserToShuffle}"
 			reRender="designDefinition" />
@@ -47,11 +46,12 @@
 			<h:outputText value="#{key}" />
 		</rich:column>
 		<rich:column>
-			<f:facet name="header">#{messages['layout.text.users']}</f:facet>
+			<f:facet name="header">#{messages['layout.text.subjects']}</f:facet>
 			<rich:dataList value="#{crudWorkflow.entity.getUserAssignments(key)}" var="ua">
 				<h:outputText value="#{ua.processDefinition.name} -> #{ua.user.name} (#{ua.user.email})" />
 			</rich:dataList>
 		</rich:column>	
 	</rich:dataTable>
 </h:panelGroup>
+
 </ui:fragment>

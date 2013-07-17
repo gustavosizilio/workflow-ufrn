@@ -53,7 +53,7 @@ public class Workflow extends GenericEntity {
 	}
 	public Workflow(User user) {
 		this();
-		this.turnQuantity = 1;
+		this.turnQuantity = 0;
 		this.user = user;
 	}
 	public Workflow(User user, String title) {
@@ -262,10 +262,13 @@ public class Workflow extends GenericEntity {
 		}
 	}
 	public boolean isLastTurn(){
-		if(this.getCurrentTurn() == null  || this.turnQuantity == null){
+		if(this.turnQuantity == null || this.turnQuantity == 0)
+			return true;
+		
+		if(this.getCurrentTurn() == null){
 			return false;
 		}
-		if((this.turnQuantity-1) > this.getCurrentTurn()){
+		if((this.turnQuantity) > this.getCurrentTurn()){
 			return false;
 		}else{
 			return true;

@@ -37,8 +37,5 @@
 	    	<h:commandButton action="#{crudWorkflow.nextTurn(entity)}" title="play" rendered="#{entity.started and !entity.lastTurn}"  value="#{messages['layout.text.workflow.nextTurn']}" />
 	    	<h:commandButton value="#{messages['layout.text.workflow.trackResults']}" action="#{report.init(entity)}" />
     	</h:panelGroup>
-    	
-		<h:outputText value="   " />
-    	<h:commandButton action="#{grafico.init(entity)}" title="graph" value="#{messages['layout.text.workflow.graph']}"/>
     </ui:define>
 </ui:composition>

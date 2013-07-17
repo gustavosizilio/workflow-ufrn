@@ -13,6 +13,8 @@
 		<a4j:commandButton action="#" value="#{messages['layout.text.workflow.comments']}" id="observationModal" >
 			<rich:componentControl for="panelObservation" attachTo="observationModal" operation="show" event="onclick"/>
 		</a4j:commandButton>
+		<h:outputText value="   " />
+    	<h:commandButton action="#{grafico.init(entity)}" title="graph" value="#{messages['layout.text.workflow.graph']}"/>
 	</h:panelGroup>
 	<br />
 	

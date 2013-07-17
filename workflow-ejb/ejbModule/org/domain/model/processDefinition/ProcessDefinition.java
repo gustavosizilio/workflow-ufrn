@@ -152,7 +152,7 @@ public class ProcessDefinition extends GenericEntity{
 		if(!this.workflow.isStarted())
 			return false;
 		
-		if(this.workflow.getTurnQuantity() > 1){
+		if(this.workflow.getTurnQuantity() != null && this.workflow.getTurnQuantity() > 1){
 			if(ua.getExecutionOrder() > this.workflow.getCurrentTurn()){
 				return false;
 			}

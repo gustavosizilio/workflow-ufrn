@@ -151,7 +151,10 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	public void suffleUsersBlock() throws ValidationException{
 		boolean hasError = false;
 		for (String groupValue : getGroupValues()) {
-			if(this.getUsersSelectedToShuffle().get(groupValue).size() < this.entity.getQuantityOfSubjectsNeeds(groupValue)){
+			if (this.getUsersSelectedToShuffle().get(groupValue) == null){
+				getFacesMessages().add("Configuração incompleta");
+				hasError = true;
+			} else if(this.getUsersSelectedToShuffle().get(groupValue).size() < this.entity.getQuantityOfSubjectsNeeds(groupValue)){
 				getFacesMessages().add("Quantidade de usuários insuficiente no grupo "+groupValue);
 				hasError = true;
 			}

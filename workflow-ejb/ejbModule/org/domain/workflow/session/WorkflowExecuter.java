@@ -114,15 +114,17 @@ public class WorkflowExecuter {
 	private void loadTaskExecution() {
 		setCurrentTask(null);
 		setCurrentTaskExecution(null);
-		for (Task task : currentTaskNode.getTasks()) {
-			if(task.startedByUser(user) && !task.finishedByUser(user)){
-				setCurrentTask(task);
-				setCurrentTaskExecution(currentTask.getTaskExecutionByUser(user));
-				stopBreakCurrentTask();
-				stopBreakOthersTasks();
-				break;
-			}
-		}		
+		if(currentTaskNode != null) {
+			for (Task task : currentTaskNode.getTasks()) {
+				if(task.startedByUser(user) && !task.finishedByUser(user)){
+					setCurrentTask(task);
+					setCurrentTaskExecution(currentTask.getTaskExecutionByUser(user));
+					stopBreakCurrentTask();
+					stopBreakOthersTasks();
+					break;
+				}
+			}		
+		}
 	}
 
 	public void startTask(Task task){

@@ -12,7 +12,7 @@ import org.domain.model.processDefinition.ProcessDefinition;
 import org.rosuda.JRI.Rengine;
 
 public class RGeradorGrafico {
-	public static final String[] args = {};
+	public static final String[] args = {"--no-save"};
 	public static final Rengine r = new Rengine(args, false, null);
 	
 	private static String DESTINATION_DIR_PATH ="C:/Users/Cleilton/Desktop/ImagensR/";

@@ -1,0 +1,50 @@
+1 - Install R (apt-get)
+	sudo apt-get install r-base r-base-dev
+2 - Install JRI
+	Help -> http://activeintelligence.org/blog/archive/install-r-extension-for-rapidminer-on-ubuntu-linux/ 
+
+	Resume:
+	sudo su
+	//Export Variables
+	JAVA_PATH=$(which javac);if [ $JAVA_PATH = /usr/bin/javac ];then export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:bin/javac::") ;else export JAVA_HOME=$(echo $JAVA_PATH | sed "s:bin/javac::");fi; export JAVA=${JAVA_HOME}bin/java;
+
+	export R_HOME=`find \`whereis R | sed s/R://\` -name libR.so | sed -r 's/(.*)\/.+\/libR.so/\1/g'`
+
+	export PATH=`find \`whereis R | sed s/R://\` -name libR.so | sed -r 's/(.*)\/libR.so/\1/g'`:$PATH
+
+
+	R CMD javareconf
+	//Enter R
+
+	install.packages(c("rJava"))
+
+3 - Configurar variaveis de ambiente
+	export R_HOME=/usr/lib/R/
+	export CLASSPATH=.:/usr/local/lib/R/site-library/rJava/jri/
+	export LD_LIBRARY_PATH=/usr/local/lib/R/site-library/rJava/jri/
+
+
+
+4 - Configure JBOSS VARIABLES
+	
+	+ Copiar as libs para o lib do jboss
+	+ Configurar as variáveis de ambiente!
+	Help -> http://mithil-tech.blogspot.com.br/2009/11/r-and-java-jri-via-eclipse.html
+	Example:
+		Path = /usr/local/lib/R/site-library/rJava/jri/;/usr/lib/R/bin/
+		R_HOME = /usr/lib/R/
+	+Configurar argumentos para a VM
+	-Djava.library.path=.:/usr/local/lib/R/site-library/rJava/jri/
+	+Adicionar as libs do engine no JRI
+	sudo cp path_of_jars /usr/local/lib/R/site-library/rJava/jri 
+	+Adicionar os jars copiados acima ao build path do projeto. não esquecer de configurar o native library
+
+
+
+
+--
+Gold links
+http://binfalse.de/2011/02/talking-r-through-java/
+
+
+

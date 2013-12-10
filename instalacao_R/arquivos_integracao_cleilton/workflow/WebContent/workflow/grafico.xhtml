@@ -1,0 +1,71 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="/layout/template.xhtml">
+	<ui:define name="body">
+
+	<br />
+
+	<h:panelGroup>
+        <h:outputText value="Gr&acute;afico"></h:outputText>
+    </h:panelGroup>
+	
+	<h:panelGroup id="panelDispersao">
+    
+		<ui:repeat value="#{grafico.workflow.processDefinitions}" var="processDefinition" >
+			
+			<h:graphicImage value="#{processDefinition.pathGrafico}" width="400" height="400" />
+			
+		</ui:repeat>
+         
+	</h:panelGroup>
+	
+
+	</ui:define>
+	
+	<ui:define name="modal">
+		<rich:modalPanel id="panelObservation" width="700" height="500"  autosized="true" >
+	        <f:facet name="header">
+	            <h:panelGroup>
+	                <h:outputText value="Observações"></h:outputText>
+	            </h:panelGroup>
+	        </f:facet>
+	        <f:facet name="controls">
+	            <h:panelGroup>
+	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelink"/>
+	                <rich:componentControl for="panelObservation" attachTo="hidelink" operation="hide" event="onclick"/>
+	            </h:panelGroup>
+	        </f:facet>
+	        <h:panelGroup>
+		        <h:form name="observationForm" id="observationForm">
+		        	<h:panelGrid columns="2">
+			         	<h:inputTextarea value="#{report.observation.comment}" />
+			         	<a4j:commandButton action="#{report.saveObservation()}" value="Salvar" reRender="observationForm"></a4j:commandButton>
+		        	</h:panelGrid>
+		    
+		        	<rich:dataTable value="#{report.workflow.observations}" var="observation" rows="5">
+		        		<h:column>
+		        			<h:outputText value="#{observation.createdAt.time}" >
+		        				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+		        			</h:outputText>
+		        			<br /><br />
+		        			<h:outputText value="#{observation.comment}" />
+		        		</h:column>
+		        		<h:column>
+		        			<a4j:commandLink value="Remover" action="#{report.removeObservation(observation)}" reRender="observationForm" />
+		        		</h:column>
+		        		<f:facet name="footer">
+			                <rich:datascroller id="ds" renderIfSinglePage="true"></rich:datascroller>
+			            </f:facet>
+		        	</rich:dataTable>
+			    </h:form>
+	        </h:panelGroup>
+	     </rich:modalPanel>
+	</ui:define>
+</ui:composition>

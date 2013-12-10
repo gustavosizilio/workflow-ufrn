@@ -1,0 +1,475 @@
+Experiment "SPL Testing Strategies"
+
+Process "ST_F1"{
+	Activity "SP1_F1_1" "Insert a new member - Product 1" "SP1_F1_2" Role "Subject"; {
+		Task "Execute TC SP1_F1_1" description "Execute the test case SP1_F1_1" 
+			artefacts artefact  "Teste case SP1_F1_1" description "Test case details SP1_F1_1" type input;;
+		Task "Report CR SP1_F1_1" description "Describe TC SP1_F1_1 results"  
+			artefacts artefact "CR SP1_F1_1" description "Reporting the CR for Test Case SP1_F1_1" type output;;  
+	}
+	Activity "SP1_F1_2" "Insert a new conference paper  - Product 1" "SP1_F1_3" Role "Subject";{
+		Task "Execute TC SP1_F1_2" description "Execute the test case SP1_F1_2" 
+			artefacts 	artefact  "Test case SP1_F1_2" description "Test case details SP1_F1_2"  type input;;
+		Task "Report CR SP1_F1_2" description "Describe  the test case TC SP1_F1_2 results" 
+			artefacts artefact "CR SP1_F1_2" description "Reporting the CR for Test Case SP1_F1_2" type output;;  
+	}
+	Activity "SP1_F1_3" "Insert a doctoral thesis - Product 1" "SP1_F1_4" Role "Subject";{
+		Task "Execute TC SP1_F1_3" description "Execute the test case  SP1_F1_3" 
+			artefacts artefact  "Test case SP1_F1_3" description "Test case details SP1_F1_3"type input;;
+		Task "Report CR SP1_F1_3" description "Describe  the test case TC SP1_F1_3 " 
+			artefacts artefact "CR SP1_F1_3" description "Reporting the CR for Test Case  SP1_F1_3e" type output;;    
+	}
+	Activity "SP1_F1_4" "Generate Report of Publications  - Product 1" "SP1_F1_5" Role "Subject";{
+		Task "Execute TC SP1_F1_4" description "Execute the test case  SP1_F1_4" 
+			artefacts artefact  "Test case SP1_F1_4" description "Test case details SP1_F1_4"type input;;
+		Task "Report CR SP1_F1_4" description "Describe  the test case TC SP1_F1_4" 
+			artefacts artefact "CR SP1_F1_4" description "Reporting the CR for Test Case  SP1_F1_4" type output;;    
+	}
+	Activity "SP1_F1_5" "Generate Report of Publications   - Product 1" "SP1_F1_6" Role "Subject";{
+		Task "Execute TC SP1_F1_5" description "Execute the test case  SP1_F1_5" 
+			artefacts artefact  "Caso de Teste SP1_F1_5" description "Test case details SP1_F1_5"type input;;
+		Task "Report CR SP1_F1_5" description "Describe  the test case TC SP1_F1_5" 
+			artefacts artefact "CR SP1_F1_5" description "Reporting the CR for Test Case  SP1_F1_5" type output;;    
+	}
+	Activity "SP1_F1_6" "Check the format of the generated reports - Product 1" "SP2_F1_1" Role "Subject";{
+		Task "Execute TC SP1_F1_6" description "Execute the test case  SP1_F1_6"
+			 artefacts artefact  "Caso de Teste SP1_F1_6" description "Test case details SP1_F1_6"type input;;
+		Task "Reporte CR SP1_F1_6" description "Describe  the test case TC SP1_F1_6" 
+			artefacts artefact "CRSP1_F1_6" description "Reporting the CR for Test Case  SP1_F1_6" type output;;    
+	}
+	Activity "SP2_F1_1" "Insert a new member  - Product 2" "SP2_F1_2" Role "Subject"; {
+		Task "Execute TC SP2_F1_1" description "Execute the test case  SP2_F1_1" 
+			artefacts artefact  "Caso de Teste SP2_F1_1" description "Test case details SP2_F1_1" type input;;
+		Task "Report CR SP2_F1_1" description "Describe  the test case TC SP2_F1_1" 
+			artefacts artefact "CR SP2_F1_1" description "Reporting the CR for Test Case  SP2_F1_1" type output;;  
+	}
+	Activity "SP2_F1_2" "Insert a new conference paper  - Product 2" "SP2_F1_3" Role "Subject";{
+		Task "Execute TC SP2_F1_2" description "Execute the test case  SP2_F1_2" 
+			artefacts artefact  "Caso de Teste SP2_F1_2" description "Test case details SP2_F1_2"  type input;;
+		Task "Report CR SP2_F1_2" description "Describe  the test case TC SP2_F1_2" 
+			artefacts artefact "CR SP2_F1_2" description "Reporting the CR for Test Case  SP2_F1_2" type output;;  
+	}
+	Activity "SP2_F1_3" "Insert a doctoral thesis   - Product 2" "SP2_F1_4" Role "Subject";{
+		Task "Execute TC SP2_F1_3" description "Execute the test case  SP2_F1_3" 
+			artefacts artefact  "Caso de Teste SP2_F1_3" description "Test case details SP2_F1_3"type input;;
+		Task "Report CR SP2_F1_3" description "Describe  the test case TC SP2_F1_3" 
+			artefacts artefact "CR SP2_F1_3" description "Resultado da Execução do Caso de Teste SP2_F1_3" type output;;    
+	}
+	Activity "SP2_F1_4" "Generate Report of Publications  - Product 2" "SP2_F1_5" Role "Subject";{
+		Task "Execute TC SP2_F1_4" description "Execute the test case  SP2_F1_4" 
+			artefacts artefact  "Caso de Teste SP2_F1_4" description "Test case details SP2_F1_4"type input;;
+		Task "Report CR SP2_F1_4" description "Describe  the test case TC SP2_F1_4" 
+			artefacts artefact "CR SP2_F1_4" description "Reporting the CR for Test Case  SP2_F1_4" type output;;    
+	}
+	Activity "SP2_F1_5" "Generate Report of Publications  - Product 2" "SP2_F1_6" Role "Subject";{
+		Task "Execute TC SP2_F1_5" description "Execute the test case SP2_F1_5" 
+			artefacts artefact  "Caso de Teste SP2_F1_5" description "Test case details SP2_F1_5"type input;;
+		Task "Report CR SP2_F1_5" description "Describe  the test case TC SP2_F1_5" 
+			artefacts artefact "CR SP2_F1_5" description "Reporting the CR for Test Case  SP2_F1_5" type output;;    
+	}
+	Activity "SP2_F1_6" "Check the format of the generated reports  - Product 2" Role "Subject";{
+		Task "Execute TC SP2_F1_6" description "Execute the test case  SP2_F1_6" 
+			artefacts artefact  "Caso de Teste SP2_F1_6" description "Test case details SP2_F1_6"type input;;
+		Task "Report CR SP2_F1_6" description "Describe  the test case TC SP2_F1_6" 
+			artefacts artefact "CR SP2_F1_6" description "Reporting the CR for Test Case  SP2_F1_6" type output;;    
+	}
+} // Fim do processo relativo às suites de teste da Feature 1 - Técnica ST (Products 1 e 2)
+
+Process "ST_F2"{
+		Activity "SP1_F2_1" "Inserir uma nova Linha de Pesquisa - Product 1" "SP1_F2_1" Role "Subject"; {
+		Task "Execute CT SP1_F2_1" description "Execute o Procedimento do Teste SP1_F2_1" 
+			artefacts artefact  "Caso de Teste SP1_F2_1" description "Detalhes do caso de teste SP1_F2_1" type input;;
+		Task "Reportar CR SP1_F2_1" description "Descrever o resultado do CT SP1_F2_1" 
+			artefacts artefact "CR SP1_F2_1" description "Resultado da Execução do Caso de Teste SP1_F2_1" type output;;  
+	}
+	Activity "SP1_F2_2" "Associar um Membro a Linha de Pesquisa - Product 1" "SP1_F2_3" Role "Subject";{
+		Task "Executar CT SP1_F2_2" description "Executar o Procedimento do Teste SP1_F2_2" 
+			artefacts artefact  "Caso de Teste SP1_F2_2" description "Detalhes do caso de teste SP1_F2_2"  type input;;
+		Task "Reportar CR SP1_F2_2" description "Descrever o resultado do CT SP1_F2_2" 
+			artefacts artefact "CR SP1_F2_2" description "Resultado da Execução do Caso de Teste SP1_F2_2" type output;;  
+	}
+	Activity "SP1_F2_3" "Remover uma Linha de Pesquisa - Product 1" "SP1_F2_4" Role "Subject";{
+		Task "Executar CT SP1_F2_3" description "Executar o Procedimento do Teste SP1_F2_3" 
+			artefacts artefact  "Caso de Teste SP1_F2_3" description "Detalhes do cos de teste SP1_F2_3"type input;;
+		Task "Reportar CR SP1_F2_3" description "Descrever o resultado do CT SP1_F2_3" 
+			artefacts artefact "CR SP1_F2_3" description "Resultado da Execução do Caso de Teste SP1_F2_3" type output;;    
+	}
+	Activity "SP1_F2_4" "Inserir uma nova linha de pesquisa - Product 1" "SP1_F2_5" Role "Subject";{
+		Task "Executar CT SP1_F2_4" description "Executar o Procedimento do Teste SP1_F2_4" 
+			artefacts artefact  "Caso de Teste SP1_F2_4" description "Detalhes do caso de teste SP1_F2_4"type input;;
+		Task "Reportar CR SP1_F2_4" description "Descrever o resultado do CT SP1_F2_4" 
+			artefacts artefact "CR SP1_F2_4" description "Resultado da Execução do Caso de Teste SP1_F2_4" type output;;    
+	}
+	Activity "SP1_F2_5" "Associar uma Publicação a uma linha - Product 1" "SP1_F2_6" Role "Subject";{
+		Task "Executar CT SP1_F2_5" description "Executar o Procedimento do Teste SP1_F2_5"
+			artefacts artefact  "Caso de Teste SP1_F2_5" description "Detalhes do caso de testes SP1_F2_5"type input;;
+		Task "Reportar CR SP1_F2_5" description "Descrever o resultado do CT SP1_F2_5" 
+			artefacts artefact "CR SP1_F2_5" description "Resultado da Execução do Caso de Teste SP1_F2_5" type output;;    
+	}
+	Activity "SP1_F2_6" "Editar uma Linha de Pesquisa - Product 1" "SP2_F2_1" Role "Subject";{
+		Task "Executar CT SP1_F2_6" description "Executar o Procedimento do Teste SP1_F2_6" 
+			artefacts artefact  "Caso de Teste SP1_F2_6" description "Detalhes do caso de teste SP1_F2_6"type input;;
+		Task "Reportar CR SP1_F2_6" description "Descrever o resultado do CT SP1_F2_6" 
+			artefacts artefact "CR SP1_F2_6" description "Resultado da Execução do Caso de Teste SP1_F2_6" type output;;    
+	}
+	
+	Activity "SP2_F2_1" "Inserir uma nova Linha de Pesquisa - Product 2" "SP2_F2_1" Role "Subject"; {
+		Task "Executar CT SP2_F2_1" description "Executar o Procedimento do Teste SP2_F2_1" 
+			artefacts artefact  "Caso de Teste SP2_F2_1" description "Detalhes do caso de teste SP2_F2_1" type input;;
+		Task "Reportar CR SP2_F2_1" description "Descrever o resultado do CT SP2_F2_1" 
+			artefacts artefact "CR SP2_F2_1" description "Resultado da Execução do Caso de Teste SP2_F2_1" type output;;  
+	}
+	Activity "SP2_F2_2" "Associar um Membro a Linha de Pesquisa - Product 2" "SP2_F2_3" Role "Subject";{
+		Task "Executar CT SP2_F2_2" description "Executar o Procedimento do Teste SP2_F2_2" 
+			artefacts artefact  "Caso de Teste SP2_F2_2" description "Detalhes do caso de teste SP2_F2_2"  type input;;
+		Task "Reportar CR SP2_F2_2" description "Descrever o resultado da CR SP2_F2_2"
+			 artefacts artefact "CR SP2_F2_2" description "Resultado da Execução do Caso de Teste SP2_F2_2" type output;;  
+	}
+	Activity "SP2_F2_3" "Remover uma Linha de Pesquisa - Product 2" "SP2_F2_4" Role "Subject";{
+		Task "Executar CT SP2_F2_3" description "Executar o Procedimento do Teste SP2_F2_3" 
+			artefacts artefact  "Caso de Teste SP2_F2_3" description "Suite de testes SP2_F2_3"type input;;
+		Task "Reportar CR SP2_F2_3" description "Descrever o resultado do CT SP2_F2_3" 
+			artefacts artefact "CR SP2_F2_3" description "Resultado da Execução do Caso de Teste SP2_F2_3" type output;;    
+	}
+	Activity "SP2_F2_4" "Inserir uma nova linha de pesquisa - Product 2" "SP2_F2_5" Role "Subject";{
+		Task "Executar CT SP2_F2_4" description "Executar o Procedimento do Teste SP2_F2_4" 
+			artefacts artefact  "Caso de Teste SP2_F2_4" description "Detalhes do caso de teste SP2_F2_4"type input;;
+		Task "Reportar CR SP2_F2_4" description "Descrever o resultado do CT SP2_F2_4" 
+			artefacts artefact "CR SP2_F2_4" description "Resultado da Execução do Caso de Teste SP2_F2_4" type output;;    
+	}
+	Activity "SP2_F2_5" "Associar uma Publicação a uma linha - Product 2" "SP2_F2_6" Role "Subject";{
+		Task "Executar CT SP2_F2_5" description "Executar o Procedimento do Teste SP2_F2_5" 
+			artefacts artefact  "Caso de Teste SP2_F2_5" description "Detalhes do caso de teste SP2_F2_5"type input;;
+		Task "Reportar CR SP2_F2_5" description "Descrever o resultado do CT SP2_F2_5" 
+			artefacts artefact "CR SP2_F2_5" description "Resultado da Execução do Caso de Teste SP2_F2_5" type output;;    
+	}
+	Activity "SP2_F2_6" "Editar uma Linha de Pesquisa - Product 2" Role "Subject";{
+		Task "Executar CT SP2_F2_6" description "Executar o Procedimento do Teste SP2_F2_6" 
+			artefacts artefact  "Caso de Teste SP2_F2_6" description "Detalhes do caso de teste SP2_F2_6"type input;;
+		Task "Reportar CR SP2_F2_6" description "Descrever o resultado do CT SP2_F2_6" 
+			artefacts artefact "CR SP2_F2_6" description "Resultado da Execução do Caso de Teste SP2_F2_6" type output;;    
+	}
+} //Fim do processo relativo às suites de teste da Feature 2- técnica ST (Products 1 e 2)
+
+Process "GT_F1" {
+	
+	Activity "SG-P1_F1_1" "Inserir um novo membro - Product 1" "SG-P1_F1_2" Role "Subject"; {
+		Task "Executar CT SG-P1_F1_1" description "Executar o Procedimento do Teste SG-P1_F1_1" 
+			artefacts artefact  "Caso de teste SG_F1_1" description "Detalhes do caso de teste SG_F1_1" type input;;
+		Task "Reportar CR SG-P1_F1_1" description "Descrever o resultado do CT SG-P1_F1_1" 
+			artefacts artefact "CR SG-P1_F1_1" description "Resultado da Execução do Caso de Teste SG-P1_F1_1" type output;;  
+	}
+	Activity "SG-P1_F1_2" "Inserir um novo Artigo de Conferência - Product 1" "SG-P1_F1_3" Role "Subject";{
+		Task "Executar CT SG-P1_F1_2" description "Executar o Procedimento do Teste SG-P1_F1_2" 
+			artefacts artefact  "Caso de Teste SG_F1_2" description "Detalhes do caso de teste SG_F1_2"  type input;;
+		Task "Reportar CR SG-P1_F1_2" description "Descrever o resultado do CT SG-P1_F1_2" 
+			artefacts artefact "CR SG-P1_F1_2" description "Resultado da Execução do Caso de Teste SG-P1_F1_2" type output;;  
+	}
+	Activity "SG-P1_F1_3" "Inserir uma tese de doutorado - Product 1" "SG-P1_F1_4" Role "Subject";{
+		Task "Executar CT SG-P1_F1_3" description "Executar o Procedimento do Teste SG-P1_F1_3" 
+			artefacts artefact  "Caso de Teste SG_F1_3" description "Detalhes do caso de testes SG_F1_3"type input;;
+		Task "Reportar CR SG-P1_F1_3" description "Descrever o resultado do CT SG-P1_F1_3" 
+			artefacts artefact "CR SG-P1_F1_3" description "Resultado da Execução do Caso de Teste SG-P1_F1_3" type output;;    
+	}
+	Activity "SG-P1_F1_4" "Gerar Relatório de Publicação - Product 1" "SG-P1_F1_5" Role "Subject";{
+		Task "Executar CT SG-P1_F1_4" description "Executar o Procedimento do Teste SG-P1_F1_4" 
+			artefacts artefact  "Caso de Teste SG_F1_4" description "Detalhes do caso de teste SG_F1_4"type input;;
+		Task "Reportar CR SG-P1_F1_4" description "Descrever o resultado do CT SG-P1_F1_4" 
+			artefacts artefact "CR SG-P1_F1_4" description "Resultado da Execução do Caso de Teste SG-P1_F1_4" type output;;    
+	}
+	Activity "SG-P1_F1_5" "Gerar Relatório de Publicação - Product 1" "SG-P1_F1_6" Role "Subject";{
+		Task "Executar CT SG-P1_F1_5" description "Executar o Procedimento do Teste SG-P1_F1_5" 
+			artefacts artefact  "Caso de Teste SG_F1_5" description "Detalhes do caso de teste SG_F1_5"type input;;
+		Task "Reportar CR SG-P1_F1_5" description "Descrever o resultado do CT SG-P1_F1_5" 
+			artefacts artefact "CR SG-P1_F1_5" description "Resultado da Execução do Caso de Teste SG-P1_F1_5" type output;;    
+	}
+	Activity "SG-P1_F1_6" "Veriﬁcar Formatos de Geração de Relatórios - Product 1" "SG-P2_F1_1" Role "Subject";{
+		Task "Executar CT SG-P1_F1_6" description "Executar o Procedimento do Teste SG-P1_F1_6" 
+			artefacts artefact  "Caso de Teste SG_F1_6" description "Detalhes do caso de teste SG_F1_6"type input;;
+		Task "Reportar CR SG-P1_F1_6" description "Descrever o resultado do CT SG-P1_F1_6" 
+			artefacts artefact "CR SG-P1_F1_6" description "Resultado da Execução do Caso de Teste SG-P1_F1_6" type output;;    
+	}
+	Activity "SG-P2_F1_1" "Inserir um novo membro - Product 2" "SG-P2_F1_2"  Role "Subject"; {
+		Task "Executar CT SG-P2_F1_1" description "Executar o Procedimento do Teste SG-P2_F1_1" 
+			artefacts artefact  "Caso de Teste SG_F1_1" description "Detalhes do caso de teste SG_F1_1" type input;;
+		Task "Reportar CR SG-P2_F1_1" description "Descrever o resultado do CT SG-P2_F1_1" 
+			artefacts artefact "CR SG-P2_F1_1" description "Resultado da Execução do Caso de Teste SG-P2_F1_1" type output;;  
+	}
+	Activity "SG-P2_F1_2" "Inserir um novo Artigo de Conferência - Product 2" "SG-P2_F1_3" Role "Subject";{
+		Task "Executar CT SG-P2_F1_2" description "Executar o Procedimento do Teste SG-P2_F1_2" 
+			artefacts artefact  "Caso de Teste SG_F1_2" description "Detalhes do caso de teste SG_F1_2"  type input;;
+		Task "Reportar CR SG-P2_F1_2" description "Descrever o resultado do CT SG-P2_F1_2" 
+			artefacts artefact "CR SG-P2_F1_2" description "Resultado da Execução do Caso de Teste SG-P2_F1_2" type output;;  
+	}
+	Activity "SG-P2_F1_3" "Inserir uma tese de doutorado - Product 2" "SG-P2_F1_4" Role "Subject";{
+		Task "Executar CT SG-P2_F1_3" description "Executar o Procedimento do Teste SG-P2_F1_3" 
+			artefacts artefact  "Caso de Teste SG_F1_3" description "Detalhes do caso de teste SG_F1_3"type input;;
+		Task "Reportar CR G-P2_F1_3" description "Descrever o resultado do CT G-P2_F1_3" 
+			artefacts artefact "CR G-P2_F1_3" description "Resultado da Execução do Caso de Teste G-P2_F1_3" type output;;    
+	}
+	Activity "SG-P2_F1_4" "Gerar Relatório de Publicação - Product 2" "SG-P2_F1_5" Role "Subject";{
+		Task "Executar CT SG-P2_F1_4" description "Executar o Procedimento do Teste  G-P2_F1_4" 
+			artefacts artefact  "Caso de Teste SG_F1_4" description "Detalhes do caso de teste SG_F1_4"type input;;
+		Task "Reportar CR G-P2_F1_4" description "Descrever o resultado do CT G-P2_F1_4" 
+			artefacts artefact "CR G-P2_F1_4" description "Resultado da Execução do Caso de Teste G-P2_F1_4" type output;;    
+	}
+	Activity "SG-P2_F1_5" "Gerar Relatório de Publicação - Product 2" "SG-P2_F1_6" Role "Subject";{
+		Task "Executar CT SG-P2_F1_5" description "Executar o Procedimento do Teste SG-P2_F1_5" 
+			artefacts artefact  "Caso de Teste SG_F1_5" description "Suite de testes SG_F1_5" type input;;
+		Task "Reportar CR SG-P2_F1_5" description "Descrever o resultado do CT SG-P2_F1_5" 
+			artefacts artefact "CR SG-P2_F1_5" description "Resultado da Execução do Caso de Teste SG-P2_F1_5" type output;;    
+	}
+	Activity "SG-P2_F1_6" "Veriﬁcar Formatos de Geração de Relatórios - Product 2" Role "Subject";{
+		Task "Executar CT SG-P2_F1_6" description "Executar o Procedimento do Teste SG-P2_F1_6" 
+			artefacts artefact  "Caso de Teste SG_F1_6" description "Detalhes do caso de teste SG_F1_6"type input;;
+		Task "Reportar CR SG-P2_F1_6" description "Descrever o resultado do CT SG-P2_F1_6" 
+			artefacts artefact "CR SG-P2_F1_6" description "Resultado da Execução do Caso de Teste SG-P2_F1_6" type output;;    
+	}
+} // Fim do processo de relativo às suites de teste da Feature 1- técnica GT (Products 1 e 2)
+
+Process "GT-F2"{
+	Activity "SG-P1_F2_1" "Inserir uma nova Linha de Pesquisa - Product 1" "SG-P1_F2_2" Role "Subject"; {
+		Task "Executar o CT SG-P1_F2_1" description "Executar o Procedimento do Teste SG-P1_F2_1" 
+			artefacts artefact  "Caso de Teste SG_F2_1" description "Detalhes do caso de teste SG_F2_1" type input;;
+		Task "Reportar CR SG-P1_F2_1" description "Descrever o resultado do CT SG-P1_F2_1" 
+			artefacts artefact "CR SG-P1_F2_1" description "Resultado da Execução do Caso de Teste SG-P1_F2_1" type output;;  
+	}
+	Activity "SG-P1_F2_2" "Associar um Membro a Linha de Pesquisa - Product 1" "SG-P1_F2_3" Role "Subject";{
+		Task "Execute CT SG-P1_F2_2" description "Executar o Procedimento do Teste SG-P1_F2_2" 
+			artefacts artefact  "Caso de Teste SG_F2_2" description "Detalhes do caso de teste SG_F2_2"  type input;;
+		Task "Reportar CR SG-P1_F2_2" description "Descrever o resultado do CT SG-P1_F2_2" 
+			artefacts artefact "CR SG-P1_F2_2" description "Resultado da Execução do Caso de Teste SG-P1_F2_2" type output;;  
+	}
+	Activity "SG-P1_F2_3" "Remover uma Linha de Pesquisa - Product 1" "SG-P1_F2_4" Role "Subject";{
+		Task "Executar CT SG-P1_F2_3" description "Executar o Procedimento do Teste SG-P1_F2_3" 
+			artefacts artefact  "Caso de Teste SG_F2_3" description "Detalhes do caso de teste SG_F2_3"type input;;
+		Task "Reportar CR SG-P1_F2_3" description "Descrever o resultado da CR SG-P1_F2_3" 
+			artefacts artefact "CR SG-P1_F2_3" description "Resultado da Execução do Caso de Teste SG-P1_F2_3" type output;;    
+	}
+	Activity "SG-P1_F2_4" "Inserir uma nova linha de pesquisa - Product 1" "SG-P1_F2_5" Role "Subject";{
+		Task "Executar CT SG-P1_F2_4" description "Executar o Procedimento do Teste SG-P1_F2_4" 
+			artefacts artefact  "Caso de Teste SG_F2_4" description "Detalhes do caso de teste SG_F2_4"type input;;
+		Task "Reportar CR SG-P1_F2_4" description "Descrever o resultado do CT SG-P1_F2_4" 
+			artefacts artefact "CR SG-P1_F2_4" description "Resultado da Execução do Caso de Teste SG-P1_F2_4" type output;;    
+	}
+	Activity "SG-P1_F2_5" "Associar uma Publicação a uma linha - Product 1" "SG-P1_F2_6" Role "Subject";{
+		Task "Executar CT SG-P1_F2_5" description "Executar o Procedimento do Teste SG-P1_F2_5" 
+			artefacts artefact  "Caso de Teste SG_F2_5" description "Detalhes do caso de testes SG_F2_5"type input;;
+		Task "Reportar CR SG-P1_F2_5" description "Descrever o resultado do CT SG-P1_F2_5" 
+			artefacts artefact "CR SG-P1_F2_5" description "Resultado da Execução do Caso de Teste SG-P1_F2_5" type output;;    
+	}
+	Activity "SG-P1_F2_6" "Editar uma Linha de Pesquisa - Product 1" "SG-P2_F2_1"  Role "Subject";{
+		Task "Executar CT SG-P1_F2_6" description "Executar o Procedimento do Teste SG-P1_F2_6" 
+			artefacts artefact  "Caso de Teste SG_F2_6" description "Detalhes do caso de teste SG_F2_6"type input;;
+		Task "Reportar CR SG-P1_F2_6" description "Descrever o resultado do CT SG-P1_F2_6" 
+			artefacts artefact "CR SG-P1_F2_6" description "Resultado da Execução do Caso de Teste SG-P1_F2_6" type output;;    
+	}
+	Activity "SG-P2_F2_1" "Inserir uma nova Linha de Pesquisa - Product 1" "SG-P2_F2_2" Role "Subject"; {
+		Task "Executar CT SG-P2_F2_1" description "Executar o Procedimento do Teste SG-P2_F2_1" 
+			artefacts artefact  "Caso de Teste SG_F2_1" description "Detalhes do caso de teste SG_F2_1" type input;;
+		Task "Reportar CR SG-P2_F2_1" description "Descrever o resultado do CT SG-P2_F2_1" 
+			artefacts artefact "CR SG-P2_F2_1" description "Resultado da Execução do Caso de Teste SG-P2_F2_1" type output;;  
+	}
+	Activity "SG-P2_F2_2" "Associar um Membro a Linha de Pesquisa - Product 1" "SG-P2_F2_3" Role "Subject";{
+		Task "Executar CT SG-P2_F2_2" description "Executar o Procedimento do Teste SG-P2_F2_2" 
+			artefacts artefact  "Caso de Teste SG_F2_2" description "Detalhes do caso de teste SG_F2_2"  type input;;
+		Task "Reportar CR SG-P2_F2_2" description "Descrever o resultado da CR SG-P2_F2_2" 
+			artefacts artefact "CR SG-P2_F2_2" description "Resultado da Execução do Caso de Teste SG-P2_F2_2" type output;;  
+	}
+	Activity "SG-P2_F2_3" "Remover uma Linha de Pesquisa - Product 1" "SG-P2_F2_4" Role "Subject";{
+		Task "Executar CT SG-P2_F2_3" description "Executar o Procedimento do Teste SG-P2_F2_3" 
+			artefacts artefact  "Caso de Teste SG_F2_3" description "Detalhes do caso de teste SG_F2_3"type input;;
+		Task "Reportar CR SG-P2_F2_3" description "Descrever o resultado da CR SG-P2_F2_3" 
+			artefacts artefact "CR SG-P2_F2_3" description "Resultado da Execução do Caso de Teste SG-P2_F2_3" type output;;    
+	}
+	Activity "SG-P2_F2_4" "Inserir uma nova linha de pesquisa - Product 1" "SG-P2_F2_5" Role "Subject";{
+		Task "Executar CT SG-P2_F2_4" description "Executar o Procedimento do Teste SG-P2_F2_4" 
+			artefacts artefact  "Caso de Teste SG_F2_4" description "Detalhes do caso de teste SG_F2_4"type input;;
+		Task "Reportar CR SG-P2_F2_4" description "Descrever o resultado do CT SG-P2_F2_4" 
+			artefacts artefact "CR SG-P2_F2_4" description "Resultado da Execução do Caso de Teste SG-P2_F2_4" type output;;    
+	}
+	Activity "SG-P2_F2_5" "Associar uma Publicação a uma linha - Product 1" "SG-P2_F2_6" Role "Subject";{
+		Task "Executar CT SG-P2_F2_5" description "Executar o Procedimento do Teste SG-P2_F2_5" 
+			artefacts artefact  "Caso de Teste SG_F2_5" description "Detalhes do caso de teste SG_F2_5"type input;;
+		Task "Reportar CR SG-P2_F2_5" description "Descrever o resultado do CT SG-P2_F2_5" 
+			artefacts artefact "CR SG-P2_F2_5" description "Resultado da Execução do Caso de Teste SG-P2_F2_5" type output;;    
+	}
+	Activity "SG-P2_F2_6" "Editar uma Linha de Pesquisa - Product 1" Role "Subject";{
+		Task "Executar CT SG-P2_F2_5" description "Executar o Procedimento do Teste SG-P2_F2_5" 
+			artefacts artefact  "Caso de Teste SG_F2_6" description "Detalhes do caso de teste SG_F2_6"type input;;
+		Task "Reportar CR SG-P2_F2_5" description "Descrever o resultado do CT SG-P2_F2_5" 
+			artefacts artefact "CR SG-P2_F2_5" description "Resultado da Execução do Caso de Teste SG-P2_F2_5" type output;;    
+	}
+}// Fim do processo relativo às suites de teste da Feature 2- técnica GT (Products 1 e 2)
+
+
+
+//Metrica única para tempo de execução e relato da CR F1 Product 1
+Metric "TimeTesting-ST-F1-Product1" relates "ST_F1" {
+				 description "Tempo de execução dos casos de Testes da F1 no P1"
+				 form continuous
+				 unit minutes
+				 activityBegin "ST_F1.SP1_F1_1" activityEnd "ST_F1.SP1_F1_6" }
+
+//Metrica única para tempo de execução e relato da CR F1 Product 2
+Metric "TimeTesting-ST-F1-Product2" relates "ST_F1" {
+				 description "Tempo de execução dos casos de Testes da F1 no P1"
+				 form continuous
+				 unit minutes
+				 activityBegin "ST_F1.SP2_F1_1" activityEnd "ST_F1.SP2_F1_6" }
+
+//Metrica para tempo de execução do CT F2 Product 1
+
+
+Metric "TimeExecutingTest_ST-F1-Product1" relates "ST_F1" {
+				 description "Test case execution time - F1 in P1"
+				 form continuous
+				 unit minutes
+				 tasks "ST_F1.SP1_F1_1.Execute TC SP1_F1_1" "ST_F1.SP1_F1_2.Execute TC SP1_F1_2" 
+				 		"ST_F1.SP1_F1_3.Execute TC SP1_F1_3" "ST_F1.SP1_F1_4.Execute TC SP1_F1_4"
+				 		"ST_F1.SP1_F1_5.Execute TC SP1_F1_5" "ST_F1.SP1_F1_6.Execute TC SP1_F1_6" }
+				   
+Metric "TimeReportingCR_ST-F1-Product1" relates "ST_F1" {
+				 description "Reporting CR time - F1 in P1"
+				 form continuous
+				 unit minutes
+				 tasks "ST_F1.SP1_F1_1.Report CR SP1_F1_1" "ST_F1.SP1_F1_2.Report CR SP1_F1_2" 
+				 		"ST_F1.SP1_F1_3.Report CR SP1_F1_3" "ST_F1.SP2_F1_4.Report CR SP2_F1_4"
+				 		"ST_F1.SP2_F1_5.Report CR SP2_F1_5" "ST_F1.SP2_F1_6.Report CR SP2_F1_6"}
+
+//Metrica para tempo de execução do CT F2 Product 2
+Metric "TimeExecutingTest_ST-F2-Product2" relates "ST_F2" {
+				 description "Tempo de execução dos casos de teste da F2 no P2"
+				 form continuous
+				 unit minutes
+				 tasks "ST_F2.SP2_F2_1.Executar CT SP2_F2_1" "ST_F2.SP2_F2_2.Executar CT SP2_F2_2"
+				  "ST_F2.SP2_F2_3.Executar CT SP2_F2_3" "ST_F2.SP2_F2_4.Executar CT SP2_F2_4"
+				   "ST_F2.SP2_F2_5.Executar CT SP2_F2_5"  "ST_F2.SP2_F2_6.Executar CT SP2_F2_6" }
+
+//Metrica para tempo de relato do CT F2 Product 2
+Metric "TimeReportingTest_ST-F2-Product2" relates "ST_F2" {
+				 description "Tempo de execução dos casos de teste da F2 no P2"
+				 form continuous
+				 unit minutes
+				 tasks "ST_F2.SP2_F2_1.Reportar CR SP2_F2_1" "ST_F2.SP2_F2_2.Reportar CR SP2_F2_2"
+				  "ST_F2.SP2_F2_3.Reportar CR SP2_F2_3" "ST_F2.SP2_F2_4.Reportar CR SP2_F2_4"
+				  "ST_F2.SP2_F2_5.Reportar CR SP2_F2_5" "ST_F2.SP2_F2_6.Reportar CR SP2_F2_6" }
+
+								 			 
+Experimental Plan Design "TestDesign"
+	type LS - Latin Square  {
+		Parameter "Participants have to pause time for asking questions"
+		Parameter "The LPS complexity is low"
+        Parameter "Artefacts are written in the participant source language"
+        Parameter "Participants are undergraduating students"
+                                                          
+        Factor "TestTechnique" isDesiredVariation True
+        	Level "Generic";
+            Level "Specific";
+            ;
+		Factor "Feature" isDesiredVariation False 
+        	Level "F1";
+            Level "F2";
+            ;
+         Factor "Subject" isDesiredVariation False
+         	Level "Subject1";
+         	Level "Subject2";
+         	;
+             
+         Internal Replication 4
+         
+         Link "ST_F1" to "TestTechnique.Specific" "Feature.F1" 
+         Link "ST_F2" to "TestTechnique.Specific" "Feature.F2" 
+         Link "GT_F1" to "TestTechnique.Generic" "Feature.F1" 
+         Link "GT-F2" to "TestTechnique.Generic" "Feature.F2"
+}	
+ 
+Questionnaires 
+
+Questionnaire  "Experiment Feedback" type Pos {
+ "Q1 - Scholling" {
+	description "What is your scholling:"
+	type ComboBox
+	Alternatives
+	Option "Undergraduate student"
+	Option "Graduate"
+	Option "Graduate student"
+	Option "Master" 
+}
+	
+"Q2 - Research theme"{
+	description "What is your research theme?"
+	type Text }
+	
+"Q3 - ExperienceTest" {
+	description "Have you ever worked as a software tester?"
+	type ComboBox
+	required 1
+	Alternatives
+	Option "Yes"	
+	Option "No" 
+}
+"Q4 - ExperienceBlackBoxTests" {
+	description "If yes, have you already worked with black-box tests 
+				(based on use case specifications)?"
+	type ComboBox
+	Alternatives
+	Option"Yes"
+	Option "No" }
+	
+"Q5 - TestExperienceDetails" {
+	description "Describe your previous experience working with tests:"
+	type Paragraph Text
+}
+};
+
+Questionnaire  "Scholling" type Pre {
+"Nome" {
+	description "Qual seu nome:"
+	type Text
+	}
+"Grau de Escolaridade" {
+	description "Qual o grau de escolaridade:"
+	type ComboBox
+	Alternatives
+	Option "Graduação Em Andamento"
+	Option "Graduação Completa"
+	Option "Mestrado Incompleto"
+	Option "Mestrado Completo"	}
+	
+"Q1.ExperienciaTestes" {
+	description "Já trabalhou ou teve experiência com testes de software?"
+	type ComboBox
+	required 1
+	Alternatives
+	Option "Sim"
+	Option 	"Não"
+	} 
+"Q2.DetalhesExperienciaTestes" {
+	description "Se sim, relate brevemente sua experiência?"
+	type ComboBox
+	Alternatives
+	Option "Sim"
+	Option "Não" 
+}
+	
+"Q3.DisciplinaLPS" {
+	description "Já pagou a disciplina de Linhas de Product de Software com Paulo Borba?"
+	type ComboBox
+	Alternatives
+	Option "Sim"
+	Option "Não"
+	}
+	
+"Q4.FamiliaridadeRGMS" {
+	description "Se sim, é familiarizado com a linha RGMS e suas funcionalidades?"
+	type Paragraph Text }
+	
+"Q5.ComentariosExtra" {
+	description "Participou do experimento passado?"
+	type ComboBox 
+	Alternatives 
+	Option "Sim"
+	Option "Não" 
+	}
+};

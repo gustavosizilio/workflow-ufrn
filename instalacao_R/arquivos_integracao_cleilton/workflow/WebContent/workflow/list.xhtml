@@ -1,0 +1,53 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="/layout/list.xhtml">
+	<ui:param name="action" value="#{crudWorkflow}" />
+	
+    <ui:define name="columns">
+		<rich:column>
+		 	<f:facet name="header">
+            	<h:outputText value="Experimento"/>
+            </f:facet>
+			<h:outputText value="#{entity.title}" />
+		</rich:column>    	
+		<rich:column>
+		 	<f:facet name="header">
+            	<h:outputText value="Tratamentos"/>
+            </f:facet>
+			<rich:dataList var="processDefinition" id="processDefinitions" value="#{entity.processDefinitions}" >
+				<h:outputText value="#{processDefinition.name} " />
+				<a4j:commandLink action="#{crudWorkflow.start(processDefinition)}"
+					reRender="processDefinitions" value="[Iniciar]"
+					rendered="#{processDefinition.startedAt eq null}" title="play" />
+		    		
+		    	<h:panelGroup rendered="#{processDefinition.startedAt != null}">
+			    	<h:outputText value=" - Iniciado em: " title="play" />
+			    	<h:outputText value="#{processDefinition.startedAt}" title="play">
+			    		<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+			    	</h:outputText>
+		    	</h:panelGroup>
+			</rich:dataList>
+		</rich:column>   
+    </ui:define>
+//Alteração-início
+<!--     
+    <ui:define name="actions"> 
+    	<h:commandLink action="#{report.init(entity)}" >
+    		<h:graphicImage value="/img/report.gif" title="relatório"/>
+    	</h:commandLink>
+    </ui:define> -->
+    
+    <!-- <ui:define name="actions"> 
+    	<h:commandLink action="#{grafico.init(entity)}" >
+    		<h:graphicImage value="/img/report.gif" title="Grfico"/>
+    	</h:commandLink>
+    </ui:define> -->
+//Alteração-fim
+</ui:composition>

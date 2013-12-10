@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<expl:Model xmlns:expl="urn:jbpm.org:jpdl-3.1">
+  <elements><expl:process-definition name="ST_F1" quantity="4">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionSP1_F1_1" to="SP1_F1_1"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participante"/>
+      </expl:swimlane>
+      <expl:task-node name="SP1_F1_1" description="Inserir um novo membro - Produto 1">
+        <expl:transition name="SP1_F1_1_Transition" to="SP1_F1_2"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.TimeTesting-ST-F1-Produto1ActionHandler" name="TimeTesting-ST-F1-Produto1" ref-name="TimeTesting-ST-F1-Produto1"/>
+        </expl:event>
+        <expl:task description="Executar o Procedimento do Caso de Teste SP1_F1_1" name="Executar CT SP1_F1_1">
+          <artefacts name="Caso de teste SP1_F1_1" Type="input" description="Detalhes do Caso de teste SP1_F1_1"/>
+        </expl:task>
+        <expl:task description="Descreva os resultados do caso de teste SP1_F1_1" name="Reportar CR SP1_F1_1">
+          <artefacts name="CR SP1_F1_1" Type="output" description="Relatório da CR para o teste SP1_F1_1"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP1_F1_2" description="Inserir um novo Artigo de Conferência  - Produto 1">
+        <expl:transition name="SP1_F1_2_Transition" to="SP1_F1_3"/>
+        <expl:task description="Executar o Procedimento do Caso de Teste SP1_F1_2" name="Executar CT SP1_F1_2">
+          <artefacts name="Caso de Teste SP1_F1_2" Type="input" description="Detalhes do Caso de teste SP1_F1_2"/>
+        </expl:task>
+        <expl:task description="Descreva o resultado do CT SP1_F1_2" name="Reportar CR SP1_F1_2">
+          <artefacts name="CR SP1_F1_2" Type="output" description="Relatório da CR para o teste SP1_F1_2"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP1_F1_3" description="Inserir uma tese de doutorado  - Produto 1">
+        <expl:transition name="SP1_F1_3_Transition" to="SP1_F1_4"/>
+        <expl:task description="Executar o Procedimento do Teste SP1_F1_3" name="Executar CT SP1_F1_3">
+          <artefacts name="Caso de Teste SP1_F1_3" Type="input" description="Detalhes do Caso de teste SP1_F1_3"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP1_F1_3 " name="Reportar CR SP1_F1_3">
+          <artefacts name="CR SP1_F1_3" Type="output" description="Resultado da Execução do Caso de Test SP1_F1_3e"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP1_F1_4" description="Gerar Relatório de Publicação  - Produto 1">
+        <expl:transition name="SP1_F1_4_Transition" to="SP1_F1_5"/>
+        <expl:task description="Executar o Procedimento do Teste SP1_F1_4" name="Executar CT SP1_F1_4">
+          <artefacts name="Caso de Teste SP1_F1_4" Type="input" description="Detalhes do Caso de Teste SP1_F1_4"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP1_F1_4" name="Reportar CR SP1_F1_4">
+          <artefacts name="CR SP1_F1_4" Type="output" description="Resultado da Execução do Caso de Teste SP1_F1_4"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP1_F1_5" description="Gerar Relatório de Publicação  - Produto 1">
+        <expl:transition name="SP1_F1_5_Transition" to="SP1_F1_6"/>
+        <expl:task description="Executar o Procedimento do Teste SP1_F1_5" name="Executar CT SP1_F1_5">
+          <artefacts name="Caso de Teste SP1_F1_5" Type="input" description="Detalhes do Caso de testes SP1_F1_5"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP1_F1_5" name="Reportar CR SP1_F1_5">
+          <artefacts name="CR SP1_F1_5" Type="output" description="Resultado da Execução do Caso de Teste SP1_F1_5"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP1_F1_6" description="Veriﬁcar Formatos de Geração de Relatórios - Produto 1">
+        <expl:transition name="SP1_F1_6_Transition" to="SP2_F1_1"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.TimeTesting-ST-F1-Produto1ActionHandler" name="TimeTesting-ST-F1-Produto1" ref-name="TimeTesting-ST-F1-Produto1"/>
+        </expl:event>
+        <expl:task description="Executar o Procedimento do Teste SP1_F1_6" name="Executar Caso de Teste SP1_F1_6">
+          <artefacts name="Caso de Teste SP1_F1_6" Type="input" description="Detalhes do Caso de testes SP1_F1_6"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP1_F1_6" name="Reportar CR SP1_F1_6">
+          <artefacts name="CRSP1_F1_6" Type="output" description="Resultado da Execução do Caso de Teste SP1_F1_6"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F1_1" description="Inserir um novo membro  - Produto 2">
+        <expl:transition name="SP2_F1_1_Transition" to="SP2_F1_2"/>
+        <expl:task description="Executar o Procedimento do Teste SP2_F1_1" name="Executar o CT SP2_F1_1">
+          <artefacts name="Caso de Teste SP2_F1_1" Type="input" description="Detalhes do Caso de Teste SP2_F1_1"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F1_1" name="Reportar CR SP2_F1_1">
+          <artefacts name="CR SP2_F1_1" Type="output" description="Resultado da Execução do Caso de Teste SP2_F1_1"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F1_2" description="Inserir um novo Artigo de Conferência  - Produto 2">
+        <expl:transition name="SP2_F1_2_Transition" to="SP2_F1_3"/>
+        <expl:task description="Executar o Procedimento do Teste SP2_F1_2" name="Executar o CT SP2_F1_2">
+          <artefacts name="Caso de Teste SP2_F1_2" Type="input" description="Detalhes do Caso de teste SP2_F1_2"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F1_2" name="Reportar CR SP2_F1_2">
+          <artefacts name="CR SP2_F1_2" Type="output" description="Resultado da Execução do Caso de Teste SP2_F1_2"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F1_3" description="Inserir uma tese de doutorado  - Produto 2">
+        <expl:transition name="SP2_F1_3_Transition" to="SP2_F1_4"/>
+        <expl:task description="Executar o Procedimento do Teste SP2_F1_3" name="Executar o CT SP2_F1_3">
+          <artefacts name="Caso de Teste SP2_F1_3" Type="input" description="Detalhes do Caso de teste SP2_F1_3"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F1_3" name="Reportar CR SP2_F1_3">
+          <artefacts name="CR SP2_F1_3" Type="output" description="Resultado da Execução do Caso de Teste SP2_F1_3"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F1_4" description="Gerar Relatório de Publicação  - Produto 2">
+        <expl:transition name="SP2_F1_4_Transition" to="SP2_F1_5"/>
+        <expl:task description="Executar o Procedimento do Teste SP2_F1_4" name="Execute CT SP2_F1_4">
+          <artefacts name="Caso de Teste SP2_F1_4" Type="input" description="Detalhes do Caso de teste SP2_F1_4"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F1_4" name="Reportar CR SP2_F1_4">
+          <artefacts name="CR SP2_F1_4" Type="output" description="Resultado da Execução do Caso de Teste SP2_F1_4"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F1_5" description="Gerar Relatório de Publicação  - Produto 2">
+        <expl:transition name="SP2_F1_5_Transition" to="SP2_F1_6"/>
+        <expl:task description="Executar o Procedimento do Teste SP2_F1_5" name="Executar CT SP2_F1_5">
+          <artefacts name="Caso de Teste SP2_F1_5" Type="input" description="Detalhes do caso de testes SP2_F1_5"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F1_5" name="Reportar CR SP2_F1_5">
+          <artefacts name="CR SP2_F1_5" Type="output" description="Resultado da Execução do Caso de Teste SP2_F1_5"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F1_6" description="Veriﬁcar Formatos de Geração de Relatórios  - Produto 2">
+        <expl:task description="Executar o Procedimento do Teste SP2_F1_6" name="Executar CT SP2_F1_6">
+          <artefacts name="Caso de Teste SP2_F1_6" Type="input" description="Detalhes do caso de teste SP2_F1_6"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F1_6" name="Reportar CR SP2_F1_6">
+          <artefacts name="CR SP2_F1_6" Type="output" description="Resultado da Execução do Caso de Teste SP2_F1_6"/>
+        </expl:task>
+        <expl:transition name="SP2_F1_6transition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition><expl:process-definition name="ST_F2" quantity="4">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionSP1_F2_2" to="SP1_F2_2"/>
+        <expl:transition name="startTransitionSP2_F2_2" to="SP2_F2_2"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participante"/>
+      </expl:swimlane>
+      <expl:task-node name="SP1_F2_1" description="Inserir uma nova Linha de Pesquisa - Produto 1">
+        <expl:transition name="SP1_F2_1_Transition" to="SP1_F2_1"/>
+        <expl:task description="Executar o Procedimento do Teste SP1_F2_1" name="Executar CT SP1_F2_1">
+          <artefacts name="Caso de Teste SP1_F2_1" Type="input" description="Detalhes do caso de teste SP1_F2_1"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP1_F2_1ActionHandler" name="Executar CT SP1_F2_1" ref-name="Executar CT SP1_F2_1"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP1_F2_1" name="Reportar CR SP1_F2_1">
+          <artefacts name="CR SP1_F2_1" Type="output" description="Resultado da Execução do Caso de Teste SP1_F2_1"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP1_F2_1ActionHandler" name="Reportar CR SP1_F2_1" ref-name="Reportar CR SP1_F2_1"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP1_F2_2" description="Associar um Membro a Linha de Pesquisa - Produto 1">
+        <expl:transition name="SP1_F2_2_Transition" to="SP1_F2_3"/>
+        <expl:task description="Executar o Procedimento do Teste SP1_F2_2" name="Executar CT SP1_F2_2">
+          <artefacts name="Caso de Teste SP1_F2_2" Type="input" description="Detalhes do caso de teste SP1_F2_2"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP1_F2_2ActionHandler" name="Executar CT SP1_F2_2" ref-name="Executar CT SP1_F2_2"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP1_F2_2" name="Reportar CR SP1_F2_2">
+          <artefacts name="CR SP1_F2_2" Type="output" description="Resultado da Execução do Caso de Teste SP1_F2_2"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP1_F2_2ActionHandler" name="Reportar CR SP1_F2_2" ref-name="Reportar CR SP1_F2_2"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP1_F2_3" description="Remover uma Linha de Pesquisa - Produto 1">
+        <expl:transition name="SP1_F2_3_Transition" to="SP1_F2_4"/>
+        <expl:task description="Executar o Procedimento do Teste SP1_F2_3" name="Executar CT SP1_F2_3">
+          <artefacts name="Caso de Teste SP1_F2_3" Type="input" description="Detalhes do cos de teste SP1_F2_3"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP1_F2_3ActionHandler" name="Executar CT SP1_F2_3" ref-name="Executar CT SP1_F2_3"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP1_F2_3" name="Reportar CR SP1_F2_3">
+          <artefacts name="CR SP1_F2_3" Type="output" description="Resultado da Execução do Caso de Teste SP1_F2_3"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP1_F2_3ActionHandler" name="Reportar CR SP1_F2_3" ref-name="Reportar CR SP1_F2_3"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP1_F2_4" description="Inserir uma nova linha de pesquisa - Produto 1">
+        <expl:transition name="SP1_F2_4_Transition" to="SP1_F2_5"/>
+        <expl:task description="Executar o Procedimento do Teste SP1_F2_4" name="Executar CT SP1_F2_4">
+          <artefacts name="Caso de Teste SP1_F2_4" Type="input" description="Detalhes do caso de teste SP1_F2_4"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP1_F2_4ActionHandler" name="Executar CT SP1_F2_4" ref-name="Executar CT SP1_F2_4"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP1_F2_4" name="Reportar CR SP1_F2_4">
+          <artefacts name="CR SP1_F2_4" Type="output" description="Resultado da Execução do Caso de Teste SP1_F2_4"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP1_F2_4ActionHandler" name="Reportar CR SP1_F2_4" ref-name="Reportar CR SP1_F2_4"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP1_F2_5" description="Associar uma Publicação a uma linha - Produto 1">
+        <expl:transition name="SP1_F2_5_Transition" to="SP1_F2_6"/>
+        <expl:task description="Executar o Procedimento do Teste SP1_F2_5" name="Executar CT SP1_F2_5">
+          <artefacts name="Caso de Teste SP1_F2_5" Type="input" description="Detalhes do caso de testes SP1_F2_5"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP1_F2_5ActionHandler" name="Executar CT SP1_F2_5" ref-name="Executar CT SP1_F2_5"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP1_F2_5" name="Reportar CR SP1_F2_5">
+          <artefacts name="CR SP1_F2_5" Type="output" description="Resultado da Execução do Caso de Teste SP1_F2_5"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP1_F2_5ActionHandler" name="Reportar CR SP1_F2_5" ref-name="Reportar CR SP1_F2_5"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP1_F2_6" description="Editar uma Linha de Pesquisa - Produto 1">
+        <expl:transition name="SP1_F2_6_Transition" to="SP2_F2_1"/>
+        <expl:task description="Executar o Procedimento do Teste SP1_F2_6" name="Executar CT SP1_F2_6">
+          <artefacts name="Caso de Teste SP1_F2_6" Type="input" description="Detalhes do caso de teste SP1_F2_6"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP1_F2_6ActionHandler" name="Executar CT SP1_F2_6" ref-name="Executar CT SP1_F2_6"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP1_F2_6" name="Reportar CR SP1_F2_6">
+          <artefacts name="CR SP1_F2_6" Type="output" description="Resultado da Execução do Caso de Teste SP1_F2_6"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP1_F2_6ActionHandler" name="Reportar CR SP1_F2_6" ref-name="Reportar CR SP1_F2_6"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F2_1" description="Inserir uma nova Linha de Pesquisa - Produto 2">
+        <expl:transition name="SP2_F2_1_Transition" to="SP2_F2_1"/>
+        <expl:task description="Executar o Procedimento do Teste SP2_F2_1" name="Executar CT SP2_F2_1">
+          <artefacts name="Caso de Teste SP2_F2_1" Type="input" description="Detalhes do caso de teste SP2_F2_1"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP2_F2_1ActionHandler" name="Executar CT SP2_F2_1" ref-name="Executar CT SP2_F2_1"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F2_1" name="Reportar CR SP2_F2_1">
+          <artefacts name="CR SP2_F2_1" Type="output" description="Resultado da Execução do Caso de Teste SP2_F2_1"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP2_F2_1ActionHandler" name="Reportar CR SP2_F2_1" ref-name="Reportar CR SP2_F2_1"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F2_2" description="Associar um Membro a Linha de Pesquisa - Produto 2">
+        <expl:transition name="SP2_F2_2_Transition" to="SP2_F2_3"/>
+        <expl:task description="Executar o Procedimento do Teste SP2_F2_2" name="Executar CT SP2_F2_2">
+          <artefacts name="Caso de Teste SP2_F2_2" Type="input" description="Detalhes do caso de teste SP2_F2_2"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP2_F2_2ActionHandler" name="Executar CT SP2_F2_2" ref-name="Executar CT SP2_F2_2"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado da CR SP2_F2_2" name="Reportar CR SP2_F2_2">
+          <artefacts name="CR SP2_F2_2" Type="output" description="Resultado da Execução do Caso de Teste SP2_F2_2"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP2_F2_2ActionHandler" name="Reportar CR SP2_F2_2" ref-name="Reportar CR SP2_F2_2"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F2_3" description="Remover uma Linha de Pesquisa - Produto 2">
+        <expl:transition name="SP2_F2_3_Transition" to="SP2_F2_4"/>
+        <expl:task description="Executar o Procedimento do Teste SP2_F2_3" name="Executar CT SP2_F2_3">
+          <artefacts name="Caso de Teste SP2_F2_3" Type="input" description="Suite de testes SP2_F2_3"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP2_F2_3ActionHandler" name="Executar CT SP2_F2_3" ref-name="Executar CT SP2_F2_3"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F2_3" name="Reportar CR SP2_F2_3">
+          <artefacts name="CR SP2_F2_3" Type="output" description="Resultado da Execução do Caso de Teste SP2_F2_3"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP2_F2_3ActionHandler" name="Reportar CR SP2_F2_3" ref-name="Reportar CR SP2_F2_3"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F2_4" description="Inserir uma nova linha de pesquisa - Produto 2">
+        <expl:transition name="SP2_F2_4_Transition" to="SP2_F2_5"/>
+        <expl:task description="Executar o Procedimento do Teste SP2_F2_4" name="Executar CT SP2_F2_4">
+          <artefacts name="Caso de Teste SP2_F2_4" Type="input" description="Detalhes do caso de teste SP2_F2_4"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP2_F2_4ActionHandler" name="Executar CT SP2_F2_4" ref-name="Executar CT SP2_F2_4"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F2_4" name="Reportar CR SP2_F2_4">
+          <artefacts name="CR SP2_F2_4" Type="output" description="Resultado da Execução do Caso de Teste SP2_F2_4"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP2_F2_4ActionHandler" name="Reportar CR SP2_F2_4" ref-name="Reportar CR SP2_F2_4"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F2_5" description="Associar uma Publicação a uma linha - Produto 2">
+        <expl:transition name="SP2_F2_5_Transition" to="SP2_F2_6"/>
+        <expl:task description="Executar o Procedimento do Teste SP2_F2_5" name="Executar CT SP2_F2_5">
+          <artefacts name="Caso de Teste SP2_F2_5" Type="input" description="Detalhes do caso de teste SP2_F2_5"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP2_F2_5ActionHandler" name="Executar CT SP2_F2_5" ref-name="Executar CT SP2_F2_5"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F2_5" name="Reportar CR SP2_F2_5">
+          <artefacts name="CR SP2_F2_5" Type="output" description="Resultado da Execução do Caso de Teste SP2_F2_5"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP2_F2_5ActionHandler" name="Reportar CR SP2_F2_5" ref-name="Reportar CR SP2_F2_5"/>
+          </expl:event>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SP2_F2_6" description="Editar uma Linha de Pesquisa - Produto 2">
+        <expl:task description="Executar o Procedimento do Teste SP2_F2_6" name="Executar CT SP2_F2_6">
+          <artefacts name="Caso de Teste SP2_F2_6" Type="input" description="Detalhes do caso de teste SP2_F2_6"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Executar CT SP2_F2_6ActionHandler" name="Executar CT SP2_F2_6" ref-name="Executar CT SP2_F2_6"/>
+          </expl:event>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SP2_F2_6" name="Reportar CR SP2_F2_6">
+          <artefacts name="CR SP2_F2_6" Type="output" description="Resultado da Execução do Caso de Teste SP2_F2_6"/>
+          <expl:event type="task-end">
+            <expl:action class="br.ufrn.dimap.ppgsc.Reportar CR SP2_F2_6ActionHandler" name="Reportar CR SP2_F2_6" ref-name="Reportar CR SP2_F2_6"/>
+          </expl:event>
+        </expl:task>
+        <expl:transition name="SP2_F2_6transition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition><expl:process-definition name="GT_F1" quantity="4">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionSG-P1_F1_1" to="SG-P1_F1_1"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participante"/>
+      </expl:swimlane>
+      <expl:task-node name="SG-P1_F1_1" description="Inserir um novo membro - Produto 1">
+        <expl:transition name="SG-P1_F1_1_Transition" to="SG-P1_F1_2"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F1_1" name="Executar CT SG-P1_F1_1">
+          <artefacts name="Caso de teste SG_F1_1" Type="input" description="Detalhes do caso de teste SG_F1_1"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F1_1" name="Reportar CR SG-P1_F1_1">
+          <artefacts name="CR SG-P1_F1_1" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F1_1"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P1_F1_2" description="Inserir um novo Artigo de Conferência - Produto 1">
+        <expl:transition name="SG-P1_F1_2_Transition" to="SG-P1_F1_3"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F1_2" name="Executar CT SG-P1_F1_2">
+          <artefacts name="Caso de Teste SG_F1_2" Type="input" description="Detalhes do caso de teste SG_F1_2"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F1_2" name="Reportar CR SG-P1_F1_2">
+          <artefacts name="CR SG-P1_F1_2" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F1_2"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P1_F1_3" description="Inserir uma tese de doutorado - Produto 1">
+        <expl:transition name="SG-P1_F1_3_Transition" to="SG-P1_F1_4"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F1_3" name="Executar CT SG-P1_F1_3">
+          <artefacts name="Caso de Teste SG_F1_3" Type="input" description="Detalhes do caso de testes SG_F1_3"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F1_3" name="Reportar CR SG-P1_F1_3">
+          <artefacts name="CR SG-P1_F1_3" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F1_3"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P1_F1_4" description="Gerar Relatório de Publicação - Produto 1">
+        <expl:transition name="SG-P1_F1_4_Transition" to="SG-P1_F1_5"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F1_4" name="Executar CT SG-P1_F1_4">
+          <artefacts name="Caso de Teste SG_F1_4" Type="input" description="Detalhes do caso de teste SG_F1_4"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F1_4" name="Reportar CR SG-P1_F1_4">
+          <artefacts name="CR SG-P1_F1_4" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F1_4"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P1_F1_5" description="Gerar Relatório de Publicação - Produto 1">
+        <expl:transition name="SG-P1_F1_5_Transition" to="SG-P1_F1_6"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F1_5" name="Executar CT SG-P1_F1_5">
+          <artefacts name="Caso de Teste SG_F1_5" Type="input" description="Detalhes do caso de teste SG_F1_5"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F1_5" name="Reportar CR SG-P1_F1_5">
+          <artefacts name="CR SG-P1_F1_5" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F1_5"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P1_F1_6" description="Veriﬁcar Formatos de Geração de Relatórios - Produto 1">
+        <expl:transition name="SG-P1_F1_6_Transition" to="SG-P2_F1_1"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F1_6" name="Executar CT SG-P1_F1_6">
+          <artefacts name="Caso de Teste SG_F1_6" Type="input" description="Detalhes do caso de teste SG_F1_6"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F1_6" name="Reportar CR SG-P1_F1_6">
+          <artefacts name="CR SG-P1_F1_6" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F1_6"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F1_1" description="Inserir um novo membro - Produto 2">
+        <expl:transition name="SG-P2_F1_1_Transition" to="SG-P2_F1_2"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F1_1" name="Executar CT SG-P2_F1_1">
+          <artefacts name="Caso de Teste SG_F1_1" Type="input" description="Detalhes do caso de teste SG_F1_1"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P2_F1_1" name="Reportar CR SG-P2_F1_1">
+          <artefacts name="CR SG-P2_F1_1" Type="output" description="Resultado da Execução do Caso de Teste SG-P2_F1_1"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F1_2" description="Inserir um novo Artigo de Conferência - Produto 2">
+        <expl:transition name="SG-P2_F1_2_Transition" to="SG-P2_F1_3"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F1_2" name="Executar CT SG-P2_F1_2">
+          <artefacts name="Caso de Teste SG_F1_2" Type="input" description="Detalhes do caso de teste SG_F1_2"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P2_F1_2" name="Reportar CR SG-P2_F1_2">
+          <artefacts name="CR SG-P2_F1_2" Type="output" description="Resultado da Execução do Caso de Teste SG-P2_F1_2"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F1_3" description="Inserir uma tese de doutorado - Produto 2">
+        <expl:transition name="SG-P2_F1_3_Transition" to="SG-P2_F1_4"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F1_3" name="Executar CT SG-P2_F1_3">
+          <artefacts name="Caso de Teste SG_F1_3" Type="input" description="Detalhes do caso de teste SG_F1_3"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT G-P2_F1_3" name="Reportar CR G-P2_F1_3">
+          <artefacts name="CR G-P2_F1_3" Type="output" description="Resultado da Execução do Caso de Teste G-P2_F1_3"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F1_4" description="Gerar Relatório de Publicação - Produto 2">
+        <expl:transition name="SG-P2_F1_4_Transition" to="SG-P2_F1_5"/>
+        <expl:task description="Executar o Procedimento do Teste  G-P2_F1_4" name="Executar CT SG-P2_F1_4">
+          <artefacts name="Caso de Teste SG_F1_4" Type="input" description="Detalhes do caso de teste SG_F1_4"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT G-P2_F1_4" name="Reportar CR G-P2_F1_4">
+          <artefacts name="CR G-P2_F1_4" Type="output" description="Resultado da Execução do Caso de Teste G-P2_F1_4"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F1_5" description="Gerar Relatório de Publicação - Produto 2">
+        <expl:transition name="SG-P2_F1_5_Transition" to="SG-P2_F1_6"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F1_5" name="Executar CT SG-P2_F1_5">
+          <artefacts name="Caso de Teste SG_F1_5" Type="input" description="Suite de testes SG_F1_5"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P2_F1_5" name="Reportar CR SG-P2_F1_5">
+          <artefacts name="CR SG-P2_F1_5" Type="output" description="Resultado da Execução do Caso de Teste SG-P2_F1_5"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F1_6" description="Veriﬁcar Formatos de Geração de Relatórios - Produto 2">
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F1_6" name="Executar CT SG-P2_F1_6">
+          <artefacts name="Caso de Teste SG_F1_6" Type="input" description="Detalhes do caso de teste SG_F1_6"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P2_F1_6" name="Reportar CR SG-P2_F1_6">
+          <artefacts name="CR SG-P2_F1_6" Type="output" description="Resultado da Execução do Caso de Teste SG-P2_F1_6"/>
+        </expl:task>
+        <expl:transition name="SG-P2_F1_6transition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition><expl:process-definition name="GT-F2" quantity="4">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionSG-P1_F2_1" to="SG-P1_F2_1"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participante"/>
+      </expl:swimlane>
+      <expl:task-node name="SG-P1_F2_1" description="Inserir uma nova Linha de Pesquisa - Produto 1">
+        <expl:transition name="SG-P1_F2_1_Transition" to="SG-P1_F2_2"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F2_1" name="Executar o CT SG-P1_F2_1">
+          <artefacts name="Caso de Teste SG_F2_1" Type="input" description="Detalhes do caso de teste SG_F2_1"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F2_1" name="Reportar CR SG-P1_F2_1">
+          <artefacts name="CR SG-P1_F2_1" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F2_1"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P1_F2_2" description="Associar um Membro a Linha de Pesquisa - Produto 1">
+        <expl:transition name="SG-P1_F2_2_Transition" to="SG-P1_F2_3"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F2_2" name="Execute CT SG-P1_F2_2">
+          <artefacts name="Caso de Teste SG_F2_2" Type="input" description="Detalhes do caso de teste SG_F2_2"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F2_2" name="Reportar CR SG-P1_F2_2">
+          <artefacts name="CR SG-P1_F2_2" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F2_2"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P1_F2_3" description="Remover uma Linha de Pesquisa - Produto 1">
+        <expl:transition name="SG-P1_F2_3_Transition" to="SG-P1_F2_4"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F2_3" name="Executar CT SG-P1_F2_3">
+          <artefacts name="Caso de Teste SG_F2_3" Type="input" description="Detalhes do caso de teste SG_F2_3"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado da CR SG-P1_F2_3" name="Reportar CR SG-P1_F2_3">
+          <artefacts name="CR SG-P1_F2_3" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F2_3"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P1_F2_4" description="Inserir uma nova linha de pesquisa - Produto 1">
+        <expl:transition name="SG-P1_F2_4_Transition" to="SG-P1_F2_5"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F2_4" name="Executar CT SG-P1_F2_4">
+          <artefacts name="Caso de Teste SG_F2_4" Type="input" description="Detalhes do caso de teste SG_F2_4"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F2_4" name="Reportar CR SG-P1_F2_4">
+          <artefacts name="CR SG-P1_F2_4" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F2_4"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P1_F2_5" description="Associar uma Publicação a uma linha - Produto 1">
+        <expl:transition name="SG-P1_F2_5_Transition" to="SG-P1_F2_6"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F2_5" name="Executar CT SG-P1_F2_5">
+          <artefacts name="Caso de Teste SG_F2_5" Type="input" description="Detalhes do caso de testes SG_F2_5"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F2_5" name="Reportar CR SG-P1_F2_5">
+          <artefacts name="CR SG-P1_F2_5" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F2_5"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P1_F2_6" description="Editar uma Linha de Pesquisa - Produto 1">
+        <expl:transition name="SG-P1_F2_6_Transition" to="SG-P2_F2_1"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P1_F2_6" name="Executar CT SG-P1_F2_6">
+          <artefacts name="Caso de Teste SG_F2_6" Type="input" description="Detalhes do caso de teste SG_F2_6"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P1_F2_6" name="Reportar CR SG-P1_F2_6">
+          <artefacts name="CR SG-P1_F2_6" Type="output" description="Resultado da Execução do Caso de Teste SG-P1_F2_6"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F2_1" description="Inserir uma nova Linha de Pesquisa - Produto 1">
+        <expl:transition name="SG-P2_F2_1_Transition" to="SG-P2_F2_2"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F2_1" name="Executar CT SG-P2_F2_1">
+          <artefacts name="Caso de Teste SG_F2_1" Type="input" description="Detalhes do caso de teste SG_F2_1"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P2_F2_1" name="Reportar CR SG-P2_F2_1">
+          <artefacts name="CR SG-P2_F2_1" Type="output" description="Resultado da Execução do Caso de Teste SG-P2_F2_1"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F2_2" description="Associar um Membro a Linha de Pesquisa - Produto 1">
+        <expl:transition name="SG-P2_F2_2_Transition" to="SG-P2_F2_3"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F2_2" name="Executar CT SG-P2_F2_2">
+          <artefacts name="Caso de Teste SG_F2_2" Type="input" description="Detalhes do caso de teste SG_F2_2"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado da CR SG-P2_F2_2" name="Reportar CR SG-P2_F2_2">
+          <artefacts name="CR SG-P2_F2_2" Type="output" description="Resultado da Execução do Caso de Teste SG-P2_F2_2"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F2_3" description="Remover uma Linha de Pesquisa - Produto 1">
+        <expl:transition name="SG-P2_F2_3_Transition" to="SG-P2_F2_4"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F2_3" name="Executar CT SG-P2_F2_3">
+          <artefacts name="Caso de Teste SG_F2_3" Type="input" description="Detalhes do caso de teste SG_F2_3"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado da CR SG-P2_F2_3" name="Reportar CR SG-P2_F2_3">
+          <artefacts name="CR SG-P2_F2_3" Type="output" description="Resultado da Execução do Caso de Teste SG-P2_F2_3"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F2_4" description="Inserir uma nova linha de pesquisa - Produto 1">
+        <expl:transition name="SG-P2_F2_4_Transition" to="SG-P2_F2_5"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F2_4" name="Executar CT SG-P2_F2_4">
+          <artefacts name="Caso de Teste SG_F2_4" Type="input" description="Detalhes do caso de teste SG_F2_4"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P2_F2_4" name="Reportar CR SG-P2_F2_4">
+          <artefacts name="CR SG-P2_F2_4" Type="output" description="Resultado da Execução do Caso de Teste SG-P2_F2_4"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F2_5" description="Associar uma Publicação a uma linha - Produto 1">
+        <expl:transition name="SG-P2_F2_5_Transition" to="SG-P2_F2_6"/>
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F2_5" name="Executar CT SG-P2_F2_5">
+          <artefacts name="Caso de Teste SG_F2_5" Type="input" description="Detalhes do caso de teste SG_F2_5"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P2_F2_5" name="Reportar CR SG-P2_F2_5">
+          <artefacts name="CR SG-P2_F2_5" Type="output" description="Resultado da Execução do Caso de Teste SG-P2_F2_5"/>
+        </expl:task>
+      </expl:task-node>
+      <expl:task-node name="SG-P2_F2_6" description="Editar uma Linha de Pesquisa - Produto 1">
+        <expl:task description="Executar o Procedimento do Teste SG-P2_F2_5" name="Executar CT SG-P2_F2_5">
+          <artefacts name="Caso de Teste SG_F2_6" Type="input" description="Detalhes do caso de teste SG_F2_6"/>
+        </expl:task>
+        <expl:task description="Descrever o resultado do CT SG-P2_F2_5" name="Reportar CR SG-P2_F2_5">
+          <artefacts name="CR SG-P2_F2_5" Type="output" description="Resultado da Execução do Caso de Teste SG-P2_F2_5"/>
+        </expl:task>
+        <expl:transition name="SG-P2_F2_6transition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition></elements>
+</expl:Model>

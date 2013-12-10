@@ -1,0 +1,54 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/template.xhtml">
+	
+	<ui:define name="body">
+    	<rich:dataTable value="#{action.entities}" var="entity" rows="20">
+		    <ui:insert name="columns" /> 
+		    <rich:column width="200" style="text-align: center;"  >
+			 	<f:facet name="header">
+                    <h:outputText value="AÃ§Ãµes"/>
+                </f:facet>
+				<h:panelGroup rendered="#{defautlActions == null ? true : defautlActions}">
+					<h:commandLink action="#{action.detail(entity)}" >
+						<h:graphicImage value="/img/detail.png" alt="detalhes" title="detalhes"/>
+					</h:commandLink>
+					
+					<h:outputText value="   " />
+					
+					<h:commandLink action="#{action.edit(entity)}">
+						<h:graphicImage value="/img/edit.jpg" alt="detalhes" title="detalhes"/>
+					</h:commandLink>
+					
+					<h:outputText value="   " />
+					
+					<h:commandLink action="#{action.delete(entity)}" onclick="return confirm('VocÃª tem certeza?');" >
+						<h:graphicImage value="/img/delete.png" alt="detalhes" title="detalhes"/>
+					</h:commandLink>
+//Alteração-início
+					<h:outputText value="   " />
+					
+					<h:commandLink action="#{grafico.init(entity)}" >
+    					<h:graphicImage value="/img/report.gif" title="Dispersão"/>
+    				</h:commandLink>
+//Alteração-fim
+					<h:graphicImage value="/img/space.png" />
+				</h:panelGroup>
+				<ui:insert name="actions"/>
+			</rich:column>
+			
+		    <f:facet name="footer">
+                <rich:datascroller id="ds" renderIfSinglePage="true"></rich:datascroller>
+            </f:facet>
+    	</rich:dataTable>
+    	<rich:separator  height="4" lineType="double"/>
+    	<h:commandButton action="#{action.create()}" value="Novo" rendered="#{defautlActions == null ? true : defautlActions}" />
+    	
+	</ui:define>
+</ui:composition>

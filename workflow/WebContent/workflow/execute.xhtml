@@ -181,6 +181,7 @@
 	        </f:facet>
 	        <h:panelGroup id="uploadArtefact">
 		        <h:form enctype="multipart/form-data">
+		        		<a4j:jsFunction name="refreshModal" reRender="panelArtefact,tasks,taskNodeArtefacts" />
 						<rich:fileUpload
 							uploadControlLabel="#{messages['layout.text.send']}"
 							immediateUpload="false"
@@ -198,6 +199,5 @@
 			    </h:form>
 	        </h:panelGroup>
 	    </rich:modalPanel>
-	    <a4j:jsFunction name="refreshModal" reRender="panelArtefact,tasks,taskNodeArtefacts" />
 	</ui:define>
 </ui:composition>

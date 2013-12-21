@@ -131,6 +131,7 @@
 	        </f:facet>
 	        <h:panelGroup id="uploadDesignConfiguration">
 	        <h:form enctype="multipart/form-data">
+	        		<a4j:jsFunction name="refreshModalDesignConfiguration" reRender="panelDesignConfiguration,designConfigurationLinks,designDefinition, 2" />
 					<rich:fileUpload
 						uploadControlLabel="#{messages['layout.text.send']}"
 						immediateUpload="false"
@@ -148,7 +149,6 @@
 		    </h:form>
 	        </h:panelGroup>
 	    </rich:modalPanel>
-	    <a4j:jsFunction name="refreshModalDesignConfiguration" reRender="panelDesignConfiguration,designConfigurationLinks,designDefinition" />
 	
 		 <rich:modalPanel id="panelArtefact" autosized="true">
 	        <f:facet name="header">
@@ -164,6 +164,7 @@
 	        </f:facet>
 	        <h:panelGroup id="uploadArtefact">
 	        <h:form enctype="multipart/form-data">
+	        		<a4j:jsFunction name="refreshModal" reRender="panelArtefact,artefacts" />
 					<rich:fileUpload
 						uploadControlLabel="#{messages['layout.text.send']}"
 						immediateUpload="false"
@@ -181,6 +182,5 @@
 		    </h:form>
 	        </h:panelGroup>
 	    </rich:modalPanel>
-	    <a4j:jsFunction name="refreshModal" reRender="panelArtefact,artefacts" />
 	</ui:define>
 </ui:composition>

@@ -19,7 +19,7 @@ public class Seed {
 	@Observer("org.jboss.seam.postInitialization")
 	@Transactional
 	public void popula() throws ValidationException {
-		/*User("gustavosizilio@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Gustavo Sizílio Nery");
+		User u = new User("gustavosizilio@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Gustavo Sizílio Nery");
 		persist(u);
 		
 		User u2 = new User("marilia.freire@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Marília Freire");
@@ -34,7 +34,7 @@ public class Seed {
 		createUsers(20);
 		
 		Workflow w = new Workflow(u, "Experimento Test");
-		persist(w);*/
+		persist(w);
 	}
 
 	private void createUsers(int qnt) {

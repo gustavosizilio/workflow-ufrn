@@ -66,18 +66,9 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	//TODO parse jpdl
 	public void deployWorkflow(UploadEvent event) throws Exception {
 	    UploadItem item = event.getUploadItem();
-	    WorkflowManager jpdl = new WorkflowManager(item.getFile().getAbsolutePath());
-	    
-	    List<ProcessDefinition> processDefinitions;
-		try {
-			processDefinitions = jpdl.executeTransformations();
-			for (ProcessDefinition process : processDefinitions) {
-				process.setWorkflow(this.entity);
-				seamDao.persist(process);
-			}
-			this.entity.getProcessDefinitions().addAll(processDefinitions);
-		    seamDao.merge(entity);
-		    seamDao.flush();
+	    WorkflowManager jpdl = new WorkflowManager(item.getFile().getAbsolutePath(), this.entity, this.seamDao);
+	    try {
+			jpdl.executeTransformations();
 		} catch (ValidationException e) {
 			addErrors(e.getErrors());
 		} catch (Exception e) {

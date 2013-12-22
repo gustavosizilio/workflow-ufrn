@@ -2,10 +2,14 @@ package org.domain.dataManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.domain.dao.SeamDAO;
+import org.domain.exception.ValidationException;
 import org.domain.model.processDefinition.Artefact;
 import org.domain.model.processDefinition.EndState;
 import org.domain.model.processDefinition.Fork;
@@ -15,24 +19,101 @@ import org.domain.model.processDefinition.StartState;
 import org.domain.model.processDefinition.Task;
 import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Transition;
+import org.domain.model.processDefinition.Workflow;
 import org.domain.model.processDefinition.dataType.ArtefactType;
+import org.domain.model.processDefinition.metric.Metric;
+import org.domain.model.processDefinition.metric.MetricType;
+import org.domain.model.processDefinition.metric.Question;
+import org.domain.model.processDefinition.metric.QuestionOption;
+import org.domain.model.processDefinition.metric.QuestionType;
+import org.domain.model.processDefinition.metric.Questionnaire;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class WorkflowManager extends XMLManager{
+	private Workflow workflow;
+	private SeamDAO seamDao;
 	
-	public WorkflowManager(String file) {
+	public WorkflowManager(String file, Workflow workflow, SeamDAO seamDAO) {
 		super();
+		this.workflow = workflow;
+		this.seamDao = seamDAO;
 		this.file = file;
 	}
-	
-	public List<ProcessDefinition> executeTransformations() throws ParserConfigurationException, SAXException, IOException{
-		List<ProcessDefinition> processDefinitions = new ArrayList<ProcessDefinition>();
+	private Map<String, Questionnaire> questionnaires; 
+	private List<ProcessDefinition> processDefinitions;
+	public void executeTransformations() throws ParserConfigurationException, SAXException, IOException, ValidationException{
+		extractQuestionnaires();
+		extractProcessDefinitions();
+	}
+
+	private void extractQuestionnaires() throws ParserConfigurationException, SAXException, IOException, ValidationException {
+		questionnaires = new HashMap<String, Questionnaire>();
+		
 		Element docEle = getDOM().getDocumentElement();
 		NodeList nodes = docEle.getElementsByTagName(Elements.ELEMENTS).item(0).getChildNodes();
+		for (int e = 0 ; e < nodes.getLength();e++) {
+			if(getTagName(nodes.item(e)).equals(Elements.QUESTIONNAIRES)){
+				Node node = nodes.item(e);
+				Questionnaire questionnaire = new Questionnaire(getAttribute(node, Elements.NAME));
+				List<Node> nl = getElements(node.getChildNodes());
+				if(nl != null && nl.size() > 0) {
+					for(int i = 0 ; i < nl.size();i++) {
+						if(nl.get(i).getNodeType() == 1){ //Somente do tipo ELEMENT
+							extractElement(nl.get(i), questionnaire);
+						}
+					}
+				}
+				questionnaires.put(questionnaire.getName(), questionnaire);
+			}
+		}
+		;
+		for (Questionnaire questionnaire : questionnaires.values()) {
+			questionnaire.setWorkflow(this.workflow);
+			this.seamDao.persist(questionnaire);
+		}
+		this.workflow.getQuestionnaires().addAll(questionnaires.values());
+	    seamDao.merge(this.workflow);
+	    seamDao.flush();
+	}
+
+	private void extractElement(Node item, Questionnaire questionnaire) {
+		if (extraxtName(item.getNodeName()).equals(Elements.QUESTION)){
+			questionnaire.getQuestions().add(extractQuestion(item, questionnaire));
+		}
+	}
+
+	private Question extractQuestion(Node item, Questionnaire questionnaire) {
+		Question question = new Question();
+		question.setDescription(getAttribute(item, Elements.DESCRIPTION));
+		question.setQuestionnaire(questionnaire);
+		question.setType(QuestionType.RADIO);
 		
+		
+		List<Node> nodes = getElements(item.getChildNodes());
+		for (Node node : nodes) {
+			if(extraxtName(node.getNodeName()).equals(Elements.OPTION)){
+				QuestionOption option = extractOption(node, question);
+				question.getOptions().add(option);
+			}
+		}
+		return question;
+	}
+
+	private QuestionOption extractOption(Node item, Question question) {
+		QuestionOption option = new QuestionOption();
+		option.setDescription(getAttribute(item, Elements.DESCRIPTION));
+		option.setQuestion(question);
+		return option;
+	}
+
+	private void extractProcessDefinitions() throws ParserConfigurationException, SAXException,
+			IOException, ValidationException {
+		setProcessDefinitions(new ArrayList<ProcessDefinition>());
+		Element docEle = getDOM().getDocumentElement();
+		NodeList nodes = docEle.getElementsByTagName(Elements.ELEMENTS).item(0).getChildNodes();
 		for (int e = 0 ; e < nodes.getLength();e++) {
 			if(getTagName(nodes.item(e)).equals(Elements.PROCESS_DEFINITION)){
 				Node node = nodes.item(e);
@@ -45,11 +126,19 @@ public class WorkflowManager extends XMLManager{
 						}
 					}
 				}
-				processDefinitions.add(processDefinition);
+				getProcessDefinitions().add(processDefinition);
 			}
 		}
 		
-		return processDefinitions;
+		
+		List<ProcessDefinition> processDefinitions = getProcessDefinitions();
+		for (ProcessDefinition process : processDefinitions) {
+			process.setWorkflow(this.workflow);
+			this.seamDao.persist(process);
+		}
+		this.workflow.getProcessDefinitions().addAll(processDefinitions);
+	    seamDao.merge(this.workflow);
+	    seamDao.flush();
 	}
 
 	private void extractElement(Node item, ProcessDefinition processDefinition) {
@@ -128,9 +217,26 @@ public class WorkflowManager extends XMLManager{
 				artefact.setTaskNode(taskNode);
 				taskNode.getArtefacts().add(artefact);
 			}
+			if(extraxtName(node.getNodeName()).equals(Elements.METRICS)){
+				Metric metric = extractMetric(node);
+				metric.setTaskNode(taskNode);
+				taskNode.getMetrics().add(metric);
+			}
 		}
 		
 		return taskNode;
+	}
+
+	private Metric extractMetric(Node item) {
+		Metric metric = new Metric();
+		metric.setName(getAttribute(item, Elements.NAME));
+		metric.setRefName(getAttribute(item, Elements.REFNAME));
+		if(getAttribute(item, Elements.METRIC_TYPE).equals("quest")){
+			metric.setMetricType(MetricType.QUEST);
+			metric.setQuestionnaire(this.questionnaires.get(metric.getRefName()));
+		}
+		
+		return metric;
 	}
 
 	private StartState extractStartState(Node item, ProcessDefinition processDefinition) {
@@ -180,6 +286,14 @@ public class WorkflowManager extends XMLManager{
 		artefact.setName(getAttribute(item, Elements.NAME));
 		artefact.setArtefactType(ArtefactType.getValue(getAttribute(item, Elements.TYPE), ArtefactType.OUT));
 		return artefact;
+	}
+
+	public List<ProcessDefinition> getProcessDefinitions() {
+		return processDefinitions;
+	}
+
+	public void setProcessDefinitions(List<ProcessDefinition> processDefinitions) {
+		this.processDefinitions = processDefinitions;
 	}
 
 }

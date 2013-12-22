@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 
 import org.domain.model.User;
 import org.domain.model.generic.GenericEntity;
+import org.domain.model.processDefinition.metric.Questionnaire;
 
 @Entity
 public class Workflow extends GenericEntity {
@@ -39,6 +40,9 @@ public class Workflow extends GenericEntity {
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="workflow")
 	private List<ProcessDefinition> processDefinitions;
+	
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="workflow")
+	private List<Questionnaire> questionnaires;
 	
 	private Date startedAt;
 	
@@ -273,5 +277,11 @@ public class Workflow extends GenericEntity {
 		}else{
 			return true;
 		}
+	}
+	public List<Questionnaire> getQuestionnaires() {
+		return questionnaires;
+	}
+	public void setQuestionnaires(List<Questionnaire> questionnaires) {
+		this.questionnaires = questionnaires;
 	}
 }

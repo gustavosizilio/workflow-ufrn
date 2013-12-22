@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 
 import org.domain.model.User;
 import org.domain.model.processDefinition.dataType.ArtefactType;
+import org.domain.model.processDefinition.metric.Metric;
 
 @Entity
 public class TaskNode {
@@ -30,6 +31,8 @@ public class TaskNode {
 	private StartState startState;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Artefact> artefacts;
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
+	private List<Metric> metrics;
 	@OneToMany(mappedBy="taskNode",cascade=CascadeType.ALL)
 	private List<UserExecution> userExecutions;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
@@ -40,6 +43,7 @@ public class TaskNode {
 		this.artefacts = new ArrayList<Artefact>();
 		this.tasks = new ArrayList<Task>();
 		this.transitions = new ArrayList<Transition>();
+		this.metrics = new ArrayList<Metric>();
 	}
 	
 	public Long getId() {
@@ -146,5 +150,13 @@ public class TaskNode {
 
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
+	}
+
+	public List<Metric> getMetrics() {
+		return metrics;
+	}
+
+	public void setMetrics(List<Metric> metrics) {
+		this.metrics = metrics;
 	}
 }

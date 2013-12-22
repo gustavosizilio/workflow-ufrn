@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<expl:Model xmlns:expl="urn:jbpm.org:jpdl-3.1">
+  <elements><questionnaires name="Satisfaction">
+      <question description="The technique is easy to use">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is well documented">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is efficient">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+    </questionnaires><expl:process-definition name="TechniqueA" quantity="6">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionexecuteTestA1" to="executeTestA1"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participant"/>
+      </expl:swimlane>
+      <expl:task-node name="executeTestA1" description="Execute Test 1">
+        <artefacts name="testA1" type="input" description="Test Case 1"/>
+        <metrics name="executeTestA1" refName="Satisfaction" metricType="quest"/>
+        <expl:transition name="executeTestA1_Transition" to="executeTestA2"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.TimeToTestAActionHandler" name="TimeToTestA" ref-name="TimeToTestA"/>
+        </expl:event>
+      </expl:task-node>
+      <expl:task-node name="executeTestA2" description="Execute Test 2">
+        <artefacts name="testA2" type="input" description="Test Case 1"/>
+        <metrics name="executeTestA2" refName="Satisfaction" metricType="quest"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.TimeToTestAActionHandler" name="TimeToTestA" ref-name="TimeToTestA"/>
+        </expl:event>
+        <expl:transition name="executeTestA2transition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition><expl:process-definition name="TechniqueB" quantity="6">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionexecuteTestB1" to="executeTestB1"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participant"/>
+      </expl:swimlane>
+      <expl:task-node name="executeTestB1" description="Execute Test 1">
+        <artefacts name="testB1" type="input" description="Test Case 1"/>
+        <metrics name="executeTestB1" refName="Satisfaction" metricType="quest"/>
+        <expl:transition name="executeTestB1_Transition" to="executeTestB2"/>
+      </expl:task-node>
+      <expl:task-node name="executeTestB2" description="Execute Test 2">
+        <artefacts name="testB2" type="input" description="Test Case 1"/>
+        <metrics name="executeTestB2" refName="Satisfaction" metricType="quest"/>
+        <expl:transition name="executeTestB2transition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition></elements>
+</expl:Model>

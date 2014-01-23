@@ -262,3 +262,6 @@ label {
 .rich-mpnl-body {
 	overflow: auto;
 }
+.rich-mpnl-body label {
+	display: inline;
+}

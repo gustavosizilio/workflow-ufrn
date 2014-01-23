@@ -23,6 +23,10 @@ import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Transition;
 import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.UserExecution;
+import org.domain.model.processDefinition.metric.Metric;
+import org.domain.model.processDefinition.metric.Question;
+import org.domain.model.processDefinition.metric.Questionnaire;
+import org.domain.model.processDefinition.metric.UserAnswer;
 import org.domain.utils.ReadPropertiesFile;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
@@ -59,6 +63,8 @@ public class WorkflowExecuter {
 	private ArtefactFile currentArtefactFile;
 	private Artefact currentArtefact;
 	private Task currentTask;
+	private Questionnaire currentQuestionnaire;
+	private Metric currentMetric;
 	
 	public String init(ProcessDefinition process, UserAssignment ua){
 		if(process.canExecute(ua)){
@@ -261,13 +267,42 @@ public class WorkflowExecuter {
 					facesMessages.add(Severity.ERROR, "É preciso finalizar todas as tarefas!");
 					return false;
 				}
-			}			
+			}	
+			for (Metric metric : currentTaskNode.getQuestionnaireMetrics()) {
+				if(!metric.finishedByUser(user)){
+					facesMessages.add(Severity.ERROR, "É preciso finalizar todos os questionários!");
+					return false;
+				}
+			}
 		}
 		return true;
 	}
 	
 	public void setCurrentArtefact(Artefact artefact){
 		this.currentArtefact = artefact;
+	}
+	
+	public void setCurrentQuestionnaire(Metric m, Questionnaire questionnaire){
+		this.currentMetric = m;
+		this.currentQuestionnaire = questionnaire;
+	}
+	
+	public void saveQuestionnaire(){
+		for (Question q : this.currentQuestionnaire.getQuestions()) {
+			UserAnswer uan = q.getUserAnswer(user, this.currentMetric);
+			if(uan.getId() == null ||  uan.getId() == 0){
+				seamDao.persist(uan);
+			} else {
+				seamDao.merge(uan);
+			}
+			seamDao.merge(q);
+		}
+		
+		seamDao.flush();
+	}
+	
+	public Questionnaire getCurrentQuestionnaire(){
+		return this.currentQuestionnaire;
 	}
 	
 	public void removeArtefact(Artefact artefact) throws Exception {
@@ -419,5 +454,13 @@ public class WorkflowExecuter {
 
 	public void setCurrentTaskExecution(TaskExecution currentTaskExecution) {
 		this.currentTaskExecution = currentTaskExecution;
+	}
+
+	public Metric getCurrentMetric() {
+		return currentMetric;
+	}
+
+	public void setCurrentMetric(Metric currentMetric) {
+		this.currentMetric = currentMetric;
 	}
 }

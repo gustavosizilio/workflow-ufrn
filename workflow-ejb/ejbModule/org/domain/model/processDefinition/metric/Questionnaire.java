@@ -31,6 +31,9 @@ public class Questionnaire {
 		this.questions = new ArrayList<Question>();
 		this.name = name;
 	}
+	public Questionnaire() {
+		
+	}
 	public Long getId() {
 		return id;
 	}

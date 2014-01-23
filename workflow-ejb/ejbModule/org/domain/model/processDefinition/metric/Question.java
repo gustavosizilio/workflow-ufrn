@@ -1,6 +1,7 @@
 package org.domain.model.processDefinition.metric;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+
+import org.domain.model.User;
 
 @Entity
 public class Question {
@@ -97,6 +100,23 @@ public class Question {
 
 	public void setOptions(List<QuestionOption> options) {
 		this.options = options;
+	}
+	
+	public UserAnswer getUserAnswer(User u, Metric m) {
+		UserAnswer an = null;
+		for (UserAnswer a : getUserAnswers()) {
+			if(a.getUser().getId().equals(u.getId()) && a.getMetric().getId().equals(m.getId())){
+				an = a;
+			}
+		}
+		if (an == null){
+			an = new UserAnswer(u);
+			an.setQuestion(this);
+			an.setCreatedAt(new GregorianCalendar());
+			an.setMetric(m);
+			getUserAnswers().add(an);
+		}
+		return an;
 	}
 
 	public List<UserAnswer> getUserAnswers() {

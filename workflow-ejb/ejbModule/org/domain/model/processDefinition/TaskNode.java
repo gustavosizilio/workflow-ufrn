@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 import org.domain.model.User;
 import org.domain.model.processDefinition.dataType.ArtefactType;
 import org.domain.model.processDefinition.metric.Metric;
+import org.domain.model.processDefinition.metric.MetricType;
 
 @Entity
 public class TaskNode {
@@ -153,6 +154,16 @@ public class TaskNode {
 	}
 
 	public List<Metric> getMetrics() {
+		return metrics;
+	}
+	
+	public List<Metric> getQuestionnaireMetrics() {
+		List<Metric> metrics = new ArrayList<Metric>();
+		for (Metric m : getMetrics()) {
+			if(m.getMetricType() == MetricType.QUEST){
+				metrics.add(m);
+			}
+		}
 		return metrics;
 	}
 

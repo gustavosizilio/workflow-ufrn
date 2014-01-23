@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.domain.model.User;
 import org.domain.model.processDefinition.TaskNode;
 
 @Entity
@@ -72,6 +73,23 @@ public class Metric {
 
 	public void setQuestionnaire(Questionnaire questionnaire) {
 		this.questionnaire = questionnaire;
+	}
+
+	public boolean finishedByUser(User user) {
+		if(metricType.equals(MetricType.QUEST)){
+			return validateQuestionnaire(user);
+		}
+		return true;
+	}
+
+	private boolean validateQuestionnaire(User user) {
+		for (Question q : questionnaire.getQuestions()) {
+			UserAnswer an = q.getUserAnswer(user, this);
+			if(an == null || an.getAnswer() == null || an.getAnswer().isEmpty()){
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

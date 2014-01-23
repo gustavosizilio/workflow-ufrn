@@ -117,8 +117,17 @@
 					</ui:repeat>
 				</h:panelGroup>
 			</h:panelGroup>
+			
+			<h:panelGroup rendered="#{executer.currentTaskNode.questionnaireMetrics.size() > 0}">
+				<rich:separator />
+					<ui:repeat var="metric" value="#{executer.currentTaskNode.questionnaireMetrics}">
+							<a4j:commandButton reRender="metricForm" action="#{executer.setCurrentQuestionnaire(metric, metric.questionnaire)}"
+							 value="Questionnaire: #{metric.questionnaire.name}" onclick="#{rich:component('panelMetric')}.show()">
+						    </a4j:commandButton>
+					</ui:repeat>
+			</h:panelGroup>
 		</rich:panel>
-		
+			
 		<rich:panel header="#{executer.currentJoin.name}" rendered="#{executer.currentJoin != null}">
 			<h:outputText value="#{executer.currentJoin.description}" />
 		</rich:panel>
@@ -166,7 +175,41 @@
 			    </h:form>
 	        </h:panelGroup>
 	     </rich:modalPanel>
-	
+		
+		
+		<rich:modalPanel id="panelMetric" autosized="true" >
+	        <f:facet name="header">
+	            <h:panelGroup>
+	                <h:outputText value="#{messages['layout.text.questionnaire']}"></h:outputText>
+	            </h:panelGroup>
+	        </f:facet>
+	        <f:facet name="controls">
+	            <h:panelGroup>
+	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkpanelMetric"/>
+	                <rich:componentControl for="panelMetric" attachTo="hidelinkpanelMetric" operation="hide" event="onclick"/>
+	            </h:panelGroup>
+	        </f:facet>
+	        <h:panelGroup id="metricForm" style="height:400px; width: 600px; overflow:auto; display: block;">
+		        <h:form enctype="multipart/form-data">
+		        		<h3><h:outputText value="Questionnaire: #{executer.currentQuestionnaire.name}" /></h3>
+		        		<ui:repeat var="q" value="#{executer.currentQuestionnaire.questions}">
+			        		<rich:panel>
+			        			<h:outputText value="#{q.description}" />
+			        			<h:panelGroup rendered="#{q.hasOptions()}">
+			        				<ui:param name="ua" value="#{q.getUserAnswer(user, executer.currentMetric)}" />
+			        				<h:selectOneRadio layout="pageDirection" style="width:100%;" value="#{ua.answer}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
+			        					<s:selectItems var="op" label="#{op.description}" itemValue="#{op.id}"  value="#{q.options}" />
+			        				</h:selectOneRadio>
+			        			</h:panelGroup>
+			        		</rich:panel>
+		        		</ui:repeat>
+		        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaire" />
+		        		<rich:componentControl for="panelMetric" attachTo="saveQuestionnaire" operation="hide" event="onclick"/>
+			    </h:form>
+	        </h:panelGroup>
+	    </rich:modalPanel>
+	    
+	    
 		 <rich:modalPanel id="panelArtefact" autosized="true">
 	        <f:facet name="header">
 	            <h:panelGroup>

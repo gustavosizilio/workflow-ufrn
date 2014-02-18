@@ -195,11 +195,30 @@
 		        		<ui:repeat var="q" value="#{executer.currentQuestionnaire.questions}">
 			        		<rich:panel>
 			        			<h:outputText value="#{q.description}" />
-			        			<h:panelGroup rendered="#{q.hasOptions()}">
+			        			<h:panelGroup rendered="#{q.isComboBox()}">
 			        				<ui:param name="ua" value="#{q.getUserAnswer(user, executer.currentMetric)}" />
-			        				<h:selectOneRadio layout="pageDirection" style="width:100%;" value="#{ua.answer}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
+			        				<h:selectOneMenu style="width:100%;" value="#{ua.answer}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
 			        					<s:selectItems var="op" label="#{op.description}" itemValue="#{op.id}"  value="#{q.options}" />
-			        				</h:selectOneRadio>
+			        				</h:selectOneMenu>
+			        			</h:panelGroup>
+			        			
+			        			<h:panelGroup rendered="#{q.isCheckBox()}">
+			        				<ui:param name="ua" value="#{q.getUserAnswer(user, executer.currentMetric)}" />
+			        				<h:selectManyCheckbox style="width:100%;" value="#{ua.answerAsList}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
+			        					<s:selectItems var="op" label="#{op.description}" itemValue="#{op.id}"  value="#{q.options}" />
+			        				</h:selectManyCheckbox>
+			        			</h:panelGroup>
+			        			
+			        			<h:panelGroup rendered="#{q.isText()}">
+			        				<ui:param name="ua" value="#{q.getUserAnswer(user, executer.currentMetric)}" />
+			        				<h:inputText style="width:100%;" value="#{ua.answer}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
+			        				</h:inputText>
+			        			</h:panelGroup>
+			        			
+			        			<h:panelGroup rendered="#{q.isParagraphText()}">
+			        				<ui:param name="ua" value="#{q.getUserAnswer(user, executer.currentMetric)}" />
+			        				<h:inputTextarea style="width:100%;" value="#{ua.answer}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
+			        				</h:inputTextarea>
 			        			</h:panelGroup>
 			        		</rich:panel>
 		        		</ui:repeat>

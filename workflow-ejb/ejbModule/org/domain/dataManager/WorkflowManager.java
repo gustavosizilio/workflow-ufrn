@@ -89,8 +89,24 @@ public class WorkflowManager extends XMLManager{
 		Question question = new Question();
 		question.setDescription(getAttribute(item, Elements.DESCRIPTION));
 		question.setQuestionnaire(questionnaire);
-		question.setType(QuestionType.RADIO);
 		
+		System.out.println(getAttribute(item, Elements.TYPE));
+		if(getAttribute(item, Elements.TYPE) != null){
+			if(getAttribute(item, Elements.TYPE).equals(Elements.COMBOBOX)){
+				question.setType(QuestionType.COMBOBOX);
+			}
+			if(getAttribute(item, Elements.TYPE).equals(Elements.CHECKBOX)){
+				question.setType(QuestionType.CHECKBOX);
+			}
+			if(getAttribute(item, Elements.TYPE).equals(Elements.TEXT)){
+				question.setType(QuestionType.TEXT);
+			}
+			if(getAttribute(item, Elements.TYPE).equals(Elements.PARAGRAPHTEXT)){
+				question.setType(QuestionType.PARAGRAPH);
+			}
+		} else {
+			question.setType(QuestionType.TEXT);
+		}
 		
 		List<Node> nodes = getElements(item.getChildNodes());
 		for (Node node : nodes) {

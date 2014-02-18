@@ -52,5 +52,9 @@ public class Elements {
 	public static final String QUESTIONNAIRES = "questionnaires";
 	public static final String QUESTION = "question";
 	public static final String OPTION = "option";
+	public static final String COMBOBOX = "comboBox";
+	public static final String CHECKBOX = "checkBox";
+	public static final String TEXT = "text";
+	public static final String PARAGRAPHTEXT = "paragraphText";
 	
 }

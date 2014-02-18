@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:expl="urn:jbpm.org:jpdl-3.1">
+  <expl:Model>
+    <elements>
+      <processDefinition name="STTestingF1" quantity="4">
+        <startState name="Starting">
+          <transition name="startTransitionSP1_F1_1" to="SP1_F1_1"/>
+        </startState>
+        <endState name="End"/>
+        <swimlane>
+          <assignment actorId="Participant"/>
+        </swimlane>
+        <taskNode name="SP1_F1_1" description="Insert a new member - Product 1">
+          <transition name="SP1_F1_1_Transition" to="SP1_F1_2"/>
+          <task description="Execute the test case SP1_F1_1" name="ExecuteTCSP1_F1_1">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F1_1ActionHandler" name="ExecuteTCSP1_F1_1" refName="ExecuteTCSP1_F1_1"/>
+            </event>
+            <artefacts name="TCSP1_F1_1" type="input" description="Teste Case SP1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SP1-F1_1" name="ReportCRSP1_F1_1"/>
+        </taskNode>
+        <taskNode name="SP1_F1_2" description="Insert a new conference paper  - Product 1">
+          <transition name="SP1_F1_2_Transition" to="SP1_F1_3"/>
+          <task description="Execute the test case SP1_F1_2" name="ExecuteTCSP1_F1_2">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F1_2ActionHandler" name="ExecuteTCSP1_F1_2" refName="ExecuteTCSP1_F1_2"/>
+            </event>
+            <artefacts name="TCSP1_F1_2" type="input" description="Teste Case SP1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SP1-F1_2" name="ReportCRSP1_F1_2"/>
+        </taskNode>
+        <taskNode name="SP1_F1_3" description="Insert a doctoral thesis - Product 1">
+          <transition name="SP1_F1_3_Transition" to="SP1_F1_4"/>
+          <task description="Execute the test case SP1_F1_3" name="ExecuteTCSP1_F1_3">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F1_3ActionHandler" name="ExecuteTCSP1_F1_3" refName="ExecuteTCSP1_F1_3"/>
+            </event>
+            <artefacts name="TCSP1_F1_3" type="input" description="Teste Case SP1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SP1F1_3" name="ReportCRSP1_F1_3"/>
+        </taskNode>
+        <taskNode name="SP1_F1_4" description="Generate Report of Publications - Product 1">
+          <transition name="SP1_F1_4_Transition" to="SP1_F1_5"/>
+          <task description="Execute the test case SP1_F1_4" name="ExecuteTCSP1_F1_4">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F1_4ActionHandler" name="ExecuteTCSP1_F1_4" refName="ExecuteTCSP1_F1_4"/>
+            </event>
+            <artefacts name="TCSP1_F1_4" type="input" description="Teste Case SP1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SP1F1_4" name="ReportCRSP1_F1_4"/>
+        </taskNode>
+        <taskNode name="SP1_F1_5" description="Generate Report of Publications - Product 1">
+          <transition name="SP1_F1_5_Transition" to="SP1_F1_6"/>
+          <task description="Execute the test case SP1_F1_5" name="ExecuteTCSP1_F1_5">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F1_5ActionHandler" name="ExecuteTCSP1_F1_5" refName="ExecuteTCSP1_F1_5"/>
+            </event>
+            <artefacts name="TCSP1_F1_5" type="input" description="Teste Case SP1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SP1F1_5" name="ReportCRSP1_F1_5"/>
+        </taskNode>
+        <taskNode name="SP1_F1_6" description="Check the format of the generated reports - Product 1">
+          <transition name="SP1_F1_6_Transition" to="SP2_F1_1"/>
+          <task description="Execute the test case SP1_F1_6" name="ExecuteTCSP1_F1_6">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F1_6ActionHandler" name="ExecuteTCSP1_F1_6" refName="ExecuteTCSP1_F1_6"/>
+            </event>
+            <artefacts name="TCSP1_F1_6" type="input" description="Teste Case SP1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SP1F1_6" name="ReportCRSP1_F1_6"/>
+        </taskNode>
+        <taskNode name="SP2_F1_1" description="Insert a new member - Product 2">
+          <transition name="SP2_F1_1_Transition" to="SP2_F1_2"/>
+          <task description="Execute the test case SP2_F1_1" name="ExecuteTCSP2_F1_1">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F1_1ActionHandler" name="ExecuteTCSP2_F1_1" refName="ExecuteTCSP2_F1_1"/>
+            </event>
+            <artefacts name="TCSP2_F1_1" type="input" description="Teste Case 1 SP2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case 1 SP2F1_1" name="ReportCRSP2_F1_1"/>
+        </taskNode>
+        <taskNode name="SP2_F1_2" description="Insert a new conference paper  - Product 2">
+          <transition name="SP2_F1_2_Transition" to="SP2_F1_3"/>
+          <task description="Execute the test case SP2_F1_2" name="ExecuteTCSP2_F1_2">
+            <artefacts name="TCSP2_F1_2" type="input" description="Teste Case 2 SP2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case 2 SP2F1_2" name="ReportCRSP2_F1_2"/>
+        </taskNode>
+        <taskNode name="SP2_F1_3" description="Insert a doctoral thesis - Product 2">
+          <transition name="SP2_F1_3_Transition" to="SP2_F1_4"/>
+          <task description="Execute the test case SP2_F1_3" name="ExecuteTCSP2_F1_3">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F1_3ActionHandler" name="ExecuteTCSP2_F1_3" refName="ExecuteTCSP2_F1_3"/>
+            </event>
+            <artefacts name="TCSP2_F1_3" type="input" description="Teste Case 3 SP2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case 3 SP2F1_3" name="ReportCRSP2_F1_3"/>
+        </taskNode>
+        <taskNode name="SP2_F1_4" description="Generate Report of Publications - Product 2">
+          <transition name="SP2_F1_4_Transition" to="SP2_F1_5"/>
+          <task description="Execute the test case SP2_F1_4" name="ExecuteTCSP2_F1_4">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F1_4ActionHandler" name="ExecuteTCSP2_F1_4" refName="ExecuteTCSP2_F1_4"/>
+            </event>
+            <artefacts name="TCSP2_F1_4" type="input" description="Teste Case 4 SP2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case 4 SP2F1_4" name="ReportCRSP2_F1_4"/>
+        </taskNode>
+        <taskNode name="SP2_F1_5" description="Generate Report of Publications - Product 2">
+          <transition name="SP2_F1_5_Transition" to="SP2_F1_6"/>
+          <task description="Execute the test case SP2_F1_5" name="ExecuteTCSP2_F1_5">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F1_5ActionHandler" name="ExecuteTCSP2_F1_5" refName="ExecuteTCSP2_F1_5"/>
+            </event>
+            <artefacts name="TCSP2_F1_5" type="input" description="Teste Case 5 SP2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SP2F1_5" name="ReportCRSP2_F1_5"/>
+        </taskNode>
+        <taskNode name="SP2_F1_6" description="Check the format of the generated reports - Product 2">
+          <task description="Execute the test case SP2_F1_6" name="ExecuteTCSP2_F1_6">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F1_6ActionHandler" name="ExecuteTCSP2_F1_6" refName="ExecuteTCSP2_F1_6"/>
+            </event>
+            <artefacts name="TCSP2_F1_6" type="input" description="Teste Case 6 SP2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SPF1_6" name="ReportCRSP2_F1_6"/>
+          <transition name="SP2_F1_6transition" to="End"/>
+        </taskNode>
+      </processDefinition>
+      <processDefinition name="STTestingF2" quantity="4">
+        <startState name="Starting">
+          <transition name="startTransitionSP1_F2_1" to="SP1_F2_1"/>
+        </startState>
+        <endState name="End"/>
+        <swimlane>
+          <assignment actorId="Participant"/>
+        </swimlane>
+        <taskNode name="SP1_F2_1" description="Insert a new research line - Product 1">
+          <transition name="SP1_F2_1_Transition" to="SP1_F2_2"/>
+          <task description="Execute the test case SP1_F2_1" name="ExecuteTCSP1_F2_1">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F2_1ActionHandler" name="ExecuteTCSP1_F2_1" refName="ExecuteTCSP1_F2_1"/>
+            </event>
+            <artefacts name="TCSP1_F2_1" type="input" description="Teste Case SP1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SP1F2_1" name="ReportCRSP1_F2_1"/>
+        </taskNode>
+        <taskNode name="SP1_F2_2" description="Associate a member to the research line  - Product 1">
+          <transition name="SP1_F2_2_Transition" to="SP1_F2_3"/>
+          <task description="Execute the test case SP1_F2_2" name="ExecuteTCSP1_F2_2">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F2_2ActionHandler" name="ExecuteTCSP1_F2_2" refName="ExecuteTCSP1_F2_2"/>
+            </event>
+            <artefacts name="TCSP1_F2_2" type="input" description="Teste Case SP1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SP1F2_2" name="ReportCRSP1_F2_2"/>
+        </taskNode>
+        <taskNode name="SP1_F2_3" description="Remove a research line - Product 1">
+          <transition name="SP1_F2_3_Transition" to="SP1_F2_4"/>
+          <task description="Execute the test case SP1_F2_3" name="ExecuteTCSP1_F2_3">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F2_3ActionHandler" name="ExecuteTCSP1_F2_3" refName="ExecuteTCSP1_F2_3"/>
+            </event>
+            <artefacts name="TCSP1_F2_3" type="input" description="Teste Case SP1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SP1F2_3" name="ReportCRSP1_F2_3"/>
+        </taskNode>
+        <taskNode name="SP1_F2_4" description="Insert a new research line - Product 1">
+          <transition name="SP1_F2_4_Transition" to="SP1_F2_5"/>
+          <task description="Execute the test case SP1_F2_4" name="ExecuteTCSP1_F2_4">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F2_4ActionHandler" name="ExecuteTCSP1_F2_4" refName="ExecuteTCSP1_F2_4"/>
+            </event>
+            <artefacts name="TCSP1_F2_4" type="input" description="Teste Case SP1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SP1F2_4" name="ReportCRSP1_F2_4"/>
+        </taskNode>
+        <taskNode name="SP1_F2_5" description="Associate a publication to a research line - Product 1">
+          <transition name="SP1_F2_5_Transition" to="SP1_F2_6"/>
+          <task description="Execute the test case SP1_F2_5" name="ExecuteTCSP1_F2_5">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F2_5ActionHandler" name="ExecuteTCSP1_F2_5" refName="ExecuteTCSP1_F2_5"/>
+            </event>
+            <artefacts name="TCSP1_F2_5" type="input" description="Teste Case SP1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SP1F2_5" name="ReportCRSP1_F2_5"/>
+        </taskNode>
+        <taskNode name="SP1_F2_6" description="Edit a research line">
+          <transition name="SP1_F2_6_Transition" to="SP2_F2_1"/>
+          <task description="Execute the test case SP1_F2_6" name="ExecuteTCSP1_F2_6">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP1_F2_6ActionHandler" name="ExecuteTCSP1_F2_6" refName="ExecuteTCSP1_F2_6"/>
+            </event>
+            <artefacts name="TCSP1_F2_6" type="input" description="Teste Case SP1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SP1F2_6" name="ReportCRSP1_F2_6"/>
+        </taskNode>
+        <taskNode name="SP2_F2_1" description="Insert a new research line - Product 2">
+          <transition name="SP2_F2_1_Transition" to="SP2_F2_2"/>
+          <task description="Execute the test case SP2_F2_1" name="ExecuteTCSP2_F2_1">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F2_1ActionHandler" name="ExecuteTCSP2_F2_1" refName="ExecuteTCSP2_F2_1"/>
+            </event>
+            <artefacts name="TCSP2_F2_1" type="input" description="Teste Case 1 SP2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case 1 SP2F2_1" name="ReportCRSP2_F2_1"/>
+        </taskNode>
+        <taskNode name="SP2_F2_2" description="Associate a member to the research line  - Product 2">
+          <transition name="SP2_F2_2_Transition" to="SP2_F2_3"/>
+          <task description="Execute the test case SP2_F2_2" name="ExecuteTCSP2_F2_2">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F2_2ActionHandler" name="ExecuteTCSP2_F2_2" refName="ExecuteTCSP2_F2_2"/>
+            </event>
+            <artefacts name="TCSP2_F2_2" type="input" description="Teste Case 2 SP2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case 2 SP2F2_2" name="ReportCRSP2_F2_2"/>
+        </taskNode>
+        <taskNode name="SP2_F2_3" description="Remove a research line - Product 2">
+          <transition name="SP2_F2_3_Transition" to="SP2_F2_4"/>
+          <task description="Execute the test case SP2_F2_3" name="ExecuteTCSP2_F2_3">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F2_3ActionHandler" name="ExecuteTCSP2_F2_3" refName="ExecuteTCSP2_F2_3"/>
+            </event>
+            <artefacts name="TCSP2_F2_3" type="input" description="Teste Case 3 SP2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case 3 SP2F2_3" name="ReportCRSP2_F2_3"/>
+        </taskNode>
+        <taskNode name="SP2_F2_4" description="Insert a new research line - Product 2">
+          <transition name="SP2_F2_4_Transition" to="SP2_F2_5"/>
+          <task description="Execute the test case SP2_F2_4" name="ExecuteTCSP2_F2_4">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F2_4ActionHandler" name="ExecuteTCSP2_F2_4" refName="ExecuteTCSP2_F2_4"/>
+            </event>
+            <artefacts name="TCSP2_F2_4" type="input" description="Teste Case 4 SP2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case 4 SP2F2_4" name="ReportCRSP2_F2_4"/>
+        </taskNode>
+        <taskNode name="SP2_F2_5" description="Associate a publication to a research line - Product 2">
+          <transition name="SP2_F2_5_Transition" to="SP2_F2_6"/>
+          <task description="Execute the test case SP2_F2_5" name="ExecuteTCSP2_F2_5">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F2_5ActionHandler" name="ExecuteTCSP2_F2_5" refName="ExecuteTCSP2_F2_5"/>
+            </event>
+            <artefacts name="TCSP2_F2_5" type="input" description="Teste Case 5 SP2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SP2F2_5" name="ReportCRSP2_F2_5"/>
+        </taskNode>
+        <taskNode name="SP2_F2_6" description="Edit a research line - Product 2">
+          <task description="Execute the test case SP2_F2_6" name="ExecuteTCSP2_F2_6">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSP2_F2_6ActionHandler" name="ExecuteTCSP2_F2_6" refName="ExecuteTCSP2_F2_6"/>
+            </event>
+            <artefacts name="TCSP2_F2_6" type="input" description="Teste Case 6 SP2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SPF2_6" name="ReportCRSP2_F2_6"/>
+          <transition name="SP2_F2_6transition" to="End"/>
+        </taskNode>
+      </processDefinition>
+      <processDefinition name="GTTestingF1" quantity="4">
+        <startState name="Starting">
+          <transition name="startTransitionSG1_F1_1" to="SG1_F1_1"/>
+        </startState>
+        <endState name="End"/>
+        <swimlane>
+          <assignment actorId="Participant"/>
+        </swimlane>
+        <taskNode name="SG1_F1_1" description="Insert a new member - Product 1">
+          <transition name="SG1_F1_1_Transition" to="SG1_F1_2"/>
+          <task description="Execute the test case SG1_F1_1" name="ExecuteTCSG1_F1_1">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F1_1ActionHandler" name="ExecuteTCSG1_F1_1" refName="ExecuteTCSG1_F1_1"/>
+            </event>
+            <artefacts name="TCSG1_F1_1" type="input" description="Teste Case SG1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SG1F1_1" name="ReportCRSG1_F1_1"/>
+        </taskNode>
+        <taskNode name="SG1_F1_2" description="Insert a new conference paper  - Product 1">
+          <transition name="SG1_F1_2_Transition" to="SG1_F1_3"/>
+          <task description="Execute the test case SG1_F1_2" name="ExecuteTCSG1_F1_2">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F1_2ActionHandler" name="ExecuteTCSG1_F1_2" refName="ExecuteTCSG1_F1_2"/>
+            </event>
+            <artefacts name="TCSG1_F1_2" type="input" description="Teste Case SG1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SG1F1_2" name="ReportCRSG1_F1_2"/>
+        </taskNode>
+        <taskNode name="SG1_F1_3" description="Insert a doctoral thesis - Product 1">
+          <transition name="SG1_F1_3_Transition" to="SG1_F1_4"/>
+          <task description="Execute the test case SG1_F1_3" name="ExecuteTCSG1_F1_3">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F1_3ActionHandler" name="ExecuteTCSG1_F1_3" refName="ExecuteTCSG1_F1_3"/>
+            </event>
+            <artefacts name="TCSG1_F1_3" type="input" description="Teste Case SG1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SG1F1_3" name="ReportCRSG1_F1_3"/>
+        </taskNode>
+        <taskNode name="SG1_F1_4" description="Generate Report of Publications - Product 1">
+          <transition name="SG1_F1_4_Transition" to="SG1_F1_5"/>
+          <task description="Execute the test case SG1_F1_4" name="ExecuteTCSG1_F1_4">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F1_4ActionHandler" name="ExecuteTCSG1_F1_4" refName="ExecuteTCSG1_F1_4"/>
+            </event>
+            <artefacts name="TCSG1_F1_4" type="input" description="Teste Case SG1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SG1F1_4" name="ReportCRSG1_F1_4"/>
+        </taskNode>
+        <taskNode name="SG1_F1_5" description="Generate Report of Publications - Product 1">
+          <transition name="SG1_F1_5_Transition" to="SG1_F1_6"/>
+          <task description="Execute the test case SG1_F1_5" name="ExecuteTCSG1_F1_5">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F1_5ActionHandler" name="ExecuteTCSG1_F1_5" refName="ExecuteTCSG1_F1_5"/>
+            </event>
+            <artefacts name="TCSG1_F1_5" type="input" description="Teste Case SG1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SG1F1_5" name="ReportCRSG1_F1_5"/>
+        </taskNode>
+        <taskNode name="SG1_F1_6" description="Check the format of the generated reports - Product 1">
+          <transition name="SG1_F1_6_Transition" to="SG2_F1_1"/>
+          <task description="Execute the test case SG1_F1_6" name="ExecuteTCSG1_F1_6">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F1_6ActionHandler" name="ExecuteTCSG1_F1_6" refName="ExecuteTCSG1_F1_6"/>
+            </event>
+            <artefacts name="TCSG1_F1_6" type="input" description="Teste Case SG1 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SG1F1_6" name="ReportCRSG1_F1_6"/>
+        </taskNode>
+        <taskNode name="SG2_F1_1" description="Insert a new member - Product 2">
+          <transition name="SG2_F1_1_Transition" to="SG2_F1_2"/>
+          <task description="Execute the test case SG2_F1_1" name="ExecuteTCSG2_F1_1">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F1_1ActionHandler" name="ExecuteTCSG2_F1_1" refName="ExecuteTCSG2_F1_1"/>
+            </event>
+            <artefacts name="TCSG2_F1_1" type="input" description="Teste Case 1 SG2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case 1 SG2F1_1" name="ReportCRSG2_F1_1"/>
+        </taskNode>
+        <taskNode name="SG2_F1_2" description="Insert a new conference paper  - Product 2">
+          <transition name="SG2_F1_2_Transition" to="SG2_F1_3"/>
+          <task description="Execute the test case SG2_F1_2" name="ExecuteTCSG2_F1_2">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F1_2ActionHandler" name="ExecuteTCSG2_F1_2" refName="ExecuteTCSG2_F1_2"/>
+            </event>
+            <artefacts name="TCSG2_F1_2" type="input" description="Teste Case 2 SG2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case 2 SG2F1_2" name="ReportCRSG2_F1_2"/>
+        </taskNode>
+        <taskNode name="SG2_F1_3" description="Insert a doctoral thesis - Product 2">
+          <transition name="SG2_F1_3_Transition" to="SG2_F1_4"/>
+          <task description="Execute the test case SG2_F1_3" name="ExecuteTCSG2_F1_3">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F1_3ActionHandler" name="ExecuteTCSG2_F1_3" refName="ExecuteTCSG2_F1_3"/>
+            </event>
+            <artefacts name="TCSG2_F1_3" type="input" description="Teste Case 3 SG2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case 3 SG2F1_3" name="ReportCRSG2_F1_3"/>
+        </taskNode>
+        <taskNode name="SG2_F1_4" description="Generate Report of Publications - Product 2">
+          <transition name="SG2_F1_4_Transition" to="SG2_F1_5"/>
+          <task description="Execute the test case SG2_F1_4" name="ExecuteTCSG2_F1_4">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F1_4ActionHandler" name="ExecuteTCSG2_F1_4" refName="ExecuteTCSG2_F1_4"/>
+            </event>
+            <artefacts name="TCSG2_F1_4" type="input" description="Teste Case 4 SG2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case 4 SG2F1_4" name="ReportCRSG2_F1_4"/>
+        </taskNode>
+        <taskNode name="SG2_F1_5" description="Generate Report of Publications - Product 2">
+          <transition name="SG2_F1_5_Transition" to="SG2_F1_6"/>
+          <task description="Execute the test case SG2_F1_5" name="ExecuteTCSG2_F1_5">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F1_5ActionHandler" name="ExecuteTCSG2_F1_5" refName="ExecuteTCSG2_F1_5"/>
+            </event>
+            <artefacts name="TCSG2_F1_5" type="input" description="Teste Case 5 SG2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SG2F1_5" name="ReportCRSG2_F1_5"/>
+        </taskNode>
+        <taskNode name="SG2_F1_6" description="Check the format of the generated reports - Product 2">
+          <task description="Execute the test case SG2_F1_6" name="ExecuteTCSG2_F1_6">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F1_6ActionHandler" name="ExecuteTCSG2_F1_6" refName="ExecuteTCSG2_F1_6"/>
+            </event>
+            <artefacts name="TCSG2_F1_6" type="input" description="Teste Case 6 SG2 Feature 1"/>
+          </task>
+          <task description="Report CR to test case SGF1_6" name="ReportCRSG2_F1_6"/>
+          <transition name="SG2_F1_6transition" to="End"/>
+        </taskNode>
+      </processDefinition>
+      <processDefinition name="GTTestingF2" quantity="4">
+        <startState name="Starting">
+          <transition name="startTransitionSG1_F2_1" to="SG1_F2_1"/>
+        </startState>
+        <endState name="End"/>
+        <swimlane>
+          <assignment actorId="Participant"/>
+        </swimlane>
+        <taskNode name="SG1_F2_1" description="Insert a new research line - Product 1">
+          <transition name="SG1_F2_1_Transition" to="SG1_F2_2"/>
+          <task description="Execute the test case SG1_F2_1" name="ExecuteTCSG1_F2_1">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F2_1ActionHandler" name="ExecuteTCSG1_F2_1" refName="ExecuteTCSG1_F2_1"/>
+            </event>
+            <artefacts name="TCSG1_F2_1" type="input" description="Teste Case SG1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SG1F2_1" name="ReportCRSG1_F2_1"/>
+        </taskNode>
+        <taskNode name="SG1_F2_2" description="Associate a member to the research line  - Product 1">
+          <transition name="SG1_F2_2_Transition" to="SG1_F2_3"/>
+          <task description="Execute the test case SG1_F2_2" name="ExecuteTCSG1_F2_2">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F2_2ActionHandler" name="ExecuteTCSG1_F2_2" refName="ExecuteTCSG1_F2_2"/>
+            </event>
+            <artefacts name="TCSG1_F2_2" type="input" description="Teste Case SG1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SG1F2_2" name="ReportCRSG1_F2_2"/>
+        </taskNode>
+        <taskNode name="SG1_F2_3" description="Remove a research line - Product 1">
+          <transition name="SG1_F2_3_Transition" to="SG1_F2_4"/>
+          <task description="Execute the test case SG1_F2_3" name="ExecuteTCSG1_F2_3">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F2_3ActionHandler" name="ExecuteTCSG1_F2_3" refName="ExecuteTCSG1_F2_3"/>
+            </event>
+            <artefacts name="TCSG1_F2_3" type="input" description="Teste Case SG1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SG1F2_3" name="ReportCRSG1_F2_3"/>
+        </taskNode>
+        <taskNode name="SG1_F2_4" description="Insert a new research line - Product 1">
+          <transition name="SG1_F2_4_Transition" to="SG1_F2_5"/>
+          <task description="Execute the test case SG1_F2_4" name="ExecuteTCSG1_F2_4">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F2_4ActionHandler" name="ExecuteTCSG1_F2_4" refName="ExecuteTCSG1_F2_4"/>
+            </event>
+            <artefacts name="TCSG1_F2_4" type="input" description="Teste Case SG1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SG1F2_4" name="ReportCRSG1_F2_4"/>
+        </taskNode>
+        <taskNode name="SG1_F2_5" description="Associate a publication to a research line - Product 1">
+          <transition name="SG1_F2_5_Transition" to="SG1_F2_6"/>
+          <task description="Execute the test case SG1_F2_5" name="ExecuteTCSG1_F2_5">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F2_5ActionHandler" name="ExecuteTCSG1_F2_5" refName="ExecuteTCSG1_F2_5"/>
+            </event>
+            <artefacts name="TCSG1_F2_5" type="input" description="Teste Case SG1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SG1F2_5" name="ReportCRSG1_F2_5"/>
+        </taskNode>
+        <taskNode name="SG1_F2_6" description="Edit a research line">
+          <transition name="SG1_F2_6_Transition" to="SG2_F2_1"/>
+          <task description="Execute the test case SG1_F2_6" name="ExecuteTCSG1_F2_6">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG1_F2_6ActionHandler" name="ExecuteTCSG1_F2_6" refName="ExecuteTCSG1_F2_6"/>
+            </event>
+            <artefacts name="TCSG1_F2_6" type="input" description="Teste Case SG1 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SG1F2_6" name="ReportCRSG1_F2_6"/>
+        </taskNode>
+        <taskNode name="SG2_F2_1" description="Insert a new research line - Product 2">
+          <transition name="SG2_F2_1_Transition" to="SG2_F2_2"/>
+          <task description="Execute the test case SG2_F2_1" name="ExecuteTCSG2_F2_1">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F2_1ActionHandler" name="ExecuteTCSG2_F2_1" refName="ExecuteTCSG2_F2_1"/>
+            </event>
+            <artefacts name="TCSG2_F2_1" type="input" description="Teste Case 1 SG2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case 1 SG2F2_1" name="ReportCRSG2_F2_1"/>
+        </taskNode>
+        <taskNode name="SG2_F2_2" description="Associate a member to the research line  - Product 2">
+          <transition name="SG2_F2_2_Transition" to="SG2_F2_3"/>
+          <task description="Execute the test case SG2_F2_2" name="ExecuteTCSG2_F2_2">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F2_2ActionHandler" name="ExecuteTCSG2_F2_2" refName="ExecuteTCSG2_F2_2"/>
+            </event>
+            <artefacts name="TCSG2_F2_2" type="input" description="Teste Case 2 SG2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case 2 SG2-F2_2" name="ReportCRSG2_F2_2"/>
+        </taskNode>
+        <taskNode name="SG2_F2_3" description="Remove a research line - Product 2">
+          <transition name="SG2_F2_3_Transition" to="SG2_F2_4"/>
+          <task description="Execute the test case SG2_F2_3" name="ExecuteTCSG2_F2_3">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F2_3ActionHandler" name="ExecuteTCSG2_F2_3" refName="ExecuteTCSG2_F2_3"/>
+            </event>
+            <artefacts name="TCSG2_F2_3" type="input" description="Teste Case 3 SG2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case 3 SG2F2_3" name="ReportCRSG2_F2_3"/>
+        </taskNode>
+        <taskNode name="SG2_F2_4" description="Insert a new research line - Product 2">
+          <transition name="SG2_F2_4_Transition" to="SG2_F2_5"/>
+          <task description="Execute the test case SG2_F2_4" name="ExecuteTCSG2_F2_4">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F2_4ActionHandler" name="ExecuteTCSG2_F2_4" refName="ExecuteTCSG2_F2_4"/>
+            </event>
+            <artefacts name="TCSG2_F2_4" type="input" description="Teste Case 4 SG2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case 4 SG2F2_4" name="ReportCRSG2_F2_4"/>
+        </taskNode>
+        <taskNode name="SG2_F2_5" description="Associate a publication to a research line - Product 2">
+          <transition name="SG2_F2_5_Transition" to="SG2_F2_6"/>
+          <task description="Execute the test case SG2_F2_5" name="ExecuteTCSG2_F2_5">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F2_5ActionHandler" name="ExecuteTCSG2_F2_5" refName="ExecuteTCSG2_F2_5"/>
+            </event>
+            <artefacts name="TCSG2_F2_5" type="input" description="Teste Case 5 SG2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SG2F2_5" name="ReportCRSG2_F2_5"/>
+        </taskNode>
+        <taskNode name="SG2_F2_6" description="Edit a research line - Product 2">
+          <task description="Execute the test case SG2_F2_6" name="ExecuteTCSG2_F2_6">
+            <event type="task-end">
+              <action class="br.ufrn.dimap.ppgsc.ExecuteTCSG2_F2_6ActionHandler" name="ExecuteTCSG2_F2_6" refName="ExecuteTCSG2_F2_6"/>
+            </event>
+            <artefacts name="TCSG2_F2_6" type="input" description="Teste Case 6 SG2 Feature 2"/>
+          </task>
+          <task description="Report CR to test case SGF2_6" name="ReportCRSG2_F2_6"/>
+          <transition name="SG2_F2_6transition" to="End"/>
+        </taskNode>
+      </processDefinition>
+      <questionnaires name="ExperimentFeedback" type="Post">
+        <question description="What is your scholling:">
+          <option description="Undergraduate student"/>
+          <option description="Graduate"/>
+          <option description="Graduate student"/>
+          <option description="Master"/>
+        </question>
+        <question description="What is your research theme?" type="text"/>
+        <question description="Have you ever worked as a software tester?">
+          <option description="Yes"/>
+          <option description="No"/>
+        </question>
+        <question description="If yes, have you already worked with black-box tests &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;(based on use case specifications)?">
+          <option description="Yes"/>
+          <option description="No"/>
+        </question>
+        <question description="Describe your previous experience working with tests:" type="paragraphText"/>
+      </questionnaires>
+      <questionnaires name="Scholling">
+        <question description="Qual seu nome:" type="text"/>
+        <question description="Qual o grau de escolaridade:">
+          <option description="Graduação Em Andamento"/>
+          <option description="Graduação Completa"/>
+          <option description="Mestrado Incompleto"/>
+          <option description="Mestrado Completo"/>
+        </question>
+        <question description="Já trabalhou ou teve experiência com testes de software?">
+          <option description="Sim"/>
+          <option description="Não"/>
+        </question>
+        <question description="Se sim, relate brevemente sua experiência?">
+          <option description="Sim"/>
+          <option description="Não"/>
+        </question>
+        <question description="Já pagou a disciplina de Linhas de Product de Software com Paulo Borba?">
+          <option description="Sim"/>
+          <option description="Não"/>
+        </question>
+        <question description="Se sim, é familiarizado com a linha RGMS e suas funcionalidades?" type="paragraphText"/>
+        <question description="Participou do experimento passado?">
+          <option description="Sim"/>
+          <option description="Não"/>
+        </question>
+      </questionnaires>
+      <plan>
+        <goals id="G1" description="Analyze the test execution process, for the purpose of evaluating two different SPL test case design techniques (GT vs. ST), with respect to their efficiency regarding&#xD;&#xA;          time to execute the test suites as well as the number of terminated CRs reported during the test execution process. Using the point of view of test engineers and &#xD;&#xA;          software engineering researchers in the context of controlled experiments done with graduate and undergraduate students."/>
+        <hypothesis description="The test execution effort using ST is the same compared with the GT " fromGoal="/0/@elements.0/@plan.0/@goals.0" id="H10"/>
+        <hypothesis description="The test execution effort using ST is better than using the GT " fromGoal="/0/@elements.0/@plan.0/@goals.0" type="alternative" id="H11"/>
+        <hypothesis description="The number of terminated CRs using ST is the same compared with the GT" fromGoal="/0/@elements.0/@plan.0/@goals.0" id="H20"/>
+        <hypothesis description="The number of terminated CRs using ST is the same compared with the GT" fromGoal="/0/@elements.0/@plan.0/@goals.0" type="alternative" id="H21"/>
+        <design>
+          <factors name="TestTechnique">
+            <levels name="Generic"/>
+            <levels name="Specific"/>
+          </factors>
+          <factors name="Feature">
+            <levels name="F1"/>
+            <levels name="F2"/>
+          </factors>
+          <factors name="Participants">
+            <levels name="Participant1"/>
+            <levels name="Participant2"/>
+          </factors>
+          <parameters key="SPLComplexity" value="low"/>
+          <parameters key="ParticipantLevel" value="Undergraduating Students"/>
+          <depVariable measureBy="/1 /2 /3 /4" name="TestExecutionTime" description="Test execution time for each test in the Test Suite"/>
+          <depVariable measureBy="/5 /6 /7 /8" name="NumberofCR" description="Number of terminated CR"/>
+        </design>
+      </plan>
+      <metrics nome="ReportedCR1" description="CR Reported during test execution for Specific Technique - Feature 1" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.0"/>
+      <metrics nome="ReportedCR2" description="CR Reported during test execution" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.1"/>
+      <metrics nome="ReportedCR3" description="CR Reported during test execution" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.2"/>
+      <metrics nome="ReportedCR4" description="CR Reported during test execution" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.3"/>
+      <metrics nome="TimeExecution1" description="Time To Execute Testing - Specific Technique - F1" relatesTo="/0/@elements.0/@processDefinition.0"/>
+      <metrics nome="TimeExecution2" description="Time To Execute Testing - Specific Technique - F2" relatesTo="/0/@elements.0/@processDefinition.1"/>
+      <metrics nome="TimeExecution3" description="Time To Execute Testing - Generic Technique - F1" relatesTo="/0/@elements.0/@processDefinition.2"/>
+      <metrics nome="TimeExecution4" description="Time To Execute Testing - Generic Technique - F2" relatesTo="/0/@elements.0/@processDefinition.3"/>
+    </elements>
+  </expl:Model>
+  <expl:Metric nome="TimeExecution1" description="Time To Execute Testing - Specific Technique - F1" relatesTo="/0/@elements.0/@processDefinition.0"/>
+  <expl:Metric nome="TimeExecution2" description="Time To Execute Testing - Specific Technique - F2" relatesTo="/0/@elements.0/@processDefinition.1"/>
+  <expl:Metric nome="TimeExecution3" description="Time To Execute Testing - Generic Technique - F1" relatesTo="/0/@elements.0/@processDefinition.2"/>
+  <expl:Metric nome="TimeExecution4" description="Time To Execute Testing - Generic Technique - F2" relatesTo="/0/@elements.0/@processDefinition.3"/>
+  <expl:Metric nome="ReportedCR1" description="CR Reported during test execution for Specific Technique - Feature 1" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.0"/>
+  <expl:Metric nome="ReportedCR2" description="CR Reported during test execution" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.1"/>
+  <expl:Metric nome="ReportedCR3" description="CR Reported during test execution" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.2"/>
+  <expl:Metric nome="ReportedCR4" description="CR Reported during test execution" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.3"/>
+</xmi:XMI>

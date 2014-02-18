@@ -46,8 +46,34 @@ public class Question {
 		return (getOptions() != null && getOptions().size() > 0);
 	}
 	
+	public Boolean isCheckBox(){
+		if(getType() == QuestionType.CHECKBOX)
+			return true;
+		
+		return false;
+	}
+	public Boolean isComboBox(){
+		if(getType() == QuestionType.COMBOBOX)
+			return true;
+		
+		return false;
+	}
+	public Boolean isText(){
+		if(getType() == QuestionType.TEXT)
+			return true;
+		
+		return false;
+	}
+	public Boolean isParagraphText(){
+		if(getType() == QuestionType.PARAGRAPH)
+			return true;
+		
+		return false;
+	}
+	
+	
 	public Boolean needOptions(){
-		if(getType() == QuestionType.RADIO)
+		if(getType() == QuestionType.CHECKBOX || getType() == QuestionType.COMBOBOX)
 			return true;
 		
 		return false;

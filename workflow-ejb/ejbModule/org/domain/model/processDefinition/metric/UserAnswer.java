@@ -1,6 +1,7 @@
 package org.domain.model.processDefinition.metric;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.domain.model.User;
 
@@ -24,6 +26,10 @@ public class UserAnswer {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar createdAt;
 	private String answer;
+	
+	@Transient
+	private List<String> answerAsList;
+	
 	@ManyToOne
 	private Question question;
 	@ManyToOne
@@ -37,16 +43,13 @@ public class UserAnswer {
 		this.user = u;
 	}
 	
-	public Object getValue(){
+	/*public Object getValue(){
 		if(getQuestion().hasOptions()){
 			return getQuestion().getOption(Long.parseLong(getAnswer()));
 		}
-		if(getQuestion().getType() == QuestionType.NUMERIC){
-			return Long.parseLong(getAnswer());
-		}
 		
-		return null;
-	}
+		return answer;
+	}*/
 
 
 	public User getUser() {
@@ -72,7 +75,6 @@ public class UserAnswer {
 	public String getAnswer() {
 		return answer;
 	}
-
 
 	public void setAnswer(String answer) {
 		this.answer = answer;
@@ -100,5 +102,18 @@ public class UserAnswer {
 
 	public void setMetric(Metric metric) {
 		this.metric = metric;
+	}
+
+	public List<String> getAnswerAsList() {
+		return answerAsList;
+	}
+
+	public void setAnswerAsList(List<String> answerAsList) {
+		StringBuilder sb = new StringBuilder();
+		for (String string : answerAsList) {
+			sb.append(string+";;");
+		}
+		this.answer = sb.toString();
+		this.answerAsList = answerAsList;
 	}
 }

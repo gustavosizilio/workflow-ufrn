@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<expl:Model xmlns:expl="urn:jbpm.org:jpdl-3.1">
+  <elements><questionnaires name="Satisfaction">
+      <question description="The technique is easy to use" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is well documented" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is efficient" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is good" type="comboBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="Your Name:" type="text"/>
+      <question description="Comment:" type="paragraphText"/>
+    </questionnaires>
+    
+    <questionnaires name="Scholling PRE" type="Pre">
+      <question description="The technique is easy to use" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is well documented" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is efficient" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+    </questionnaires>
+    
+    <questionnaires name="Scholling Post" type="Post">
+      <question description="The technique is easy to use" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is well documented" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is efficient" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+    </questionnaires>
+    
+    <questionnaires name="PreQuest" process="TechniqueA" type="Pre">
+      <question description="The technique is easy to use" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is well documented" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is efficient" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+    </questionnaires>
+    
+    <questionnaires name="PostQuest" process="TechniqueA" type="Post">
+      <question description="The technique is easy to use" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is well documented" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+      <question description="The technique is efficient" type="checkBox">
+        <option description="strongly disagree"/>
+        <option description="disagree"/>
+        <option description="neither agree nor disagree"/>
+        <option description="agree"/>
+        <option description="strongly agree"/>
+      </question>
+    </questionnaires>
+    <plan>
+      <goals id="G1" description="To compare the time spent to test technique A and B"/>
+      <goals id="G2" description="To compare the efficience of test technique A and B"/>
+      <goals id="G3" description="To compare the tester satisfaction using technique A and B"/>
+      <hypothesis description="The time to test using test techinque A is the same that using technique B"/>
+      <hypothesis description="The time to test using test techinque A is better then using technique B"/>
+      <hypothesis description="The efficience using technique A and B is the same"/>
+      <hypothesis description="The efficience using technique A is better than using B"/>
+      <hypothesis description="The tester satisfaction using technique A and B is the same"/>
+      <hypothesis description="The Tester satisfaction using technique A is better than using B"/>
+      <design DoE="CRD">
+        <factors name="Technique">
+          <levels name="A"/>
+          <levels name="B"/>
+        </factors>
+        <parameters key="Variable1" value="Value1"/>
+        <parameters key="Variable2" value="Value2"/>
+        <depVariable measureBy="#/1 #/2" name="testingTime" description="Spent time to test"/>
+        <depVariable measureBy="#/3 #/4" name="numberDefectFound" description="Number of defect found testing"/>
+        <depVariable measureBy="#/5 #/6" name="testerSatisfaction" description="The test satisfaction usint technique A and B"/>
+      </design>
+    </plan><expl:process-definition name="TechniqueA" quantity="6">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionexecuteTestA1" to="executeTestA1"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participant"/>
+      </expl:swimlane>
+      <expl:task-node name="executeTestA1" description="Execute Test 1">
+        <artefacts name="testA1" type="input" description="Test Case 1"/>
+        <metrics name="executeTestA1" refName="Satisfaction" metricType="quest"/>
+        <expl:transition name="executeTestA1_Transition" to="executeTestA2"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.TimeToTestAActionHandler" name="TimeToTestA" ref-name="TimeToTestA"/>
+        </expl:event>
+      </expl:task-node>
+      <expl:task-node name="executeTestA2" description="Execute Test 2">
+        <artefacts name="testA2" type="input" description="Test Case 1"/>
+        <metrics name="executeTestA2" refName="Satisfaction" metricType="quest"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.TimeToTestAActionHandler" name="TimeToTestA" ref-name="TimeToTestA"/>
+        </expl:event>
+        <expl:transition name="executeTestA2transition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition><expl:process-definition name="TechniqueB" quantity="6">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionexecuteTestB1" to="executeTestB1"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participant"/>
+      </expl:swimlane>
+      <expl:task-node name="executeTestB1" description="Execute Test 1">
+        <artefacts name="testB1" type="input" description="Test Case 1"/>
+        <metrics name="executeTestB1" refName="Satisfaction" metricType="quest"/>
+        <expl:transition name="executeTestB1_Transition" to="executeTestB2"/>
+      </expl:task-node>
+      <expl:task-node name="executeTestB2" description="Execute Test 2">
+        <artefacts name="testB2" type="input" description="Test Case 1"/>
+        <metrics name="executeTestB2" refName="Satisfaction" metricType="quest"/>
+        <expl:transition name="executeTestB2transition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition></elements>
+</expl:Model>

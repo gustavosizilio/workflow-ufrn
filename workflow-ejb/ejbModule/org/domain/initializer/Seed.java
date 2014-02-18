@@ -19,17 +19,17 @@ public class Seed {
 	@Observer("org.jboss.seam.postInitialization")
 	@Transactional
 	public void popula() throws ValidationException {
-		User u = new User("gustavosizilio@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Gustavo Sizílio Nery");
-		persist(u);
+		User u = new User("gustavosizilio@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Gustavo Siz��lio Nery");
+		u = (User) persist(u);
 		
-		User u2 = new User("marilia.freire@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Marília Freire");
-		persist(u2);
+		User u2 = new User("marilia.freire@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Mar��lia Freire");
+		u2 = (User) persist(u2);
 		
 		User u3 = new User("uirakulesza@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Uira Kulesza");
-		persist(u3);
+		u3 = (User) persist(u3);
 		
 		User u4 = new User("eduardoaranha@dimap.ufrn.br", new BasicPasswordEncryptor().encryptPassword("admin"), "Eduardo Aranha");
-		persist(u4);
+		u4 = (User) persist(u4);
 		
 		createUsers(20);
 		
@@ -44,9 +44,12 @@ public class Seed {
 		}
 	}
 
-	private void persist(Object u) {
+	private Object persist(Object u) {
 		if(seamDao.findByExample(u).size() == 0){
 			seamDao.persist(u);
+			return u;
+		} else {
+			return seamDao.findByExample(u).get(0);
 		}
 	}
 

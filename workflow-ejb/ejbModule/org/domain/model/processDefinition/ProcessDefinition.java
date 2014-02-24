@@ -16,6 +16,9 @@ import javax.persistence.OneToOne;
 
 import org.domain.model.User;
 import org.domain.model.generic.GenericEntity;
+import org.domain.model.processDefinition.metric.Metric;
+import org.domain.model.processDefinition.metric.Questionnaire;
+import org.domain.model.processDefinition.metric.QuestionnaireType;
 
 @Entity
 public class ProcessDefinition extends GenericEntity{
@@ -25,6 +28,9 @@ public class ProcessDefinition extends GenericEntity{
 	private String name;
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private Workflow workflow;
+	
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="process")
+	private List<Questionnaire> questionnaires;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")
 	private List<UserAssignment> userAssignments;
@@ -46,6 +52,7 @@ public class ProcessDefinition extends GenericEntity{
 	private List<EndState> endStates;
 	
 	public ProcessDefinition() {
+		questionnaires = new ArrayList<Questionnaire>();
 		taskNodes = new ArrayList<TaskNode>();
 		joins = new ArrayList<Join>();
 		forks = new ArrayList<Fork>();
@@ -54,6 +61,24 @@ public class ProcessDefinition extends GenericEntity{
 	public ProcessDefinition(String name){
 		this();
 		this.name = name;
+	}
+	
+	public List<Questionnaire> getPreQuestionnaires(){
+		List<Questionnaire> preQuestionnaires = new ArrayList<Questionnaire>();
+		for (Questionnaire q : questionnaires) {
+			if(q.getQuestionnaireType().equals(QuestionnaireType.PRE_PROCESS))
+				preQuestionnaires.add(q);
+		}
+		return preQuestionnaires;
+	}
+	
+	public List<Questionnaire> getPostQuestionnaires(){
+		List<Questionnaire> postQuestionnaires = new ArrayList<Questionnaire>();
+		for (Questionnaire q : questionnaires) {
+			if(q.getQuestionnaireType().equals(QuestionnaireType.POST_PROCESS))
+				postQuestionnaires.add(q);
+		}
+		return postQuestionnaires;
 	}
 	
 	public Long getId() {
@@ -74,7 +99,7 @@ public class ProcessDefinition extends GenericEntity{
 	@Override
 	public void validate() {
 		if(name == null || name.trim().length() == 0){
-			addError("Nome do Processo é obrigatório");
+			addError("Name is required");
 		}
 	}
 	@Override
@@ -209,6 +234,15 @@ public class ProcessDefinition extends GenericEntity{
 		}
 		return users;
 	}
+	
+	public boolean startedByUser(User u){
+		for (TaskNode taskNode : getTaskNodes()) {
+			if(taskNode.startedByUser(u))
+				return true;
+		}
+		return false;
+	}
+	
 	public List<UserAssignment> getUserAssignments() {
 		return userAssignments;
 	}
@@ -217,6 +251,12 @@ public class ProcessDefinition extends GenericEntity{
 	}
 	public String getPathGrafico(){
 		return "../graficos_gerados/"+workflow.getId()+"_"+getId()+".png";
+	}
+	public List<Questionnaire> getQuestionnaires() {
+		return questionnaires;
+	}
+	public void setQuestionnaires(List<Questionnaire> questionnaires) {
+		this.questionnaires = questionnaires;
 	}
 	
 }

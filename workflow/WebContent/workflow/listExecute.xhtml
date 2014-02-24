@@ -27,11 +27,52 @@
     </ui:define>
     
     <ui:define name="actions"> 
-    	<h:commandLink action="#{executer.init(entity.processDefinition, entity)}" title="play" rendered="#{entity.processDefinition.canExecute(entity)}">
-    		<h:graphicImage value="/img/play.png" />
-    	</h:commandLink>
+    	<h:panelGroup rendered="#{entity.processDefinition.canExecute(entity)}">
+			<ui:repeat var="q" value="#{entity.processDefinition.workflow.preQuestionnaires}">
+					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
+					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
+					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(user)}" />
+				    </a4j:commandButton>
+			</ui:repeat>
+			<br />
+			<h:commandLink action="#{executer.init(entity.processDefinition, entity)}" title="play" >
+    			<h:graphicImage value="/img/play.png" />
+    		</h:commandLink>
+    		<br />
+    		<ui:repeat var="q" value="#{entity.processDefinition.workflow.postQuestionnaires}">
+					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
+					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
+					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(user)}" />
+				    </a4j:commandButton>
+			</ui:repeat>
+		</h:panelGroup>
     	<h:commandLink action="#" title="play" rendered="#{not entity.processDefinition.canExecute(entity)}">
     		<h:graphicImage value="/img/noplay.png" />
     	</h:commandLink>
     </ui:define>
+    
+    <rich:modalPanel id="panelQuestionnaire" autosized="true" >
+        <f:facet name="header">
+            <h:panelGroup>
+                <h:outputText value="#{messages['layout.text.questionnaire']}"></h:outputText>
+            </h:panelGroup>
+        </f:facet>
+        <f:facet name="controls">
+            <h:panelGroup>
+                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkpanelQuestionnaire"/>
+                <rich:componentControl for="panelQuestionnaire" attachTo="hidelinkpanelQuestionnaire" operation="hide" event="onclick"/>
+            </h:panelGroup>
+        </f:facet>
+        <h:panelGroup id="questionnaireForm" style="height:400px; width: 600px; overflow:auto; display: block;">
+	        <h:form enctype="multipart/form-data">
+	        		<h3><h:outputText value="Questionnaire: #{executer.currentQuestionnaire.name}" /></h3>
+	        		<ui:include src="questionnaireFields.xhtml" >
+	        			<ui:param name="questions" value="#{executer.currentQuestionnaire.questions}" />
+	        			<ui:param name="disabledFields" value="#{disabledFieldsParam}" />
+	        		</ui:include>
+	        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaire" onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )"/>
+	        		<rich:componentControl for="panelQuestionnaire" attachTo="saveQuestionnaire" operation="hide" event="onclick"/>
+		    </h:form>
+        </h:panelGroup>
+    </rich:modalPanel>
 </ui:composition>

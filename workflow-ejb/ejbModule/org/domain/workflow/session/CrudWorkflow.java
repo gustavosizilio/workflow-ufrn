@@ -148,10 +148,10 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		boolean hasError = false;
 		for (String groupValue : getGroupValues()) {
 			if (this.getUsersSelectedToShuffle().get(groupValue) == null){
-				getFacesMessages().add("Configuração incompleta");
+				getFacesMessages().add("Incomplete configuration");
 				hasError = true;
 			} else if(this.getUsersSelectedToShuffle().get(groupValue).size() < this.entity.getQuantityOfSubjectsNeeds(groupValue)){
-				getFacesMessages().add("Quantidade de usuários insuficiente no grupo "+groupValue);
+				getFacesMessages().add("User quantity is not enought for the group "+groupValue);
 				hasError = true;
 			}
 		}
@@ -175,7 +175,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		boolean hasError = false;
 		for (String groupValue : getGroupValues()) {
 			if(this.getUsersSelectedToShuffle().get(groupValue) == null || this.getUsersSelectedToShuffle().get(groupValue).size() < this.entity.getQuantityOfSubjectsNeeds(groupValue)){
-				getFacesMessages().add("Quantidade de usuários insuficiente no grupo "+groupValue);
+				getFacesMessages().add("User quantity is not enought for the group "+groupValue);
 				hasError = true;
 			}
 		}

@@ -1,0 +1,41 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:t="http://myfaces.apache.org/tomahawk">
+
+<ui:repeat var="question" value="#{questions}">
+<rich:panel>
+	<h:outputText value="#{question.description}" />
+	<h:panelGroup rendered="#{question.isComboBox()}">
+		<ui:param name="ua" value="#{question.getUserAnswer(user, metric)}" />
+		<h:selectOneMenu style="width:100%;" value="#{ua.answer}" disabled="#{disabledFields}" >
+			<s:selectItems var="op" label="#{op.description}" itemValue="#{op.id}"  value="#{question.options}" />
+		</h:selectOneMenu>
+	</h:panelGroup>
+	
+	<h:panelGroup rendered="#{question.isCheckBox()}">
+		<ui:param name="ua" value="#{question.getUserAnswer(user, metric)}" />
+		<h:selectManyCheckbox style="width:100%;" value="#{ua.answerAsList}" disabled="#{disabledFields}" >
+			<s:selectItems var="op" label="#{op.description}" itemValue="#{op.id}"  value="#{question.options}" />
+		</h:selectManyCheckbox>
+	</h:panelGroup>
+	
+	<h:panelGroup rendered="#{question.isText()}">
+		<ui:param name="ua" value="#{question.getUserAnswer(user, metric)}" />
+		<h:inputText style="width:100%;" value="#{ua.answer}" disabled="#{disabledFields}" >
+		</h:inputText>
+	</h:panelGroup>
+	
+	<h:panelGroup rendered="#{question.isParagraphText()}">
+		<ui:param name="ua" value="#{question.getUserAnswer(user, metric)}" />
+		<h:inputTextarea style="width:100%;" value="#{ua.answer}" disabled="#{disabledFields}" >
+		</h:inputTextarea>
+	</h:panelGroup>
+</rich:panel>
+</ui:repeat>
+</ui:composition>

@@ -58,10 +58,6 @@
 						</h:column>
 					</rich:dataTable>
 					
-					<h:outputLabel value="#{messages['layout.text.workflow.comment']}:" for="userExecutionComment"/>
-					<h:inputTextarea id="userExecutionComment" value="#{executer.currentUserExecution.comment}"
-					 disabled="#{executer.currentUserExecution.finishedAt != null}"
-					 rendered="#{executer.currentUserExecution != null}" />
 				</h:panelGrid>
 				<h:panelGroup id="tasks">
 					<br />
@@ -127,7 +123,7 @@
 					</ui:repeat>
 			</h:panelGroup>
 		</rich:panel>
-			
+		
 		<rich:panel header="#{executer.currentJoin.name}" rendered="#{executer.currentJoin != null}">
 			<h:outputText value="#{executer.currentJoin.description}" />
 		</rich:panel>
@@ -136,6 +132,24 @@
 			<h:outputText value="#{executer.endState.description}" />
 		</rich:panel>
 		
+		<h:panelGroup rendered="#{executer.isStartingState()}">
+			<ui:repeat var="q" value="#{executer.currentProcess.preQuestionnaires}">
+					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
+					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
+					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(user)}" />
+				    </a4j:commandButton>
+			</ui:repeat>
+		</h:panelGroup>
+		
+		<h:panelGroup rendered="#{executer.isEndingState()}">
+			<ui:repeat var="q" value="#{executer.currentProcess.postQuestionnaires}">
+					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
+					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
+					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(user)}" />
+				    </a4j:commandButton>
+			</ui:repeat>
+		</h:panelGroup>
+			
 		<h:panelGroup>
 		
 			<ui:repeat var="transition" value="#{executer.transitions}">
@@ -192,42 +206,41 @@
 	        <h:panelGroup id="metricForm" style="height:400px; width: 600px; overflow:auto; display: block;">
 		        <h:form enctype="multipart/form-data">
 		        		<h3><h:outputText value="Questionnaire: #{executer.currentQuestionnaire.name}" /></h3>
-		        		<ui:repeat var="q" value="#{executer.currentQuestionnaire.questions}">
-			        		<rich:panel>
-			        			<h:outputText value="#{q.description}" />
-			        			<h:panelGroup rendered="#{q.isComboBox()}">
-			        				<ui:param name="ua" value="#{q.getUserAnswer(user, executer.currentMetric)}" />
-			        				<h:selectOneMenu style="width:100%;" value="#{ua.answer}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
-			        					<s:selectItems var="op" label="#{op.description}" itemValue="#{op.id}"  value="#{q.options}" />
-			        				</h:selectOneMenu>
-			        			</h:panelGroup>
-			        			
-			        			<h:panelGroup rendered="#{q.isCheckBox()}">
-			        				<ui:param name="ua" value="#{q.getUserAnswer(user, executer.currentMetric)}" />
-			        				<h:selectManyCheckbox style="width:100%;" value="#{ua.answerAsList}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
-			        					<s:selectItems var="op" label="#{op.description}" itemValue="#{op.id}"  value="#{q.options}" />
-			        				</h:selectManyCheckbox>
-			        			</h:panelGroup>
-			        			
-			        			<h:panelGroup rendered="#{q.isText()}">
-			        				<ui:param name="ua" value="#{q.getUserAnswer(user, executer.currentMetric)}" />
-			        				<h:inputText style="width:100%;" value="#{ua.answer}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
-			        				</h:inputText>
-			        			</h:panelGroup>
-			        			
-			        			<h:panelGroup rendered="#{q.isParagraphText()}">
-			        				<ui:param name="ua" value="#{q.getUserAnswer(user, executer.currentMetric)}" />
-			        				<h:inputTextarea style="width:100%;" value="#{ua.answer}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
-			        				</h:inputTextarea>
-			        			</h:panelGroup>
-			        		</rich:panel>
-		        		</ui:repeat>
-		        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaire" />
-		        		<rich:componentControl for="panelMetric" attachTo="saveQuestionnaire" operation="hide" event="onclick"/>
+		        		<ui:include src="questionnaireFields.xhtml" >
+		        			<ui:param name="questions" value="#{executer.currentQuestionnaire.questions}" />
+		        			<ui:param name="disabledFields" value="#{executer.currentQuestionnaire.isFinished(user, executer.currentMetric)}" />
+		        			<ui:param name="metric" value="#{executer.currentMetric}" />
+		        		</ui:include>
+		        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaireMetric" onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )" />
+		        		<rich:componentControl for="panelMetric" attachTo="saveQuestionnaireMetric" operation="hide" event="onclick"/>
 			    </h:form>
 	        </h:panelGroup>
 	    </rich:modalPanel>
 	    
+	    <rich:modalPanel id="panelQuestionnaire" autosized="true" >
+	        <f:facet name="header">
+	            <h:panelGroup>
+	                <h:outputText value="#{messages['layout.text.questionnaire']}"></h:outputText>
+	            </h:panelGroup>
+	        </f:facet>
+	        <f:facet name="controls">
+	            <h:panelGroup>
+	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkpanelQuestionnaire"/>
+	                <rich:componentControl for="panelQuestionnaire" attachTo="hidelinkpanelQuestionnaire" operation="hide" event="onclick"/>
+	            </h:panelGroup>
+	        </f:facet>
+	        <h:panelGroup id="questionnaireForm" style="height:400px; width: 600px; overflow:auto; display: block;">
+		        <h:form enctype="multipart/form-data">
+		        		<h3><h:outputText value="Questionnaire: #{executer.currentQuestionnaire.name}" /></h3>
+		        		<ui:include src="questionnaireFields.xhtml" >
+		        			<ui:param name="questions" value="#{executer.currentQuestionnaire.questions}" />
+		        			<ui:param name="disabledFields" value="#{disabledFieldsParam}" />
+		        		</ui:include>
+		        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaire" onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )" />
+		        		<rich:componentControl for="panelQuestionnaire" attachTo="saveQuestionnaire" operation="hide" event="onclick"/>
+			    </h:form>
+	        </h:panelGroup>
+	    </rich:modalPanel>
 	    
 		 <rich:modalPanel id="panelArtefact" autosized="true">
 	        <f:facet name="header">

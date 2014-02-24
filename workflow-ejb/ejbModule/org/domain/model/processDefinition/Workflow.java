@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import org.domain.model.User;
 import org.domain.model.generic.GenericEntity;
 import org.domain.model.processDefinition.metric.Questionnaire;
+import org.domain.model.processDefinition.metric.QuestionnaireType;
 
 @Entity
 public class Workflow extends GenericEntity {
@@ -53,6 +54,7 @@ public class Workflow extends GenericEntity {
 	private List<Observation> observations;
 	
 	public Workflow() {
+		this.questionnaires = new ArrayList<Questionnaire>();
 		this.setProcessDefinitions(new ArrayList<ProcessDefinition>());
 	}
 	public Workflow(User user) {
@@ -68,13 +70,31 @@ public class Workflow extends GenericEntity {
 	@Override
 	public void validate() {
 		if(title == null || title.trim().length() == 0){
-			addError("Campo Título é obrigatório");
+			addError("Title is required");
 		}
 		for (ProcessDefinition process : processDefinitions) {
 			if(!process.isValid()){
 				addErrors(process.getErrors());
 			}
 		}
+	}
+	
+	public List<Questionnaire> getPreQuestionnaires(){
+		List<Questionnaire> preQuestionnaires = new ArrayList<Questionnaire>();
+		for (Questionnaire q : questionnaires) {
+			if(q.getQuestionnaireType().equals(QuestionnaireType.PRE_EXPERIMENT))
+				preQuestionnaires.add(q);
+		}
+		return preQuestionnaires;
+	}
+	
+	public List<Questionnaire> getPostQuestionnaires(){
+		List<Questionnaire> postQuestionnaires = new ArrayList<Questionnaire>();
+		for (Questionnaire q : questionnaires) {
+			if(q.getQuestionnaireType().equals(QuestionnaireType.POST_EXPERIMENT))
+				postQuestionnaires.add(q);
+		}
+		return postQuestionnaires;
 	}
 	
 	public List<User> getAllUsers(){

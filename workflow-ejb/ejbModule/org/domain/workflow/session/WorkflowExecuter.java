@@ -77,7 +77,7 @@ public class WorkflowExecuter {
 			
 			return WORKFLOW_EXECUTE_XHTML;
 		}else{
-			facesMessages.add("Workflow ainda não iniciado.");
+			facesMessages.add("Workflow not started yet.");
 			return WORKFLOW_LIST_EXECUTE_XHTML;
 		}
 	}
@@ -103,7 +103,27 @@ public class WorkflowExecuter {
 		return transitions;
 	}
 	
+	public Boolean isStartingState(){
+		if(currentTaskNode == null){
+			if(this.startState != null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Boolean isEndingState(){
+		if(this.endState != null){
+			return true;
+		}
+		return false;
+	}
+	
 	public void next(Transition transition){
+		if(isStartingState()){
+			if(!validatePreProcessQuestionnaires())
+				return;
+		}
 		if(validateCurrentTaskNode()){
 			this.startState = null;
 			finishUserExecution();
@@ -174,7 +194,7 @@ public class WorkflowExecuter {
 			TaskExecution taskExecution = task.getTaskExecutionByUser(user);
 			if(taskExecution != null && !taskExecution.equals(currentTaskExecution) && !taskExecution.isFinished()){
 				Break newBreak = new Break(task.getTaskExecutionByUser(user), true);
-				newBreak.setReason("Iniciando execução de outra tarefa");
+				newBreak.setReason("Starting another task");
 				this.seamDao.persist(newBreak);
 				
 				taskExecution.getBreakes().add(newBreak);
@@ -218,7 +238,7 @@ public class WorkflowExecuter {
 
 			for (Artefact artefact : artefacts) {
 				if(artefact.get(currentUserExecution) == null){
-					facesMessages.add(Severity.ERROR, "É preciso enviar todos os artefatos!");
+					facesMessages.add(Severity.ERROR, "You should send all artefacts!");
 					return false;
 				}
 			}
@@ -260,17 +280,29 @@ public class WorkflowExecuter {
 		}
 	}
 
+	private boolean validatePreProcessQuestionnaires() {
+		if(isStartingState()){
+			for (Questionnaire q : this.currentProcess.getPreQuestionnaires()) {
+				if(!q.isFinished(user)){
+					facesMessages.add(Severity.ERROR, "You should complete all questionnaires!");
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	private boolean validateCurrentTaskNode() {
 		if(currentTaskNode != null){
 			for (Task task : currentTaskNode.getTasks()) {
 				if(!task.finishedByUser(user)){
-					facesMessages.add(Severity.ERROR, "É preciso finalizar todas as tarefas!");
+					facesMessages.add(Severity.ERROR, "You should finish all tasks!");
 					return false;
 				}
 			}	
 			for (Metric metric : currentTaskNode.getQuestionnaireMetrics()) {
 				if(!metric.finishedByUser(user)){
-					facesMessages.add(Severity.ERROR, "É preciso finalizar todos os questionários!");
+					facesMessages.add(Severity.ERROR, "You should complete all questionnaires!");
 					return false;
 				}
 			}
@@ -286,7 +318,9 @@ public class WorkflowExecuter {
 		this.currentMetric = m;
 		this.currentQuestionnaire = questionnaire;
 	}
-	
+	public void setCurrentQuestionnaire(Questionnaire questionnaire){
+		this.currentQuestionnaire = questionnaire;
+	}
 	public void saveQuestionnaire(){
 		for (Question q : this.currentQuestionnaire.getQuestions()) {
 			UserAnswer uan = q.getUserAnswer(user, this.currentMetric);

@@ -27,6 +27,7 @@ import org.domain.model.processDefinition.metric.Question;
 import org.domain.model.processDefinition.metric.QuestionOption;
 import org.domain.model.processDefinition.metric.QuestionType;
 import org.domain.model.processDefinition.metric.Questionnaire;
+import org.domain.model.processDefinition.metric.QuestionnaireType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -58,6 +59,28 @@ public class WorkflowManager extends XMLManager{
 			if(getTagName(nodes.item(e)).equals(Elements.QUESTIONNAIRES)){
 				Node node = nodes.item(e);
 				Questionnaire questionnaire = new Questionnaire(getAttribute(node, Elements.NAME));
+				questionnaire.setQuestionnaireType(QuestionnaireType.METRIC_LINKED);
+				
+				String process = getAttribute(node, Elements.PROCESS);
+				String type = getAttribute(node, Elements.TYPE);
+				if(process != null){
+					questionnaire.setQuestionnaireType(QuestionnaireType.PRE_PROCESS);
+					questionnaire.setProcessName(process);
+					if(type != null) {
+						if(type.equals(Elements.POST))
+							questionnaire.setQuestionnaireType(QuestionnaireType.POST_PROCESS);
+						else
+							questionnaire.setQuestionnaireType(QuestionnaireType.PRE_PROCESS);
+					}
+				} else {
+					if(type != null) {
+						if(type.equals(Elements.POST))
+							questionnaire.setQuestionnaireType(QuestionnaireType.POST_EXPERIMENT);
+						else
+							questionnaire.setQuestionnaireType(QuestionnaireType.PRE_EXPERIMENT);
+					}
+				}
+				
 				List<Node> nl = getElements(node.getChildNodes());
 				if(nl != null && nl.size() > 0) {
 					for(int i = 0 ; i < nl.size();i++) {
@@ -71,7 +94,6 @@ public class WorkflowManager extends XMLManager{
 		}
 		;
 		for (Questionnaire questionnaire : questionnaires.values()) {
-			questionnaire.setWorkflow(this.workflow);
 			this.seamDao.persist(questionnaire);
 		}
 		this.workflow.getQuestionnaires().addAll(questionnaires.values());
@@ -151,10 +173,34 @@ public class WorkflowManager extends XMLManager{
 		for (ProcessDefinition process : processDefinitions) {
 			process.setWorkflow(this.workflow);
 			this.seamDao.persist(process);
+			setQuestionnairesToProcess(process);
 		}
 		this.workflow.getProcessDefinitions().addAll(processDefinitions);
+		setQuestionnairesToWorkflow(this.workflow);
 	    seamDao.merge(this.workflow);
 	    seamDao.flush();
+	}
+
+	private void setQuestionnairesToWorkflow(Workflow workflow2) throws ValidationException {
+		for (Questionnaire q : questionnaires.values()) {
+			if((q.getQuestionnaireType().equals(QuestionnaireType.POST_EXPERIMENT) || q.getQuestionnaireType().equals(QuestionnaireType.PRE_EXPERIMENT))){
+				q.setWorkflow(workflow2);
+				seamDao.merge(q);
+				workflow2.getQuestionnaires().add(q);
+			}
+		}
+		seamDao.merge(workflow2);
+	}
+
+	private void setQuestionnairesToProcess(ProcessDefinition process) throws ValidationException {
+		for (Questionnaire q : questionnaires.values()) {
+			if((q.getQuestionnaireType().equals(QuestionnaireType.POST_PROCESS) || q.getQuestionnaireType().equals(QuestionnaireType.PRE_PROCESS)) && q.getProcessName() != null && q.getProcessName().equals(process.getName())){
+				q.setProcess(process);
+				seamDao.merge(q);
+				process.getQuestionnaires().add(q);
+			}
+		}
+		seamDao.merge(process);
 	}
 
 	private void extractElement(Node item, ProcessDefinition processDefinition) {

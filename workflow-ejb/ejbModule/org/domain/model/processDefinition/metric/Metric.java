@@ -83,13 +83,7 @@ public class Metric {
 	}
 
 	private boolean validateQuestionnaire(User user) {
-		for (Question q : questionnaire.getQuestions()) {
-			UserAnswer an = q.getUserAnswer(user, this);
-			if(an == null || an.getAnswer() == null || an.getAnswer().isEmpty()){
-				return false;
-			}
-		}
-		return true;
+		return questionnaire.isFinished(user, this);
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.domain.model.processDefinition.metric;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -105,13 +106,16 @@ public class UserAnswer {
 	}
 
 	public List<String> getAnswerAsList() {
-		return answerAsList;
+		if(answer!=null)
+			return Arrays.asList(answer.split(";"));
+		
+		return null;
 	}
 
 	public void setAnswerAsList(List<String> answerAsList) {
 		StringBuilder sb = new StringBuilder();
 		for (String string : answerAsList) {
-			sb.append(string+";;");
+			sb.append(string+";");
 		}
 		this.answer = sb.toString();
 		this.answerAsList = answerAsList;

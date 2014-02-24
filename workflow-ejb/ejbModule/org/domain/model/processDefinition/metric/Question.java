@@ -131,8 +131,14 @@ public class Question {
 	public UserAnswer getUserAnswer(User u, Metric m) {
 		UserAnswer an = null;
 		for (UserAnswer a : getUserAnswers()) {
-			if(a.getUser().getId().equals(u.getId()) && a.getMetric().getId().equals(m.getId())){
-				an = a;
+			if(a.getUser().getId().equals(u.getId())){
+				if(m != null) {
+					if(a.getMetric().getId().equals(m.getId())){
+						an = a;
+					}
+				} else {
+					an = a;
+				}
 			}
 		}
 		if (an == null){
@@ -144,6 +150,10 @@ public class Question {
 		}
 		return an;
 	}
+	
+	public UserAnswer getUserAnswer(User u) {
+		return getUserAnswer(u, null);
+	}
 
 	public List<UserAnswer> getUserAnswers() {
 		return userAnswers;
@@ -151,5 +161,20 @@ public class Question {
 
 	public void setUserAnswers(List<UserAnswer> userAnswers) {
 		this.userAnswers = userAnswers;
+	}
+
+	public boolean isFinished(User user, Metric metric) {
+		UserAnswer an = this.getUserAnswer(user, metric);
+		if(an == null || an.getAnswer() == null || an.getAnswer().isEmpty()){
+			return false;
+		}
+		return true;
+	}
+	public boolean isFinished(User user) {
+		UserAnswer an = this.getUserAnswer(user);
+		if(an == null || an.getAnswer() == null || an.getAnswer().isEmpty()){
+			return false;
+		}
+		return true;
 	}
 }

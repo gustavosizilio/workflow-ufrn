@@ -56,5 +56,7 @@ public class Elements {
 	public static final String CHECKBOX = "checkBox";
 	public static final String TEXT = "text";
 	public static final String PARAGRAPHTEXT = "paragraphText";
+	public static final String PRE = "Pre";
+	public static final String POST = "Post";
 	
 }

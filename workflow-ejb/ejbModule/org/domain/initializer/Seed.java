@@ -19,10 +19,10 @@ public class Seed {
 	@Observer("org.jboss.seam.postInitialization")
 	@Transactional
 	public void popula() throws ValidationException {
-		User u = new User("gustavosizilio@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Gustavo Siz��lio Nery");
+		User u = new User("gustavosizilio@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Gustavo Sizilio Nery");
 		u = (User) persist(u);
 		
-		User u2 = new User("marilia.freire@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Mar��lia Freire");
+		User u2 = new User("marilia.freire@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Marilia Freire");
 		u2 = (User) persist(u2);
 		
 		User u3 = new User("uirakulesza@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Uira Kulesza");

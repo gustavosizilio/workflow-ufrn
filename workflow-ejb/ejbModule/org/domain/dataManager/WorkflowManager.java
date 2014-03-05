@@ -44,6 +44,7 @@ public class WorkflowManager extends XMLManager{
 		this.file = file;
 	}
 	private Map<String, Questionnaire> questionnaires; 
+	private Map<String, Metric> metrics = new HashMap<String, Metric>();
 	private List<ProcessDefinition> processDefinitions;
 	public void executeTransformations() throws ParserConfigurationException, SAXException, IOException, ValidationException{
 		extractQuestionnaires();
@@ -111,8 +112,6 @@ public class WorkflowManager extends XMLManager{
 		Question question = new Question();
 		question.setDescription(getAttribute(item, Elements.DESCRIPTION));
 		question.setQuestionnaire(questionnaire);
-		
-		System.out.println(getAttribute(item, Elements.TYPE));
 		if(getAttribute(item, Elements.TYPE) != null){
 			if(getAttribute(item, Elements.TYPE).equals(Elements.COMBOBOX)){
 				question.setType(QuestionType.COMBOBOX);
@@ -281,7 +280,7 @@ public class WorkflowManager extends XMLManager{
 			}
 			if(extraxtName(node.getNodeName()).equals(Elements.METRICS)){
 				Metric metric = extractMetric(node);
-				metric.setTaskNode(taskNode);
+				metric.getTaskNodes().add(taskNode);
 				taskNode.getMetrics().add(metric);
 			}
 		}
@@ -292,13 +291,21 @@ public class WorkflowManager extends XMLManager{
 	private Metric extractMetric(Node item) {
 		Metric metric = new Metric();
 		metric.setName(getAttribute(item, Elements.NAME));
-		metric.setRefName(getAttribute(item, Elements.REFNAME));
-		if(getAttribute(item, Elements.METRIC_TYPE).equals("quest")){
-			metric.setMetricType(MetricType.QUEST);
-			metric.setQuestionnaire(this.questionnaires.get(metric.getRefName()));
+		if(metrics.containsKey(metric.getName())){
+			return metrics.get(metric.getName());
+		} else {
+			metric.setRefName(getAttribute(item, Elements.REFNAME));
+			if(getAttribute(item, Elements.METRIC_TYPE).equals("quest")){
+				metric.setMetricType(MetricType.QUEST);
+				metric.setQuestionnaire(this.questionnaires.get(metric.getRefName()));
+			} else if (getAttribute(item, Elements.METRIC_TYPE).equals("collectedData")) {
+				metric.setMetricType(MetricType.COLLECTED_DATA);
+			} 
+			seamDao.persist(metric);
+			metrics.put(metric.getName(), metric);
+			return metric;
 		}
 		
-		return metric;
 	}
 
 	private StartState extractStartState(Node item, ProcessDefinition processDefinition) {

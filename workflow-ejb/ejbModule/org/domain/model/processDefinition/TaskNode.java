@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -32,7 +33,7 @@ public class TaskNode {
 	private StartState startState;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Artefact> artefacts;
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
+	@ManyToMany(cascade=CascadeType.MERGE)
 	private List<Metric> metrics;
 	@OneToMany(mappedBy="taskNode",cascade=CascadeType.ALL)
 	private List<UserExecution> userExecutions;
@@ -154,6 +155,16 @@ public class TaskNode {
 	}
 
 	public List<Metric> getMetrics() {
+		return metrics;
+	}
+	
+	public List<Metric> getCollectedDataMetrics() {
+		List<Metric> metrics = new ArrayList<Metric>();
+		for (Metric m : getMetrics()) {
+			if(m.getMetricType() == MetricType.COLLECTED_DATA){
+				metrics.add(m);
+			}
+		}
 		return metrics;
 	}
 	

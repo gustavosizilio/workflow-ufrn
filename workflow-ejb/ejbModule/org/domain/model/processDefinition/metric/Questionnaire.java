@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 
 import org.domain.model.User;
 import org.domain.model.processDefinition.ProcessDefinition;
+import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Workflow;
 
 @Entity
@@ -95,9 +96,9 @@ public class Questionnaire {
 	public void setWorkflow(Workflow workflow) {
 		this.workflow = workflow;
 	}
-	public boolean isFinished(User user, Metric metric) {
+	public boolean isFinished(User user, Metric metric, TaskNode task) {
 		for (Question q : this.getQuestions()) {
-			if(!q.isFinished(user, metric))
+			if(!q.isFinished(user, metric, task))
 				return false;
 		}
 		return true;

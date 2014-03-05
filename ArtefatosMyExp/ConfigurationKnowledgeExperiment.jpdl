@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:expl="urn:jbpm.org:jpdl-3.1">
-  <expl:Model>
+ <expl:Model>
     <elements>
       <processDefinition name="EShopProcess" quantity="4">
         <startState name="Starting">
@@ -343,10 +342,3 @@
       <metrics name="KnowledgeOLIS" description="Knowledge reported for questionnaire for OLISProcess" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.2"/>
     </elements>
   </expl:Model>
-  <expl:Metric name="AnswersEShop" description="Answer reported for questions during execution for EShopProcess" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.0"/>
-  <expl:Metric name="AnswersByerAgent" description="Answer reported for questions during execution for ByerAgentProcess" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.1"/>
-  <expl:Metric name="AnswersOLIS" description="Answer reported for questions during execution for OLISProcess" type="collectedData" relatesTo="/0/@elements.0/@processDefinition.2"/>
-  <expl:Metric name="ReplyTimeEShop" description="Time taken to answer a question correctly" relatesTo="/0/@elements.0/@processDefinition.0"/>
-  <expl:Metric name="ReplyTimeByerAgent" description="Time taken to answer a question correctly" relatesTo="/0/@elements.0/@processDefinition.1"/>
-  <expl:Metric name="ReplyTimeOLIS" description="Time taken to answer a question correctly" relatesTo="/0/@elements.0/@processDefinition.2"/>
-</xmi:XMI>

@@ -301,7 +301,7 @@ public class WorkflowExecuter {
 				}
 			}	
 			for (Metric metric : currentTaskNode.getQuestionnaireMetrics()) {
-				if(!metric.finishedByUser(user)){
+				if(!metric.finishedByUser(user, this.currentTaskNode)){
 					facesMessages.add(Severity.ERROR, "You should complete all questionnaires!");
 					return false;
 				}
@@ -323,7 +323,7 @@ public class WorkflowExecuter {
 	}
 	public void saveQuestionnaire(){
 		for (Question q : this.currentQuestionnaire.getQuestions()) {
-			UserAnswer uan = q.getUserAnswer(user, this.currentMetric);
+			UserAnswer uan = q.getUserAnswer(user, this.currentMetric, this.currentTaskNode);
 			if(uan.getId() == null ||  uan.getId() == 0){
 				seamDao.persist(uan);
 			} else {

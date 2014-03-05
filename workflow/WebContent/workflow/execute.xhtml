@@ -23,7 +23,15 @@
 				 				target="_blank">
 				</h:commandLink>
 			</rich:dataList>
-			<br /><br />
+			
+
+			
+			<h:panelGroup rendered="#{executer.currentTaskNode.collectedDataMetrics.size() > 0}">
+				<ui:repeat var="metric" value="#{executer.currentTaskNode.collectedDataMetrics}">
+					<ui:param name="ua" value="#{metric.getUserAnswer(user, executer.currentTaskNode)}" />
+					<h:inputText  value="#{ua.answer}" disabled="#{executer.currentUserExecution.finishedAt != null}" />
+				</ui:repeat>
+			</h:panelGroup>
 			
 			<h:panelGroup rendered="#{executer.currentUserExecution != null}">
 				<h:panelGrid columns="2">
@@ -57,7 +65,6 @@
 							
 						</h:column>
 					</rich:dataTable>
-					
 				</h:panelGrid>
 				<h:panelGroup id="tasks">
 					<br />
@@ -208,8 +215,9 @@
 		        		<h3><h:outputText value="Questionnaire: #{executer.currentQuestionnaire.name}" /></h3>
 		        		<ui:include src="questionnaireFields.xhtml" >
 		        			<ui:param name="questions" value="#{executer.currentQuestionnaire.questions}" />
-		        			<ui:param name="disabledFields" value="#{executer.currentQuestionnaire.isFinished(user, executer.currentMetric)}" />
+		        			<ui:param name="disabledFields" value="#{executer.currentQuestionnaire.isFinished(user, executer.currentMetric, executer.currentTaskNode)}" />
 		        			<ui:param name="metric" value="#{executer.currentMetric}" />
+		        			<ui:param name="taskNode" value="#{executer.currentTaskNode}" />
 		        		</ui:include>
 		        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaireMetric" onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )" />
 		        		<rich:componentControl for="panelMetric" attachTo="saveQuestionnaireMetric" operation="hide" event="onclick"/>
@@ -235,6 +243,8 @@
 		        		<ui:include src="questionnaireFields.xhtml" >
 		        			<ui:param name="questions" value="#{executer.currentQuestionnaire.questions}" />
 		        			<ui:param name="disabledFields" value="#{disabledFieldsParam}" />
+		        			<ui:param name="metric" value="#{null}" />
+		        			<ui:param name="taskNode" value="#{null}" />
 		        		</ui:include>
 		        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaire" onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )" />
 		        		<rich:componentControl for="panelQuestionnaire" attachTo="saveQuestionnaire" operation="hide" event="onclick"/>

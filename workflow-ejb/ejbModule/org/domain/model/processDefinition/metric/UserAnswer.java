@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.domain.model.User;
+import org.domain.model.processDefinition.TaskNode;
 
 @Entity
 public class UserAnswer {
@@ -35,6 +36,8 @@ public class UserAnswer {
 	private Question question;
 	@ManyToOne
 	private Metric metric;
+	@ManyToOne
+	private TaskNode taskNode;
 	
 	public UserAnswer() {
 		// TODO Auto-generated constructor stub
@@ -119,5 +122,13 @@ public class UserAnswer {
 		}
 		this.answer = sb.toString();
 		this.answerAsList = answerAsList;
+	}
+
+	public TaskNode getTaskNode() {
+		return taskNode;
+	}
+
+	public void setTaskNode(TaskNode taskNode) {
+		this.taskNode = taskNode;
 	}
 }

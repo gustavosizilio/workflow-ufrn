@@ -1,11 +1,18 @@
 package org.domain.model.processDefinition.metric;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.domain.model.User;
 import org.domain.model.processDefinition.TaskNode;
@@ -21,10 +28,14 @@ public class Metric {
 	private MetricType metricType;
 	@ManyToOne
 	private Questionnaire questionnaire;
-	@ManyToOne
-	private TaskNode  taskNode;
+	@ManyToMany
+	private List<TaskNode>  taskNodes;
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="metric")
+	private List<UserAnswer> userAnswers;	
 	
 	public Metric() {
+		this.userAnswers = new ArrayList<UserAnswer>();
+		this.setTaskNodes(new ArrayList<TaskNode>());
 	}
 
 	public Long getId() {
@@ -59,14 +70,6 @@ public class Metric {
 		this.metricType = metricType;
 	}
 
-	public TaskNode getTaskNode() {
-		return taskNode;
-	}
-
-	public void setTaskNode(TaskNode taskNode) {
-		this.taskNode = taskNode;
-	}
-
 	public Questionnaire getQuestionnaire() {
 		return questionnaire;
 	}
@@ -75,15 +78,52 @@ public class Metric {
 		this.questionnaire = questionnaire;
 	}
 
-	public boolean finishedByUser(User user) {
+	public boolean finishedByUser(User user, TaskNode task) {
 		if(metricType.equals(MetricType.QUEST)){
-			return validateQuestionnaire(user);
+			return validateQuestionnaire(user, task);
 		}
 		return true;
 	}
 
-	private boolean validateQuestionnaire(User user) {
-		return questionnaire.isFinished(user, this);
+	private boolean validateQuestionnaire(User user, TaskNode task) {
+		return questionnaire.isFinished(user, this, task);
+	}
+
+	public List<TaskNode> getTaskNodes() {
+		return taskNodes;
+	}
+
+	public void setTaskNodes(List<TaskNode> taskNodes) {
+		this.taskNodes = taskNodes;
+	}
+
+	public List<UserAnswer> getUserAnswers() {
+		return userAnswers;
+	}
+	
+	public UserAnswer getUserAnswer(User u, TaskNode task) {
+		UserAnswer an = null;
+		for (UserAnswer ua : userAnswers) {
+			if(ua.getUser().getId().equals(u.getId())){
+				if(ua.getTaskNode() != null && ua.getTaskNode().getId().equals(task.getId())){
+					return ua;
+				}
+			}
+		}
+		
+		if (an == null){
+			an = new UserAnswer(u);
+			an.setCreatedAt(new GregorianCalendar());
+			an.setMetric(this);
+			an.setTaskNode(task);
+			getUserAnswers().add(an);
+		}
+		
+		return an;
+	}
+
+	public void setUserAnswers(List<UserAnswer> userAnswers) {
+		this.userAnswers = userAnswers;
 	}
 
 }

@@ -159,7 +159,7 @@
       </expl:swimlane>
       <expl:task-node name="executeTestA1" description="Execute Test 1">
         <artefacts name="testA1" type="input" description="Test Case 1"/>
-        <metrics name="executeTestA1" refName="Satisfaction" metricType="quest"/>
+        <metrics name="executeTestA1" refName="Satisfaction" metricType="collectedData"/>
         <expl:transition name="executeTestA1_Transition" to="executeTestA2"/>
         <expl:event type="task-end">
           <expl:action class="br.ufrn.dimap.ppgsc.TimeToTestAActionHandler" name="TimeToTestA" ref-name="TimeToTestA"/>

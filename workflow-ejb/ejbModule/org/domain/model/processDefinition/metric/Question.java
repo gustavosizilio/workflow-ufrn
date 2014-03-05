@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.domain.model.User;
+import org.domain.model.processDefinition.TaskNode;
 
 @Entity
 public class Question {
@@ -128,16 +129,24 @@ public class Question {
 		this.options = options;
 	}
 	
-	public UserAnswer getUserAnswer(User u, Metric m) {
+	public UserAnswer getUserAnswer(User u, Metric m, TaskNode task) {
 		UserAnswer an = null;
 		for (UserAnswer a : getUserAnswers()) {
 			if(a.getUser().getId().equals(u.getId())){
 				if(m != null) {
-					if(a.getMetric().getId().equals(m.getId())){
-						an = a;
+					if(a.getMetric() != null && a.getMetric().getId().equals(m.getId())){
+						if(task != null) {
+							if(a.getTaskNode() != null && a.getTaskNode().getId().equals(task.getId())){
+								an = a;
+							}
+						} else {
+							if(a.getTaskNode() == null)
+								an = a;
+						}
 					}
 				} else {
-					an = a;
+					if(a.getMetric()  == null)
+							an = a;
 				}
 			}
 		}
@@ -146,13 +155,14 @@ public class Question {
 			an.setQuestion(this);
 			an.setCreatedAt(new GregorianCalendar());
 			an.setMetric(m);
+			an.setTaskNode(task);
 			getUserAnswers().add(an);
 		}
 		return an;
 	}
 	
 	public UserAnswer getUserAnswer(User u) {
-		return getUserAnswer(u, null);
+		return getUserAnswer(u, null, null);
 	}
 
 	public List<UserAnswer> getUserAnswers() {
@@ -163,8 +173,8 @@ public class Question {
 		this.userAnswers = userAnswers;
 	}
 
-	public boolean isFinished(User user, Metric metric) {
-		UserAnswer an = this.getUserAnswer(user, metric);
+	public boolean isFinished(User user, Metric metric, TaskNode task) {
+		UserAnswer an = this.getUserAnswer(user, metric, task);
 		if(an == null || an.getAnswer() == null || an.getAnswer().isEmpty()){
 			return false;
 		}

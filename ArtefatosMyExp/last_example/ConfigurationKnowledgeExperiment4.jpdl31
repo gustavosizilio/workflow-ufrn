@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<expl:Model xmlns:expl="urn:jbpm.org:jpdl-3.1">
+  <elements><questionnaires name="BuyerKnowledgeTechnologies" type="Post" processes="#//@elements.0/@processDefinition.1">
+      <question description="What is your experience using Jadex framework?" type="checkBox">
+        <option description="Start"/>
+        <option description="Professional"/>
+        <option description="Expert"/>
+      </question>
+      <question description="How long experience with Jadex?" type="checkBox">
+        <option description="Less than 1 year"/>
+        <option description="Between 1 and 3"/>
+        <option description="Over 3 years"/>
+      </question>
+    </questionnaires><questionnaires name="OLISKnowledgeTechnologies" type="Post" processes="#//@elements.0/@processDefinition.2">
+      <question description="What is your experience using Jadex framework?" type="checkBox">
+        <option description="Start"/>
+        <option description="Professional"/>
+        <option description="Expert"/>
+      </question>
+      <question description="How long experience with Jadex?" type="checkBox">
+        <option description="Less than 1 year"/>
+        <option description="Between 1 and 3"/>
+        <option description="Over 3 years"/>
+      </question>
+      <question description="What is your experience using Spring framework?" type="checkBox">
+        <option description="Start"/>
+        <option description="Professional"/>
+        <option description="Expert"/>
+      </question>
+      <question description="How long experience with Spring?" type="checkBox">
+        <option description="Less than 1 year"/>
+        <option description="Between 1 and 3"/>
+        <option description="Over 3 years"/>
+      </question>
+      <question description="What is your experience using Struts framework?" type="checkBox">
+        <option description="Start"/>
+        <option description="Professional"/>
+        <option description="Expert"/>
+      </question>
+      <question description="How long experience with Struts?" type="checkBox">
+        <option description="Less than 1 year"/>
+        <option description="Between 1 and 3"/>
+        <option description="Over 3 years"/>
+      </question>
+      <question description="What is your experience using Hibernate framework?" type="checkBox">
+        <option description="Start"/>
+        <option description="Professional"/>
+        <option description="Expert"/>
+      </question>
+      <question description="How long experience with Hibernate?" type="checkBox">
+        <option description="Less than 1 year"/>
+        <option description="Between 1 and 3"/>
+        <option description="Over 3 years"/>
+      </question>
+    </questionnaires><questionnaires name="EShopKnowledgeTecnologies" type="Post" processes="#//@elements.0/@processDefinition.0">
+      <question description="What is your experience using Spring framework?" type="checkBox">
+        <option description="Start"/>
+        <option description="Professional"/>
+        <option description="Expert"/>
+      </question>
+      <question description="How long experience with Spring?" type="checkBox">
+        <option description="Less than 1 year"/>
+        <option description="Between 1 and 3"/>
+        <option description="Over 3 years"/>
+      </question>
+      <question description="What is your experience using SpringMVC framework?" type="checkBox">
+        <option description="Start"/>
+        <option description="Professional"/>
+        <option description="Expert"/>
+      </question>
+      <question description="How long experience with SpringMVC?" type="checkBox">
+        <option description="Less than 1 year"/>
+        <option description="Between 1 and 3"/>
+        <option description="Over 3 years"/>
+      </question>
+      <question description="What is your experience using SpringOSGi framework?" type="checkBox">
+        <option description="Start"/>
+        <option description="Professional"/>
+        <option description="Expert"/>
+      </question>
+      <question description="How long experience with SpringOSGi?" type="checkBox">
+        <option description="Less than 1 year"/>
+        <option description="Between 1 and 3"/>
+        <option description="Over 3 years"/>
+      </question>
+      <question description="What is your experience using iBatis framework?" type="checkBox">
+        <option description="Start"/>
+        <option description="Professional"/>
+        <option description="Expert"/>
+      </question>
+      <question description="How long experience with iBatis?" type="checkBox">
+        <option description="Less than 1 year"/>
+        <option description="Between 1 and 3"/>
+        <option description="Over 3 years"/>
+      </question>
+    </questionnaires><plan>
+      <goals id="G1" description="Investigate whether the diferent techniques infuence the correct comprehension of the configuration knowledge">
+        <hypotheses description="The correct comprehension of the configuration knowledge do not depends on the diferent specification techniques" id="H101" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.0 #//@elements.0/@plan.0/@design/@factors.0/@levels.1" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.0"/>
+        <hypotheses description="The correct comprehension of the configuration knowledge do not depends on the diferent specification techniques" id="H102" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.0 #//@elements.0/@plan.0/@design/@factors.0/@levels.2" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.0"/>
+        <hypotheses description="The correct comprehension of the configuration knowledge do not depends on the diferent specification techniques" id="H103" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.1 #//@elements.0/@plan.0/@design/@factors.0/@levels.2" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.0"/>
+        <hypotheses description="The correct comprehension of the configuration knowledge depends on the diferent specification techniques" type="alternative" id="H111" relationOp="different" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.0 #//@elements.0/@plan.0/@design/@factors.0/@levels.1" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.0"/>
+        <hypotheses description="The correct comprehension of the configuration knowledge depends on the diferent specification techniques" type="alternative" id="H112" relationOp="different" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.0 #//@elements.0/@plan.0/@design/@factors.0/@levels.2" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.0"/>
+        <hypotheses description="The correct comprehension of the configuration knowledge depends on the diferent specification techniques" type="alternative" id="H113" relationOp="different" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.1 #//@elements.0/@plan.0/@design/@factors.0/@levels.2" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.0"/>
+      </goals>
+      <goals id="G2" description="Investigate whether the diferent techniques infuence the time of configuration knowledge comprehension">
+        <hypotheses description="The time to correctly comprehend the configuration knowledge independs on the diferent specification techniques" id="H201" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.0 #//@elements.0/@plan.0/@design/@factors.0/@levels.1" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.1"/>
+        <hypotheses description="The time to correctly comprehend the configuration knowledge independs on the diferent specification techniques" id="H202" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.0 #//@elements.0/@plan.0/@design/@factors.0/@levels.2" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.1"/>
+        <hypotheses description="The time to correctly comprehend the configuration knowledge independs on the diferent specification techniques" id="H203" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.1 #//@elements.0/@plan.0/@design/@factors.0/@levels.2" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.1"/>
+        <hypotheses description="The time to correctly comprehend the configuration knowledge depends on the diferent specification techniques" type="alternative" id="H211" relationOp="different" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.0 #//@elements.0/@plan.0/@design/@factors.0/@levels.1" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.1"/>
+        <hypotheses description="The time to correctly comprehend the configuration knowledge depends on the diferent specification techniques" type="alternative" id="H212" relationOp="different" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.1 #//@elements.0/@plan.0/@design/@factors.0/@levels.2" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.1"/>
+        <hypotheses description="The time to correctly comprehend the configuration knowledge depends on the diferent specification techniques" type="alternative" id="H213" relationOp="different" treatment="#//@elements.0/@plan.0/@design/@factors.0/@levels.1 #//@elements.0/@plan.0/@design/@factors.0/@levels.2" dependentVariable="#//@elements.0/@plan.0/@design/@depVariable.1"/>
+      </goals>
+      <design>
+        <factors name="Technique">
+          <levels name="GenArchPlus"/>
+          <levels name="pureVariants"/>
+          <levels name="CIDE"/>
+        </factors>
+        <factors name="SPL">
+          <levels name="EShop"/>
+          <levels name="BuyerAgent"/>
+          <levels name="OLIS"/>
+        </factors>
+        <factors name="Participants">
+          <levels name="Participant1"/>
+          <levels name="Participant2"/>
+          <levels name="Participant3"/>
+        </factors>
+        <parameters key="ParticipantLevel" value="Undergraduating Students"/>
+        <depVariable measureBy="#//@elements.0/@metrics.2 #//@elements.0/@metrics.1 #//@elements.0/@metrics.0" name="NumCorrectAnswer" description="Number of Correct answers"/>
+        <depVariable measureBy="#//@elements.0/@metrics.5 #//@elements.0/@metrics.3 #//@elements.0/@metrics.4" name="ReplyTime" description="Time to reply each questionnaire about the SPL"/>
+        <depVariable name="KnowledgeLevel" description="Technological level of knowledge"/>
+      </design>
+    </plan><metrics name="AnswersEShop" description="Answer reported for questions during execution for EShopProcess" type="collectedData" relatesTo="#//@elements.0/@processDefinition.0" refname=":ASPL1"/><metrics name="AnswersByerAgent" description="Answer reported for questions during execution for ByerAgentProcess" type="collectedData" relatesTo="#//@elements.0/@processDefinition.1" refname=":ASPL2"/><metrics name="AnswersOLIS" description="Answer reported for questions during execution for OLISProcess" type="collectedData" relatesTo="#//@elements.0/@processDefinition.2" refname=":ASPL3"/><metrics name="ReplyTimeEShop" description="Time taken to answer a question correctly" relatesTo="#//@elements.0/@processDefinition.0" refname=""/><metrics name="ReplyTimeByerAgent" description="Time taken to answer a question correctly" relatesTo="#//@elements.0/@processDefinition.1" refname=""/><metrics name="ReplyTimeOLIS" description="Time taken to answer a question correctly" relatesTo="#//@elements.0/@processDefinition.2" refname=""/><metrics name="KnowledgeEShop" description="Knowledge reported in questionnaire for EShopProcess" type="collectedData" relatesTo="#//@elements.0/@processDefinition.0" refname=""/><metrics name="KnowledgeByerAgent" description="Knowledge reported for questionnaire for ByerAgentProcess" type="collectedData" relatesTo="#//@elements.0/@processDefinition.1" refname=""/><metrics name="KnowledgeOLIS" description="Knowledge reported for questionnaire for OLISProcess" type="collectedData" relatesTo="#//@elements.0/@processDefinition.2" refname=""/><expl:process-definition name="EShopProcess" quantity="4">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionQ1_EShop" to="Q1_EShop"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participant"/>
+      </expl:swimlane>
+      <expl:task-node name="Q1_EShop" description="Question 1 - EShop: Which Spring Bean implements the “Email” feature?">
+        <artefacts name="EShopSPL" type="input" description="EShop SPL"/>
+        <metrics name="AnswersEShop"/>
+        <expl:transition name="Q1_EShop_Transition" to="Q2_EShop"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.ReplyTimeEShopActionHandler" name="ReplyTimeEShop" ref-name="ReplyTimeEShop"/>
+        </expl:event>
+      </expl:task-node>
+      <expl:task-node name="Q2_EShop" description="Question 2 - EShop: Which Bundles are related to the “Browsing” feature?">
+        <artefacts name="EShopSPL" type="input" description="EShop SPL"/>
+        <metrics name="AnswersEShop"/>
+        <expl:transition name="Q2_EShop_Transition" to="Q3_EShop"/>
+      </expl:task-node>
+      <expl:task-node name="Q3_EShop" description="Question 3 - EShop: Which Entities implements the “List Orders” feature?">
+        <artefacts name="EShopSPL" type="input" description="EShop SPL"/>
+        <metrics name="AnswersEShop"/>
+        <expl:transition name="Q3_EShop_Transition" to="Q4_EShop"/>
+      </expl:task-node>
+      <expl:task-node name="Q4_EShop" description="Question 4 - EShop: How many reusable assets (including files and code fragments) implements the “Product Navigation” Feature?">
+        <artefacts name="EShopSPL" type="input" description="EShop SPL"/>
+        <metrics name="AnswersEShop"/>
+        <expl:transition name="Q4_EShop_Transition" to="Q5_EShop"/>
+      </expl:task-node>
+      <expl:task-node name="Q5_EShop" description="Question 5 - EShop: To which View and Business (Spring MVC and Spring, respectively) elements the “Edit” Feature is related to?">
+        <artefacts name="EShopSPL" type="input" description="EShop SPL"/>
+        <metrics name="AnswersEShop"/>
+        <expl:transition name="Q5_EShop_Transition" to="Q6_EShop"/>
+      </expl:task-node>
+      <expl:task-node name="Q6_EShop" description="Question 6 - EShop: In which elements the “My List” feature impact?">
+        <artefacts name="EShopSPL" type="input" description="EShop SPL"/>
+        <metrics name="AnswersEShop"/>
+        <expl:transition name="Q6_EShop_Transition" to="Q7_EShop"/>
+      </expl:task-node>
+      <expl:task-node name="Q7_EShop" description="Question 7 - EShop: If the shipAddress2 attribute related with “Different Address” feature were removed, how many reusable assets (code fragments) must be removed?">
+        <artefacts name="EShopSPL" type="input" description="EShop SPL"/>
+        <metrics name="AnswersEShop"/>
+        <expl:transition name="Q7_EShop_Transition" to="Q8_EShop"/>
+      </expl:task-node>
+      <expl:task-node name="Q8_EShop" description="Question 8 - EShop: How many code assets is the “Edit” feature related to (files and code fragments)?">
+        <artefacts name="EShopSPL" type="input" description="EShop SPL"/>
+        <metrics name="AnswersEShop"/>
+        <expl:transition name="Q8_EShop_Transition" to="Q9_EShop"/>
+      </expl:task-node>
+      <expl:task-node name="Q9_EShop" description="Question 9 - EShop: How may reusable assets is the “Different Address” feature related to (files and code fragments)?">
+        <artefacts name="EShopSPL" type="input" description="EShop SPL"/>
+        <metrics name="AnswersEShop"/>
+        <expl:transition name="Q9_EShop_Transition" to="Q10_EShop"/>
+      </expl:task-node>
+      <expl:task-node name="Q10_EShop" description="Question 10 - EShop: How may reusable assets is the “List Order” feature related to (files)?">
+        <artefacts name="EShopSPL" type="input" description="EShop SPL"/>
+        <metrics name="AnswersEShop"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.ReplyTimeEShopActionHandler" name="ReplyTimeEShop" ref-name="ReplyTimeEShop"/>
+        </expl:event>
+        <expl:transition name="Q10_EShoptransition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition><expl:process-definition name="ByerAgentProcess" quantity="4">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionQ1_ByerAgent" to="Q1_ByerAgent"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participant"/>
+      </expl:swimlane>
+      <expl:task-node name="Q1_ByerAgent" description="Question 1 - ByerAgent: To which feature(s) the goal CheckStoreStock is related?">
+        <artefacts name="ByerAgentSPL" type="input" description="ByerAgent SPL"/>
+        <metrics name="AnswersByerAgent"/>
+        <expl:transition name="Q1_ByerAgent_Transition" to="Q2_ByerAgent"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.ReplyTimeByerAgentActionHandler" name="ReplyTimeByerAgent" ref-name="ReplyTimeByerAgent"/>
+        </expl:event>
+      </expl:task-node>
+      <expl:task-node name="Q2_ByerAgent" description="Question 2 - ByerAgent:How many plans are mapped to the “Pick up at Store” feature?">
+        <artefacts name="ByerAgentSPL" type="input" description="ByerAgent SPL"/>
+        <metrics name="AnswersByerAgent"/>
+        <expl:transition name="Q2_ByerAgent_Transition" to="Q3_ByerAgent"/>
+      </expl:task-node>
+      <expl:task-node name="Q3_ByerAgent" description="Question 3 - ByerAgent: Which variability granularities are found in the Buyer Agent SPL?">
+        <artefacts name="ByerAgentSPL" type="input" description="ByerAgent SPL"/>
+        <metrics name="AnswersByerAgent"/>
+        <expl:transition name="Q3_ByerAgent_Transition" to="Q4_ByerAgent"/>
+      </expl:task-node>
+      <expl:task-node name="Q4_ByerAgent" description="Question 4 - ByerAgent: Which implementation asset(s) is related to the Buy capability?">
+        <artefacts name="ByerAgentSPL" type="input" description="ByerAgent SPL"/>
+        <metrics name="AnswersByerAgent"/>
+        <expl:transition name="Q4_ByerAgent_Transition" to="Q5_ByerAgent"/>
+      </expl:task-node>
+      <expl:task-node name="Q5_ByerAgent" description="Question 5 - ByerAgent: Which plan(s) has its(their) behavior changed because of the “Credit Card” feature?">
+        <artefacts name="ByerAgentSPL" type="input" description="ByerAgent SPL"/>
+        <metrics name="AnswersByerAgent"/>
+        <expl:transition name="Q5_ByerAgent_Transition" to="Q6_ByerAgent"/>
+      </expl:task-node>
+      <expl:task-node name="Q6_ByerAgent" description="Question 6 - ByerAgent: To which belief(s), goal(s) and plan(s) is the SearchStore capability related?">
+        <artefacts name="ByerAgentSPL" type="input" description="ByerAgent SPL"/>
+        <metrics name="AnswersByerAgent"/>
+        <expl:transition name="Q6_ByerAgent_Transition" to="Q7_ByerAgent"/>
+      </expl:task-node>
+      <expl:task-node name="Q7_ByerAgent" description="Question 7 - ByerAgent: On which capability(ies) the “Store Selection Strategy” feature impact?">
+        <artefacts name="ByerAgentSPL" type="input" description="ByerAgent SPL"/>
+        <metrics name="AnswersByerAgent"/>
+        <expl:transition name="Q7_ByerAgent_Transition" to="Q8_ByerAgent"/>
+      </expl:task-node>
+      <expl:task-node name="Q8_ByerAgent" description="Question 8 - ByerAgent: Which plan(s) related to the “Pick Up At Store” feature is part of the SearchStores capability?">
+        <artefacts name="ByerAgentSPL" type="input" description="ByerAgent SPL"/>
+        <metrics name="AnswersByerAgent"/>
+        <expl:transition name="Q8_ByerAgent_Transition" to="Q9_ByerAgent"/>
+      </expl:task-node>
+      <expl:task-node name="Q9_ByerAgent" description="Question 9 - ByerAgent: If the pay goal were optional, which plan(s) would also be optional?">
+        <artefacts name="ByerAgentSPL" type="input" description="ByerAgent SPL"/>
+        <metrics name="AnswersByerAgent"/>
+        <expl:transition name="Q9_ByerAgent_Transition" to="Q10_ByerAgent"/>
+      </expl:task-node>
+      <expl:task-node name="Q10_ByerAgent" description="Question 10 - ByerAgent: If the payment process becomes optional in the next version of the SPL, which implementation &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  asset(s) must be changed (if any)?">
+        <artefacts name="ByerAgentSPL" type="input" description="ByerAgent SPL"/>
+        <metrics name="AnswersByerAgent"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.ReplyTimeByerAgentActionHandler" name="ReplyTimeByerAgent" ref-name="ReplyTimeByerAgent"/>
+        </expl:event>
+        <expl:transition name="Q10_ByerAgenttransition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition><expl:process-definition name="OLISProcess" quantity="4">
+      <expl:start-state name="Starting">
+        <expl:transition name="startTransitionQ1_OLIS" to="Q1_OLIS"/>
+      </expl:start-state>
+      <expl:end-state name="End"/>
+      <expl:swimlane>
+        <expl:assignment actor-id="Participant"/>
+      </expl:swimlane>
+      <expl:task-node name="Q1_OLIS" description="Question 1 - OLIS: On which agent(s) and/or capability(ies) the “Event Type” feature impact, (i.e. agent(s), capability(ies) that are&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;      &#x9;&#x9;&#x9; related to this feature or whose internal elements are related to it)?">
+        <artefacts name="OLISSPL" type="input" description="OLIS SPL"/>
+        <metrics name="AnswersOLIS"/>
+        <expl:transition name="Q1_OLIS_Transition" to="Q2_OLIS"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.ReplyTimeOLISActionHandler" name="ReplyTimeOLIS" ref-name="ReplyTimeOLIS"/>
+        </expl:event>
+      </expl:task-node>
+      <expl:task-node name="Q2_OLIS" description="Question 2 - OLIS: How many code assets is the “Configure User Preferences” feature related to (either complete files or fragments, do&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; &#x9;&#x9;&#x9;&#x9; not count packages)?">
+        <artefacts name="OLISSPL" type="input" description="OLIS SPL"/>
+        <metrics name="AnswersOLIS"/>
+        <expl:transition name="Q2_OLIS_Transition" to="Q3_OLIS"/>
+      </expl:task-node>
+      <expl:task-node name="Q3_OLIS" description="Question 3 - OLIS: How many code assets is the “Event Scheduler” feature related to (either complete files or &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; fragments, do not count packages)?">
+        <artefacts name="OLISSPL" type="input" description="OLIS SPL"/>
+        <metrics name="AnswersOLIS"/>
+        <expl:transition name="Q3_OLIS_Transition" to="Q4_OLIS"/>
+      </expl:task-node>
+      <expl:task-node name="Q4_OLIS" description="Question 4 - OLIS: Which plan(s) is related to the EventScheduler capability?">
+        <artefacts name="OLISSPL" type="input" description="OLIS SPL"/>
+        <metrics name="AnswersOLIS"/>
+        <expl:transition name="Q4_OLIS_Transition" to="Q5_OLIS"/>
+      </expl:task-node>
+      <expl:task-node name="Q5_OLIS" description="Question 5 - OLIS: Which Spring bean(s) is related to the “Travel” feature (id of the bean not its &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; implementation)?">
+        <artefacts name="ByerAgentSPL" type="input" description="OLIS SPL"/>
+        <metrics name="AnswersOLIS"/>
+        <expl:transition name="Q5_OLIS_Transition" to="Q6_OLIS"/>
+      </expl:task-node>
+      <expl:task-node name="Q6_OLIS" description="Question 6 - OLIS: If the “Configure User Preferences” is not selected, which is the implementation &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; used for the UserPreferencesAbstractFactory bean?">
+        <artefacts name="ByerAgentSPL" type="input" description="OLIS SPL"/>
+        <metrics name="AnswersOLIS"/>
+        <expl:transition name="Q6_OLIS_Transition" to="Q7_OLIS"/>
+      </expl:task-node>
+      <expl:task-node name="Q7_OLIS" description="Question 7 - OLIS: In which code asset(s) is the information that the Weather agent must be started?">
+        <artefacts name="ByerAgentSPL" type="input" description="OLIS SPL"/>
+        <metrics name="AnswersOLIS"/>
+        <expl:transition name="Q7_OLIS_Transition" to="Q8_OLIS"/>
+      </expl:task-node>
+      <expl:task-node name="Q8_OLIS" description="Question 8 - OLIS:In which code asset(s) is the information of the ontologies used in the derived product?">
+        <artefacts name="ByerAgentSPL" type="input" description="OLIS SPL"/>
+        <metrics name="AnswersOLIS"/>
+        <expl:transition name="Q8_OLIS_Transition" to="Q9_OLIS"/>
+      </expl:task-node>
+      <expl:task-node name="Q9_OLIS" description="Question 9 - ByerAgent: Which domain entity(ies) is related to the “Academic” feature?">
+        <artefacts name="ByerAgentSPL" type="input" description="OLIS SPL"/>
+        <metrics name="AnswersOLIS"/>
+        <expl:transition name="Q9_OLIS_Transition" to="Q10_OLIS"/>
+      </expl:task-node>
+      <expl:task-node name="Q10_OLIS" description="Question 10 - ByerAgent: If the WeatherOptionsAction, functionality that allows to configure the WeatherService, were related to an optional &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; &#x9;&#x9;&#x9;&#x9;  subfeature of the “Weather” feature, which existing code asset(s) (either complete files or fragments, do not count&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; &#x9;&#x9;&#x9;&#x9;  packages) would be mapped to this new optional subfeature?">
+        <artefacts name="ByerAgentSPL" type="input" description="OLIS SPL"/>
+        <metrics name="AnswersOLIS"/>
+        <expl:event type="task-end">
+          <expl:action class="br.ufrn.dimap.ppgsc.ReplyTimeOLISActionHandler" name="ReplyTimeOLIS" ref-name="ReplyTimeOLIS"/>
+        </expl:event>
+        <expl:transition name="Q10_OLIStransition" to="End"/>
+      </expl:task-node>
+    </expl:process-definition></elements>
+</expl:Model>

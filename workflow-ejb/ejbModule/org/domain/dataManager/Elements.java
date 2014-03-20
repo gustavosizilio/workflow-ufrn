@@ -47,7 +47,7 @@ public class Elements {
 	public static final String TREATMENT = "treatment";
 	public static final String INTERNAL_REPLICATION = "internalReplication";
 	public static final String METRICS = "metrics";
-	public static final String REFNAME = "refName";
+	public static final String REFNAME = "refname";
 	public static final String METRIC_TYPE = "metricType";
 	public static final String QUESTIONNAIRES = "questionnaires";
 	public static final String QUESTION = "question";

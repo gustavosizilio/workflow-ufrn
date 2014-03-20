@@ -7,6 +7,7 @@ import org.domain.exception.ValidationException;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Observation;
 import org.domain.model.processDefinition.Workflow;
+import org.domain.ranalysis.ANOVA;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.FlushModeType;
@@ -31,6 +32,10 @@ public class WorkflowReport {
 		this.setWorkflow(workflow);
 		cleanObservation();		
 		return WORKFLOW_REPORT_XHTML;
+	}
+	
+	public void analysis(){
+		new ANOVA().test();
 	}
 
 	private void cleanObservation() {

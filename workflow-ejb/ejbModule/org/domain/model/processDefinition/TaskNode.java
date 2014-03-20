@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -24,6 +25,7 @@ public class TaskNode {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	@Lob
 	private String description;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Transition> transitions;
@@ -161,7 +163,7 @@ public class TaskNode {
 	public List<Metric> getCollectedDataMetrics() {
 		List<Metric> metrics = new ArrayList<Metric>();
 		for (Metric m : getMetrics()) {
-			if(m.getMetricType() == MetricType.COLLECTED_DATA){
+			if(m.getMetricType().equals(MetricType.COLLECTED_DATA)){
 				metrics.add(m);
 			}
 		}
@@ -171,7 +173,7 @@ public class TaskNode {
 	public List<Metric> getQuestionnaireMetrics() {
 		List<Metric> metrics = new ArrayList<Metric>();
 		for (Metric m : getMetrics()) {
-			if(m.getMetricType() == MetricType.QUEST){
+			if(m.getMetricType().equals(MetricType.QUEST)){
 				metrics.add(m);
 			}
 		}

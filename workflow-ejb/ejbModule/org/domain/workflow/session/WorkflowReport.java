@@ -21,6 +21,7 @@ import org.jboss.seam.annotations.security.Restrict;
 @Scope(ScopeType.CONVERSATION)
 public class WorkflowReport {
 	private static final String WORKFLOW_REPORT_XHTML = "/workflow/report.xhtml";
+	private static final String ANOVA_REPORT_XHTML = "/workflow/anova.xhtml";
 	@In("seamDao") protected SeamDAO seamDao;
 	@In("user") protected User user;
 	private Workflow workflow;
@@ -34,8 +35,11 @@ public class WorkflowReport {
 		return WORKFLOW_REPORT_XHTML;
 	}
 	
-	public void analysis(){
-		new ANOVA().test();
+	private ANOVA anova;
+	public String analysis(){
+		setAnova(new ANOVA());
+		getAnova().build(this.workflow);
+		return ANOVA_REPORT_XHTML;
 	}
 
 	private void cleanObservation() {
@@ -82,5 +86,13 @@ public class WorkflowReport {
 			cleanObservation();
 		} catch (ValidationException e) {
 		}
+	}
+
+	public ANOVA getAnova() {
+		return anova;
+	}
+
+	public void setAnova(ANOVA anova) {
+		this.anova = anova;
 	}
 }

@@ -265,3 +265,7 @@ label {
 .rich-mpnl-body label {
 	display: inline;
 }
+
+.tableAnalysis, .tableAnalysis td, .tableAnalysis tr {
+	padding: 5px;	
+}

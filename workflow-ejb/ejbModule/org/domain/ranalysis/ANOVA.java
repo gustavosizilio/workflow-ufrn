@@ -29,7 +29,7 @@ public class ANOVA {
 	}
 	
 	private void anovaAnalysis() {
-		getFactors().add("fertil");getFactors().add("treat");getFactors().add("seed");
+		getFactors().add("SPL");getFactors().add("Subject");getFactors().add("Tool");
 		
 		//ANOVA ANALISYS
 		RCaller caller = new RCaller();
@@ -38,18 +38,36 @@ public class ANOVA {
 		RCode code = new RCode();
 		code.clear();
 		
-		code.addRCode("fertil <- c(rep(\"fertil1\",1), rep(\"fertil2\",1), rep(\"fertil3\",1), rep(\"fertil4\",1), rep(\"fertil5\",1))");
-		code.addRCode("treat <- c(rep(\"treatA\",5), rep(\"treatB\",5), rep(\"treatC\",5), rep(\"treatD\",5), rep(\"treatE\",5))");
-		code.addRCode("seed <- c(\"A\",\"E\",\"C\",\"B\",\"D\", \"C\",\"B\",\"A\",\"D\",\"E\", \"B\",\"C\",\"D\",\"E\",\"A\", \"D\",\"A\",\"E\",\"C\",\"B\", \"E\",\"D\",\"B\",\"A\",\"C\")");
-		code.addRCode("data <- c(42,45,41,56,47, 47,54,46,52,49, 55,52,57,49,45, 51,44,47,50,54, 44,50,48,43,46)");
-		 
-		String strFactors = "";
-		for (String s : getFactors()) {
-			strFactors += s + ", ";
-		}
-		code.addRCode("mydata <- data.frame("+ strFactors +" data)");
+		code.addRCode("SPL <- c(rep(\"OLIS\",1), rep(\"Buyer\",1), rep(\"eShop\",1))");//coluna
+		code.addRCode("Subject <- c(rep(\"A\",6),rep(\"B\",6),rep(\"C\",6))");//linha -- 6 pois temos 2 replicas
+		code.addRCode("Tool <- c(\"GenArch\", \"PV\", \"CIDE\","
+								+"\"GenArch\", \"PV\", \"CIDE\","
+								+"\"CIDE\", \"GenArch\", \"PV\","
+								+"\"CIDE\", \"GenArch\", \"PV\","
+								+"\"PV\", \"CIDE\", \"GenArch\","
+								+"\"PV\", \"CIDE\", \"GenArch\")");//tratamento
 		
-		code.addRCode("myfit <- lm(data ~ fertil+treat+seed, mydata)");
+
+		code.addRCode("data <- c(171,176, 233,"
+								+"102.5,354,41,"
+								+"313.2,145.6,228.3,"
+								+"171.8,108.3,320.3,"
+								+"269,288.4,418.6,"
+								+"340,195.5,284.7)");
+		 
+		String strFactorsComa = "";
+		for (String s : getFactors()) {
+			strFactorsComa += s + ", ";
+		}
+		String strFactorsPlus = "";
+		for (String s : getFactors()) {
+			strFactorsPlus += s + "+";
+		}
+		strFactorsPlus = strFactorsPlus.substring(0, strFactorsPlus.length()-1);
+		
+		
+		code.addRCode("mydata <- data.frame("+ strFactorsComa +" data)");
+		code.addRCode("myfit <- lm(data ~ "+ strFactorsPlus +", mydata)");
 		
 		
 		
@@ -59,12 +77,6 @@ public class ANOVA {
 		
 		for (String name : names) {
 			getAnalysisSummary().put(name, caller.getParser().getAsStringArray(name));
-			try {
-				System.out.println(caller.getParser().getXMLFileAsString());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		
 		//GRAPH
@@ -80,7 +92,7 @@ public class ANOVA {
 		}
 		
 		code.addRCode("par(mfrow=c(2,2))");
-		code.addRCode("plot(data ~ fertil+treat+seed, mydata)");
+		code.addRCode("plot(data ~ "+strFactorsPlus+", mydata)");
 		code.endPlot();
 
 		caller2.setRCode(code);

@@ -50,31 +50,32 @@
     		<h:graphicImage value="/img/noplay.png" />
     	</h:commandLink>
     </ui:define>
-    
-    <rich:modalPanel id="panelQuestionnaire" autosized="true" >
-        <f:facet name="header">
-            <h:panelGroup>
-                <h:outputText value="#{messages['layout.text.questionnaire']}"></h:outputText>
-            </h:panelGroup>
-        </f:facet>
-        <f:facet name="controls">
-            <h:panelGroup>
-                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkpanelQuestionnaire"/>
-                <rich:componentControl for="panelQuestionnaire" attachTo="hidelinkpanelQuestionnaire" operation="hide" event="onclick"/>
-            </h:panelGroup>
-        </f:facet>
-        <h:panelGroup id="questionnaireForm" style="height:400px; width: 600px; overflow:auto; display: block;">
-	        <h:form enctype="multipart/form-data">
-	        		<h3><h:outputText value="Questionnaire: #{executer.currentQuestionnaire.name}" /></h3>
-	        		<ui:include src="questionnaireFields.xhtml" >
-	        			<ui:param name="questions" value="#{executer.currentQuestionnaire.questions}" />
-	        			<ui:param name="disabledFields" value="#{disabledFieldsParam}" />
-	        			<ui:param name="metric" value="#{null}" />
-		        		<ui:param name="taskNode" value="#{null}" />
-	        		</ui:include>
-	        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaire" onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )"/>
-	        		<rich:componentControl for="panelQuestionnaire" attachTo="saveQuestionnaire" operation="hide" event="onclick"/>
-		    </h:form>
-        </h:panelGroup>
-    </rich:modalPanel>
+    <ui:define name="modal">
+	    <rich:modalPanel id="panelQuestionnaire" autosized="true" >
+	        <f:facet name="header">
+	            <h:panelGroup>
+	                <h:outputText value="#{messages['layout.text.questionnaire']}"></h:outputText>
+	            </h:panelGroup>
+	        </f:facet>
+	        <f:facet name="controls">
+	            <h:panelGroup>
+	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkpanelQuestionnaire"/>
+	                <rich:componentControl for="panelQuestionnaire" attachTo="hidelinkpanelQuestionnaire" operation="hide" event="onclick"/>
+	            </h:panelGroup>
+	        </f:facet>
+	        <h:panelGroup id="questionnaireForm" style="height:400px; width: 600px; overflow:auto; display: block;">
+		        <h:form enctype="multipart/form-data">
+		        		<h3><h:outputText value="Questionnaire: #{executer.currentQuestionnaire.name}" /></h3>
+		        		<ui:include src="questionnaireFields.xhtml" >
+		        			<ui:param name="questions" value="#{executer.currentQuestionnaire.questions}" />
+		        			<ui:param name="disabledFields" value="#{disabledFieldsParam}" />
+		        			<ui:param name="metric" value="#{null}" />
+			        		<ui:param name="taskNode" value="#{null}" />
+		        		</ui:include>
+		        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaire" onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )"/>
+		        		<rich:componentControl for="panelQuestionnaire" attachTo="saveQuestionnaire" operation="hide" event="onclick"/>
+			    </h:form>
+	        </h:panelGroup>
+	    </rich:modalPanel>
+	</ui:define>
 </ui:composition>

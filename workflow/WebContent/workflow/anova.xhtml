@@ -9,35 +9,39 @@
     xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/template.xhtml">
 	<ui:define name="body">
-		
-			<h:graphicImage value="#{report.anova.pathGraph}" />
 			
-			<table class="tableAnalysis">
-				<tr>
-					<td></td>
-					<ui:repeat var="key" value="#{report.anova.analysisSummary.keySet().toArray()}">
-						<td><b><h:outputText value="#{key}" /></b></td>
-					</ui:repeat>
-				</tr>
-				<ui:repeat var="factor" value="#{report.anova.factors}">
+			<rich:simpleTogglePanel switchType="client" label="Box plot graph" opened="false">	
+				<h:graphicImage value="#{report.anova.pathGraph}" />
+			</rich:simpleTogglePanel>
+			
+			<rich:simpleTogglePanel switchType="client" label="Research Hypotheses: The time to correct comprehension of the configuration knowledge depends on the different specification techniques" opened="false">	
+				<table class="tableAnalysis">
 					<tr>
-						<td><b><h:outputText value="#{factor}" /></b></td>
+						<td></td>
 						<ui:repeat var="key" value="#{report.anova.analysisSummary.keySet().toArray()}">
-							<ui:repeat var="value" value="#{report.anova.analysisSummary.get(key)[report.anova.factors.indexOf(factor)]}">
+							<td><b><h:outputText value="#{key}" /></b></td>
+						</ui:repeat>
+					</tr>
+					<ui:repeat var="factor" value="#{report.anova.factors}">
+						<tr>
+							<td><b><h:outputText value="#{factor}" /></b></td>
+							<ui:repeat var="key" value="#{report.anova.analysisSummary.keySet().toArray()}">
+								<ui:repeat var="value" value="#{report.anova.analysisSummary.get(key)[report.anova.factors.indexOf(factor)]}">
+									<td><h:outputText value="#{value}" /></td>
+								</ui:repeat>
+							</ui:repeat>
+						</tr>
+					</ui:repeat>
+					<tr>
+						<td><b>Residuals</b></td>
+						<ui:repeat var="key" value="#{report.anova.analysisSummary.keySet().toArray()}">
+							<ui:repeat var="value" value="#{report.anova.analysisSummary.get(key)[report.anova.factors.size()]}">
 								<td><h:outputText value="#{value}" /></td>
 							</ui:repeat>
 						</ui:repeat>
 					</tr>
-				</ui:repeat>
-				<tr>
-					<td><b>Residuals</b></td>
-					<ui:repeat var="key" value="#{report.anova.analysisSummary.keySet().toArray()}">
-						<ui:repeat var="value" value="#{report.anova.analysisSummary.get(key)[report.anova.factors.size()]}">
-							<td><h:outputText value="#{value}" /></td>
-						</ui:repeat>
-					</ui:repeat>
-				</tr>
-			</table>
+				</table>
+			</rich:simpleTogglePanel>
 	
 	</ui:define>
 </ui:composition>

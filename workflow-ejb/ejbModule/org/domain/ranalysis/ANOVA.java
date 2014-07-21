@@ -29,7 +29,7 @@ public class ANOVA {
 	}
 	
 	private void anovaAnalysis() {
-		getFactors().add("SPL");getFactors().add("Subject");getFactors().add("Tool");
+		getFactors().add("System");getFactors().add("Subject");getFactors().add("ProgrammingLanguage");
 		
 		//ANOVA ANALISYS
 		RCaller caller = new RCaller();
@@ -38,22 +38,18 @@ public class ANOVA {
 		RCode code = new RCode();
 		code.clear();
 		
-		code.addRCode("SPL <- c(rep(\"OLIS\",1), rep(\"Buyer\",1), rep(\"eShop\",1))");//coluna
-		code.addRCode("Subject <- c(rep(\"A\",6),rep(\"B\",6),rep(\"C\",6))");//linha -- 6 pois temos 2 replicas
-		code.addRCode("Tool <- c(\"GenArch\", \"PV\", \"CIDE\","
-								+"\"GenArch\", \"PV\", \"CIDE\","
-								+"\"CIDE\", \"GenArch\", \"PV\","
-								+"\"CIDE\", \"GenArch\", \"PV\","
-								+"\"PV\", \"CIDE\", \"GenArch\","
-								+"\"PV\", \"CIDE\", \"GenArch\")");//tratamento
+		code.addRCode("System <- c(rep(\"PhoneBook\",1), rep(\"EventManagement\",1))");//coluna
+		code.addRCode("Subject <- c(rep(\"A\",4), rep(\"B\",4))");//linha -- 4 pois temos 2 replicas
+		code.addRCode("ProgrammingLanguage <- c(\"Java\", \"CPlusPlus\","
+								+"\"Java\", \"CPlusPlus\","
+								+"\"CPlusPlus\", \"Java\","
+								+"\"CPlusPlus\", \"Java\")");//tratamento
 		
 
-		code.addRCode("data <- c(171,176, 233,"
-								+"102.5,354,41,"
-								+"313.2,145.6,228.3,"
-								+"171.8,108.3,320.3,"
-								+"269,288.4,418.6,"
-								+"340,195.5,284.7)");
+		code.addRCode("data <- c(171,176,"
+								+"102.5,354,"
+								+"313.2,145.6,"
+								+"171.8,108.3)");
 		 
 		String strFactorsComa = "";
 		for (String s : getFactors()) {

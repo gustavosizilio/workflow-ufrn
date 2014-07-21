@@ -2,5 +2,6 @@ package org.domain.model.processDefinition.metric;
 
 public enum MetricType {
 	QUEST,
-	COLLECTED_DATA
+	COLLECTED_DATA,
+	TIME
 }

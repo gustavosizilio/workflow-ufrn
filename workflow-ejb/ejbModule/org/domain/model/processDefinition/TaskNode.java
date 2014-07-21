@@ -35,7 +35,7 @@ public class TaskNode {
 	private StartState startState;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Artefact> artefacts;
-	@ManyToMany(cascade=CascadeType.MERGE)
+	@ManyToMany(cascade={CascadeType.MERGE,CascadeType.REMOVE})
 	private List<Metric> metrics;
 	@OneToMany(mappedBy="taskNode",cascade=CascadeType.ALL)
 	private List<UserExecution> userExecutions;

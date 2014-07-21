@@ -69,6 +69,8 @@ public class WorkflowManager extends XMLManager{
 						metric.setQuestionnaire(this.questionnaires.get(metric.getRefName()));
 					} else if (getAttribute(item, Elements.TYPE) != null && getAttribute(item, Elements.TYPE).equals("collectedData")) {
 						metric.setMetricType(MetricType.COLLECTED_DATA);
+					} else if (getAttribute(item, Elements.TYPE) != null && getAttribute(item, Elements.TYPE).equals("time")) {
+						metric.setMetricType(MetricType.TIME);
 					} else {
 						metric.setMetricType(MetricType.COLLECTED_DATA);
 					}

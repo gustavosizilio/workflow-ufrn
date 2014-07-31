@@ -1,2 +1,4 @@
 .metadata/*
 workflow-ejb/build/*
+workflow-test/bin/*
+workflow/build/*

@@ -265,7 +265,12 @@ label {
 .rich-mpnl-body label {
 	display: inline;
 }
-
+.rich-menu-item-icon {
+	display: none;
+}
 .tableAnalysis, .tableAnalysis td, .tableAnalysis tr {
 	padding: 5px;	
+}
+.rich-tree-node-selected: {
+	border: none !important;
 }

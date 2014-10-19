@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="transforms"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AcceleoExpDSL"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/br.ufrn.dimap.ase.dsl.expdslv3"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/br.ufrn.dimap.ase.dsl.expdslv3.edit"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/br.ufrn.dimap.ase.dsl.expdslv3.editor"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/br.ufrn.dimap.ase.dsl.expdslv3.tests"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/br.ufrn.dimap.ase.dsl.expdslv3.ui"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

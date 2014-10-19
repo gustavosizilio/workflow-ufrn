@@ -1,0 +1,3 @@
+Experiment EXP_TESTE "Um experimento muito louco" Experimental Design Keywords {
+"LOL" } Goals { } Dependent Variables { } Factors { } DoE = Other ( "oooo" )
+Process PROCESSO { } Questionnaires Questionnaire QUEST { };

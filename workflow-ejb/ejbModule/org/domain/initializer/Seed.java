@@ -33,7 +33,7 @@ public class Seed {
 		
 		createUsers(20);
 		
-		Workflow w = new Workflow(u, "Experimento Test");
+		Workflow w = new Workflow(u);
 		persist(w);
 	}
 

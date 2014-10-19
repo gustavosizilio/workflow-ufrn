@@ -1,19 +1,24 @@
 package org.domain.workflow.session;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.event.ActionEvent;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.domain.dao.UserDAO;
 import org.domain.dao.WorkflowDAO;
 import org.domain.dataManager.DesignConfigurationManager;
 import org.domain.dataManager.WorkflowManager;
+import org.domain.dsl.DSLUtil;
 import org.domain.exception.ValidationException;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Artefact;
@@ -24,12 +29,21 @@ import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.Workflow;
 import org.domain.utils.ReadPropertiesFile;
 import org.domain.workflow.session.generic.CrudAction;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EReferenceImpl;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.security.Restrict;
+import org.richfaces.event.NodeSelectedEvent;
 import org.richfaces.event.UploadEvent;
+import org.richfaces.model.TreeNode;
+import org.richfaces.model.TreeNodeImpl;
 import org.richfaces.model.UploadItem;
 
 
@@ -46,10 +60,20 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	private Map<String,List<User>> usersSelectedToShuffle;
 	private ProcessDefinition processDefinitionProperty;
 	private Artefact currentArtefact;
+	private DSLUtil dslUtil;
+	private EObject rootModel;
+	private TreeNode<EObject> rootNode;
+	private TreeNode<EObject> editNode;
 	
-	public CrudWorkflow() {
+	
+	private String textProperty;
+	private int intProperty;
+	
+	
+	public CrudWorkflow() throws Exception {
 		super(Workflow.class);
 		this.setUsersSelectedToShuffle(new Hashtable<String,List<User>>());
+		dslUtil = DSLUtil.getInstance();
 	}
 	
 	@Override
@@ -60,7 +84,104 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	
 	@Override
 	protected void createImpl(){
+		clearEditProperties();
 		this.entity.setUser(user);
+		this.rootModel = dslUtil.getRootElement();
+		rootNode = new TreeNodeImpl<EObject>();
+		updateTreeNode();
+	}
+
+	private void updateTreeNode() {
+		TreeNodeImpl<EObject> node = new TreeNodeImpl<EObject>();
+		node.setData(this.rootModel);
+		rootNode.addChild(this.rootModel, node);
+		for (EObject eObject : this.rootModel.eContents()) {
+			updateTreeNode(eObject, node);
+		}
+	}
+	private void updateTreeNode(EObject eObject, TreeNode<EObject> rootNode) {
+		TreeNodeImpl<EObject> node = new TreeNodeImpl<EObject>();
+		node.setData(eObject);
+		rootNode.addChild(eObject, node);
+		
+		List<EAttribute> attrs = dslUtil.getAttrs(eObject);
+		for (EObject attr : attrs) {
+			TreeNodeImpl<EObject> attrNode = new TreeNodeImpl<EObject>();
+			attrNode.setData(attr);
+			node.addChild(attr, attrNode);
+		}
+		
+		for (EObject o : eObject.eContents()) {
+			updateTreeNode(o, node);
+		}
+	}
+	
+	public Object getValueFromParent(TreeNode<EObject> node) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		return dslUtil.getValue(node.getParent().getData(), (EAttribute)node.getData());
+	}
+	
+	public void updateEditProperty(TreeNode<EObject> node) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		this.editNode = node;
+		Object value = getValueFromParent(node);
+		
+		System.err.println(((EAttribute)node.getData()).getEType().getInstanceTypeName());
+		if(value != null) {
+			if(((EAttribute)node.getData()).getEType().getInstanceTypeName() == "java.lang.String" ){
+				this.setTextProperty(value.toString());
+			} else if(((EAttribute)node.getData()).getEType().getInstanceTypeName() == "int") {
+				this.setIntProperty(Integer.parseInt(value.toString()));
+			}
+		}
+	}
+	public void updateEditProperty() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		
+		if(((EAttribute)this.editNode.getData()).getEType().getInstanceTypeName() == "java.lang.String" ) {
+			dslUtil.setValue(this.editNode.getParent().getData(), (EAttribute)this.editNode.getData(), this.getTextProperty());
+		} else if(((EAttribute)this.editNode.getData()).getEType().getInstanceTypeName() == "int" ) {
+			//dslUtil.setValue(this.editNode.getParent().getData(), (EAttribute)this.editNode.getData(), this.getIntProperty());
+			BeanUtils.setProperty(this.editNode.getParent().getData(), ((EAttribute)this.editNode.getData()).getName(), this.getIntProperty());
+		}
+		
+		clearEditProperties();
+	}
+
+	private void clearEditProperties() {
+		this.editNode = null;
+		this.setTextProperty("");
+		this.setIntProperty(0);
+	}
+
+	public String getType(EObject eObject) {
+		if(eObject instanceof EAttribute) {
+			return "attr";
+		} else if (eObject instanceof EReference) {
+			return "ref";
+		}
+		return "ref";
+	}
+	public String getName(EObject eObject) {
+		if(eObject instanceof EAttribute) {
+			return ((EAttribute) eObject).getName();
+		} else {
+			String className = eObject.getClass().getInterfaces()[0].toString();
+			className = className.substring(className.lastIndexOf(".")+1);
+			String[] r = className.split("(?=\\p{Lu})");
+			StringBuilder result = new StringBuilder();
+			for (String string : r) {
+				result.append(string + " ");
+			}
+			
+			return result.toString();			
+		}
+	}
+	
+	public void  buildRef(EObject raiz, EReferenceImpl ref, EClass refClass) {
+		try {
+			this.dslUtil.buildRef(raiz, ref, refClass);
+			this.updateTreeNode();
+		} catch (Exception e) {
+			getFacesMessages().add(e.getMessage());
+		}
 	}
 	
 	//TODO parse jpdl
@@ -358,6 +479,50 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 
 	public void setUsersSelectedToShuffle(Map<String,List<User>> usersSelectedToShuffle) {
 		this.usersSelectedToShuffle = usersSelectedToShuffle;
+	}
+
+	public DSLUtil getDslUtil() {
+		return dslUtil;
+	}
+
+	public void setDslUtil(DSLUtil dslUtil) {
+		this.dslUtil = dslUtil;
+	}
+
+	public TreeNode<EObject> getRootNode() {
+		return rootNode;
+	}
+
+	public void setRootNode(TreeNode<EObject> rootNode) {
+		this.rootNode = rootNode;
+	}
+
+	public String getTextProperty() {
+		return textProperty;
+	}
+
+	public void setTextProperty(String textProperty) {
+		this.textProperty = textProperty;
+	}
+
+	public TreeNode<EObject> getEditNode() {
+		return editNode;
+	}
+
+	public void setEditNode(TreeNode<EObject> editNode) {
+		this.editNode = editNode;
+	}
+	
+	public void doNothing(){
+		System.err.println("do nothing...");
+	}
+
+	public int getIntProperty() {
+		return intProperty;
+	}
+
+	public void setIntProperty(int intProperty) {
+		this.intProperty = intProperty;
 	}
 
 }

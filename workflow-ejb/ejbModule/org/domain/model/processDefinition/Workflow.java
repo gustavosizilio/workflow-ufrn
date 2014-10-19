@@ -14,6 +14,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -32,12 +33,11 @@ public class Workflow extends GenericEntity {
 	@ManyToOne
 	private User user;
 	
-	private String title;
-	
-	private String description;
-	
 	@Enumerated(EnumType.STRING)
 	private DesignType designType;
+	
+	@Lob
+	private String definition;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="workflow")
 	private List<ProcessDefinition> processDefinitions;
@@ -62,16 +62,9 @@ public class Workflow extends GenericEntity {
 		this.turnQuantity = 0;
 		this.user = user;
 	}
-	public Workflow(User user, String title) {
-		this(user);
-		this.title = title;
-	}
 
 	@Override
 	public void validate() {
-		if(title == null || title.trim().length() == 0){
-			addError("Title is required");
-		}
 		for (ProcessDefinition process : processDefinitions) {
 			if(!process.isValid()){
 				addErrors(process.getErrors());
@@ -231,10 +224,7 @@ public class Workflow extends GenericEntity {
 		this.user = user;
 	}
 	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
+		return "";
 	}
 	public Long getId() {
 		return id;
@@ -243,10 +233,7 @@ public class Workflow extends GenericEntity {
 		this.id = id;
 	}
 	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
+		return "";
 	}
 	public List<ProcessDefinition> getProcessDefinitions() {
 		return processDefinitions;
@@ -303,5 +290,11 @@ public class Workflow extends GenericEntity {
 	}
 	public void setQuestionnaires(List<Questionnaire> questionnaires) {
 		this.questionnaires = questionnaires;
+	}
+	public String getDefinition() {
+		return definition;
+	}
+	public void setDefinition(String definition) {
+		this.definition = definition;
 	}
 }

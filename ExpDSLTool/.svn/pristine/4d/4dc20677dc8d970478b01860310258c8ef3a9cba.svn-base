@@ -1,0 +1,228 @@
+Experiment "OO System Productivity"
+
+Experimental Plan 
+
+Goals {
+	G1 "To investigate whether the different languages can influence the development productivity" {
+	
+	H10 "The time to develop an OO System do not depends on the programming language" 
+		null_   ReplyTime (ProgammingLanguage.Java) = ReplyTime (ProgammingLanguage.CPlusPlus) 
+	H11 "The time to develop an OO System depends on the programming language" 
+		alternative   ReplyTime (ProgammingLanguage.Java) != ReplyTime (ProgammingLanguage.CPlusPlus) 
+	}
+}
+		
+DesignOfExperiment = LS - Latin Square {	
+
+    Parameter ParticipantLevel = "Undergraduating Students"    
+    
+    Dependent Variable ReplyTime "Time to do each process development phase" ProjectTime CodeTime TestTime ProjectTime2 CodeTime2 TestTime2 ProjectTime3 CodeTime3 TestTime3 ProjectTime4 CodeTime4 TestTime4
+    Dependent Variable CodeDeffect "Number of Defects found in the System during tests"  CodeDefect CodeDefect2 CodeDefect3 CodeDefect4 
+    
+    Factor ProgammingLanguage isDesiredVariation True {
+    	Java
+        CPlusPlus
+    }
+    Factor System isDesiredVariation False { 
+        Phonebook
+        EventManagement
+    }
+    Factor Participants isDesiredVariation False {
+    	Participant1
+        Participant2
+    }
+             
+   Statistical Analysis Technique //...
+   
+   Internal Replication  4   
+}         	
+    Process ComparisonProcessJavaPhoneBook {
+   	
+    Task PhoneBook_UseCaseProject description "Create the design of use cases" to  PhoneBook_ImplementUseCase {
+    		 	artefacts PhoneBook_UseCaseSpecfication description "Description of Use Cases" type input
+					      PhoneBook_ClassDiagram description "Class Diagram" type output
+					      PhoneBook_PrototypeInterface description "Prototype of interface" type output
+	}
+	Task PhoneBook_ImplementUseCase description "Implementation of Use Cases" to UseCaseTest {
+		artefacts ClassDiagram description "Class Diagram" type input
+    	      	  PhoneBook_PrototypeInterface description "Prototype of interface" type input
+    	      	  PhoneBook_JavaUseCaseCode description "Use Cases Java Code" type output
+	}
+	Task UseCaseTest description "Perform Test of Use Case"	{
+		artefacts PhoneBook_JavaUseCaseSpecfication description "Description of Use Cases" type input
+		          PhoneBook_JavaUseCaseCode description "Use Cases Java Code" type input
+				  PhoneBook_JavaTestCase description "Specification of a set of tests"  type output
+		          PhoneBook_TestLog description "Report that is captured during a run of tests" type output
+	}
+	
+	}
+
+Process ComparisonProcessCPPPhoneBook{
+   	
+    Task PhoneBook_UseCaseProject description "Create the design of use cases" 
+    		to PhoneBook_ImplementUseCase {
+    	artefacts PhoneBook_UseCaseSpecfication description "Description of Use Cases" type input
+				  PhoneBook_ClassDiagram description "Class Diagram" type output
+		          PhoneBook_PrototypeInterface description "Prototype of interface" type output
+	}
+	Task PhoneBook_ImplementUseCase description "Implementation of Use Cases" to UseCaseTest{
+     	 artefacts ClassDiagram description "Class Diagram" type input
+    	      	   PhoneBook_PrototypeInterface description "Prototype of interface" type input 
+    	      	   PhoneBook_CPPUseCaseCode description "Use Cases CPP Code" type output
+	}
+	Task UseCaseTest description "Perform Test of Use Cases"	{
+		artefacts PhoneBook_UseCaseSpecfication description "Description of Use Cases" type input
+		          PhoneBook_CPPUseCaseCode description "Use Cases CPP Code" type input
+				  PhoneBook_CPPTestCase description "Specification of a set of  CPP tests"  type output
+		          PhoneBook_TestLog description "Report that is captured during a run of tests" type output
+	}
+	
+	}
+
+ Process ComparisonProcessJavaEventManagement {
+   	
+    Task EventManagement_UseCaseProject description "Create the design of use cases" 
+    		to EventManagement_ImplementUseCase {
+    		artefacts EventManagement_UseCaseSpecfication description "Description of Use Cases" type input
+					 EventManagement_ClassDiagram description "Class Diagram" type output
+		             EventManagement_PrototypeInterface description "Prototype of interface" type output
+	}
+	Task EventManagement_ImplementUseCase description "Implementation of Use Cases"  to UseCaseTest{
+		artefacts ClassDiagram description "Class Diagram" type input
+    	      		EventManagement_PrototypeInterface description "Prototype of interface" type input
+    	      		EventManagement_JavaUseCaseCode description "Use Cases Java Code" type output
+	}
+	Task UseCaseTest description "Perform Test of Use Case"	{
+		artefacts EventManagement_JavaUseCaseSpecfication description "Description of Use Cases" type input
+				  EventManagement_JavaTestCase description "Specification of a set of tests"  type output
+		          EventManagement_JavaUseCaseCode description "Use Cases Java Code" type input
+				  EventManagement_TestLog description "Report that is captured during a run of tests" type output
+	}
+	
+	}
+
+Process ComparisonProcessCPPEventManagement to {
+   	
+    Task EventManagement_UseCaseProject description "Create the design of use cases" 
+    		to EventManagement_ImplementUseCase {
+    	artefacts EventManagement_UseCaseSpecfication description "Description of Use Cases" type input
+				  EventManagement_ClassDiagram description "Class Diagram" type output
+		          EventManagement_PrototypeInterface description "Prototype of interface" type output
+	}
+	Task EventManagement_ImplementUseCase description "Implementation of Use Cases" to UseCaseTest{
+		 artefacts ClassDiagram description "Class Diagram" type input
+    	      	   EventManagement_PrototypeInterface description "Prototype of interface" type input
+    	      	   EventManagement_CPPUseCaseCode description "Use Cases CPP Code" type output
+	}
+	Task UseCaseTest description "Perform Test of Use Case"	{
+		artefacts  EventManagement_UseCaseSpecfication description "Description of Use Cases" type input
+				   EventManagement_CPPTestCase description "Specification of a set of  CPP test"  type output
+		           EventManagement_CPPUseCaseCode description "Use Cases CPP Code" type input
+				   EventManagement_TestLog description "Report that is captured during a run of tests" type output
+	}	
+	}
+	
+
+//Experiment metrics	
+ Metric ProjectTime  relates ComparisonProcessJavaPhoneBook{ 
+ 	description "Calculate the duration of tasks related to project the useCase"
+ 	taskBegin ComparisonProcessJavaPhoneBook.PhoneBook_UseCaseProject
+ 	}
+ Metric CodeTime relates ComparisonProcessJavaPhoneBook {
+ 	description "Calculate the duration of tasks related to implement the useCase"
+ 	taskBegin ComparisonProcessJavaPhoneBook.PhoneBook_ImplementUseCase
+ }
+ Metric TestTime relates ComparisonProcessJavaPhoneBook {
+ 	description "Calculate the duration of tasks related to test the useCase"
+ 	taskBegin ComparisonProcessJavaPhoneBook.UseCaseTest
+ }
+ Metric CodeDefect relates ComparisonProcessJavaPhoneBook{
+ 	description "Calculate the number of defects found in the UseCase code"
+ 	artefact  ComparisonProcessJavaPhoneBook.PhoneBook_ImplementUseCase.PhoneBook_JavaUseCaseCode
+ }
+ //
+ Metric ProjectTime2  relates ComparisonProcessCPPPhoneBook{ 
+ 	description "Calculate the duration of tasks related to project the useCase"
+ 	taskBegin ComparisonProcessCPPPhoneBook.PhoneBook_UseCaseProject
+ 	}
+ Metric CodeTime2 relates ComparisonProcessCPPPhoneBook {
+ 	description "Calculate the duration of tasks related to implement the useCase"
+ 	taskBegin ComparisonProcessCPPPhoneBook.PhoneBook_ImplementUseCase
+ }
+ Metric TestTime2 relates ComparisonProcessCPPPhoneBook {
+ 	description "Calculate the duration of tasks related to test the useCase"
+ 	taskBegin ComparisonProcessCPPPhoneBook.UseCaseTest
+ }
+ Metric CodeDefect2 relates ComparisonProcessCPPPhoneBook {
+ 	description "Calculate the number of defects found in the UseCase code"
+ 	artefact ComparisonProcessCPPPhoneBook.PhoneBook_ImplementUseCase.PhoneBook_CPPUseCaseCode
+ }
+ //
+  Metric ProjectTime3  relates ComparisonProcessJavaEventManagement{ 
+ 	description "Calculate the duration of tasks related to project the useCase"
+ 	taskBegin ComparisonProcessJavaEventManagement.EventManagement_UseCaseProject
+ 	}
+ Metric CodeTime3 relates ComparisonProcessJavaEventManagement {
+ 	description "Calculate the duration of tasks related to implement the useCase"
+ 	taskBegin ComparisonProcessJavaEventManagement.EventManagement_ImplementUseCase
+ }
+ Metric TestTime3 relates ComparisonProcessJavaEventManagement {
+ 	description "Calculate the duration of tasks related to test the useCase"
+ 	taskBegin ComparisonProcessJavaEventManagement.UseCaseTest
+ }
+ Metric CodeDefect3 relates ComparisonProcessJavaEventManagement {
+ 	description "Calculate the number of defects found in the UseCase code"
+ 	artefact ComparisonProcessJavaEventManagement.EventManagement_ImplementUseCase.EventManagement_JavaUseCaseCode
+ }
+ //
+  Metric ProjectTime4  relates ComparisonProcessCPPEventManagement{ 
+ 	description "Calculate the duration of tasks related to project the useCase"
+ 	taskBegin ComparisonProcessCPPEventManagement.EventManagement_UseCaseProject
+ 	}
+ Metric CodeTime4 relates ComparisonProcessCPPEventManagement {
+ 	description "Calculate the duration of tasks related to implement the useCase"
+ 	taskBegin ComparisonProcessCPPEventManagement.EventManagement_ImplementUseCase
+ }
+ Metric TestTime4 relates ComparisonProcessCPPEventManagement {
+ 	description "Calculate the duration of tasks related to test the useCase"
+ 	taskBegin ComparisonProcessCPPEventManagement.UseCaseTest
+ }
+ Metric CodeDefect4 relates ComparisonProcessCPPEventManagement {
+ 	description "Calculate the number of defects found in the UseCase code"
+ 	artefact ComparisonProcessCPPEventManagement.UseCaseTest.EventManagement_CPPUseCaseCode
+ }
+ 
+ 
+  
+Questionnaires 
+ Questionnaire ExperienceQuestionnaire  type Pre {
+ 
+				Question1 {
+					description "What is your experience in software development?"
+					type SingleChoice
+					required 1	
+					Alternatives
+					Option	"Beginner"
+					Option	"Professional"
+					Option	"Expert"																								
+				}           			
+				Question2 {
+					description "How long have you - been working/worked - with Java?"
+					type SingleChoice
+					required 1
+					Alternatives
+					Option	"Less than 1 year"
+					Option "Between 1 and 3 years"
+					Option	"More than 3 years"																								
+				}           	
+				
+				Question3 {
+					description "How long have you - been working/worked - with CPP?"
+					type SingleChoice
+					required 1
+					Alternatives
+					Option	"Less than 1 year"
+					Option "Between 1 and 3 years"
+					Option	"More than 3 years"																									
+				}
+			};

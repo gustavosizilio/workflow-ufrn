@@ -163,7 +163,7 @@ public abstract class CrudAction<T extends GenericEntity> {
 	}
 	
 	public void addInfo(String message) {
-		getFacesMessages().add(Severity.INFO, message);
+		getFacesMessages().add(message);
 	}
 	
 	public void addError(String message) {

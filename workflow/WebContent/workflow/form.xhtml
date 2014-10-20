@@ -28,17 +28,23 @@
 			        		</a4j:commandLink>
 		        		</h:panelGroup>
 		        		
-		        		<h:panelGroup rendered="#{action.editNode.data.equals(item) and item.getEType().getInstanceTypeName() == 'java.lang.String'}" id="stringAttr" >
-			        		<h:inputText value="#{action.textProperty}" /><br />
-			        		<a4j:commandLink action="#{action.updateEditProperty()}" reRender="tree">
-			                    <h:graphicImage value="/img/true.png" styleClass="pic"/>
-			                    <h:outputText value="Save"/>
-			        		</a4j:commandLink>
-		        		</h:panelGroup>
 		        		
-		        		
-		        		<h:panelGroup rendered="#{action.editNode.data.equals(item) and item.getEType().getInstanceTypeName() == 'int'}" id="intAttr" >
-			        		<rich:inputNumberSpinner value="#{action.intProperty}" />
+		        		<h:panelGroup rendered="#{action.editNode.data.equals(item)}" >
+			        		
+			        		<h:panelGroup rendered="#{action.getType(node) == 'string'}" >
+			        			<h:inputText value="#{action.textProperty}"  id="stringAttr"/><br />
+		        			</h:panelGroup>
+			        		<rich:inputNumberSpinner rendered="#{action.getType(node) == 'int'}" value="#{action.intProperty}" id="intAttr" />
+			        		<h:panelGroup rendered="#{action.getType(node) == 'enum'}" >
+			        			<h:selectOneMenu value="#{action.enumProperty}" id="enumAttr">
+			        				<s:selectItems value="#{action.enumProperty.values()}" var="enum"  
+									label="#{enum.literal}"/>  
+									<s:convertEnum/>  
+			        			</h:selectOneMenu>
+			        			<br />
+			        		</h:panelGroup>
+			        		
+			        		
 			        		<a4j:commandLink action="#{action.updateEditProperty()}" reRender="tree">
 			                    <h:graphicImage value="/img/true.png" styleClass="pic"/>
 			                    <h:outputText value="Save"/>

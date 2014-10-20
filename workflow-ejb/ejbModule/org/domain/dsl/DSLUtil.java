@@ -79,12 +79,6 @@ public class DSLUtil {
 		return mGet.invoke(raiz);
 	} 
 	
-	public void setValue(EObject raiz, EAttribute attr, Object value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		String methodSetName = "set"+Character.toUpperCase(attr.getName().charAt(0)) + attr.getName().substring(1);
-		Method mSet = raiz.getClass().getDeclaredMethod(methodSetName, value.getClass());
-		mSet.invoke(raiz, value);
-	}
-	
 	public void  buildRef(EObject raiz, EReference ref, EClass refClass) throws Exception {
 		EClassImpl eclazz = (EClassImpl) raiz.eClass();
 		EObject builtRef = factory.create(refClass);

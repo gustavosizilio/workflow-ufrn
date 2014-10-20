@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -29,9 +30,11 @@ import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.Workflow;
 import org.domain.utils.ReadPropertiesFile;
 import org.domain.workflow.session.generic.CrudAction;
+import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EReferenceImpl;
@@ -68,6 +71,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	
 	private String textProperty;
 	private int intProperty;
+	private Enumerator enumProperty;
 	
 	
 	public CrudWorkflow() throws Exception {
@@ -120,26 +124,42 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		return dslUtil.getValue(node.getParent().getData(), (EAttribute)node.getData());
 	}
 	
+	public String getType(TreeNode<EObject> node) {
+		if(((EAttribute)node.getData()).getEType().getInstanceTypeName() == "java.lang.String" ){
+			return "string";
+		} else if(((EAttribute)node.getData()).getEType().getInstanceTypeName() == "int") {
+			return "int";
+		} else {
+			if(((EAttribute)node.getData()).getEType() instanceof EEnum) {
+				return "enum";
+			}
+		}
+		return "";
+	}
 	public void updateEditProperty(TreeNode<EObject> node) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		this.editNode = node;
 		Object value = getValueFromParent(node);
 		
-		System.err.println(((EAttribute)node.getData()).getEType().getInstanceTypeName());
+		String type = getType(node);
+		
 		if(value != null) {
-			if(((EAttribute)node.getData()).getEType().getInstanceTypeName() == "java.lang.String" ){
+			if(type.equals("string") ){
 				this.setTextProperty(value.toString());
-			} else if(((EAttribute)node.getData()).getEType().getInstanceTypeName() == "int") {
+			} else if(type.equals("int")) {
 				this.setIntProperty(Integer.parseInt(value.toString()));
+			} else if(type.equals("enum")) {
+				this.setEnumProperty((Enumerator) value);
 			}
 		}
 	}
 	public void updateEditProperty() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		
-		if(((EAttribute)this.editNode.getData()).getEType().getInstanceTypeName() == "java.lang.String" ) {
-			dslUtil.setValue(this.editNode.getParent().getData(), (EAttribute)this.editNode.getData(), this.getTextProperty());
-		} else if(((EAttribute)this.editNode.getData()).getEType().getInstanceTypeName() == "int" ) {
-			//dslUtil.setValue(this.editNode.getParent().getData(), (EAttribute)this.editNode.getData(), this.getIntProperty());
+		String type = getType(this.editNode);
+		if(type.equals("string") ){
+			BeanUtils.setProperty(this.editNode.getParent().getData(), ((EAttribute)this.editNode.getData()).getName(), this.getTextProperty());
+		} else if(type.equals("int")) {
 			BeanUtils.setProperty(this.editNode.getParent().getData(), ((EAttribute)this.editNode.getData()).getName(), this.getIntProperty());
+		} else if(type.equals("enum")) {
+			BeanUtils.setProperty(this.editNode.getParent().getData(), ((EAttribute)this.editNode.getData()).getName(), this.getEnumProperty());
 		}
 		
 		clearEditProperties();
@@ -523,6 +543,14 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 
 	public void setIntProperty(int intProperty) {
 		this.intProperty = intProperty;
+	}
+
+	public Enumerator getEnumProperty() {
+		return enumProperty;
+	}
+
+	public void setEnumProperty(Enumerator enumProperty) {
+		this.enumProperty = enumProperty;
 	}
 
 }

@@ -1,16 +1,16 @@
 package org.domain.workflow.session;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.faces.event.ActionEvent;
 
@@ -31,7 +31,6 @@ import org.domain.model.processDefinition.Workflow;
 import org.domain.utils.ReadPropertiesFile;
 import org.domain.workflow.session.generic.CrudAction;
 import org.eclipse.emf.common.util.Enumerator;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -43,11 +42,14 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.security.Restrict;
-import org.richfaces.event.NodeSelectedEvent;
+import org.jboss.serial.io.JBossObjectInputStream;
+import org.jboss.serial.io.JBossObjectOutputStream;
 import org.richfaces.event.UploadEvent;
 import org.richfaces.model.TreeNode;
 import org.richfaces.model.TreeNodeImpl;
 import org.richfaces.model.UploadItem;
+
+import br.ufrn.dimap.ase.dsl.expdslv3.Task;
 
 
 @Name("crudWorkflow")
@@ -72,6 +74,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	private String textProperty;
 	private int intProperty;
 	private Enumerator enumProperty;
+	private Object refAttrProperty;
 	
 	
 	public CrudWorkflow() throws Exception {
@@ -94,7 +97,78 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		rootNode = new TreeNodeImpl<EObject>();
 		updateTreeNode();
 	}
-
+	
+	@Override
+	protected boolean saveImpl(){
+		try {
+			this.entity.setDefinition(transform(this.rootModel));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return super.saveImpl();
+	}
+	
+	@Override
+	protected void editImpl(){
+		try {
+			this.rootModel = transform(this.entity.getDefinition());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	};
+	
+	public EObject transform(byte[] barray) throws IOException, ClassNotFoundException {
+		ByteArrayInputStream in = null;
+		JBossObjectInputStream objIn = null;
+		EObject model = null;
+		try {
+			in = new ByteArrayInputStream(barray);
+			objIn = new JBossObjectInputStream(in);
+			model = (EObject) objIn.readObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(objIn != null)
+					objIn.close();
+				if(in != null)
+					in.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return model;
+	}
+	
+	public byte[] transform(EObject model) throws IOException {
+		ByteArrayOutputStream out = null;
+		JBossObjectOutputStream objOut = null;
+		try {
+			out = new ByteArrayOutputStream();
+			objOut = new JBossObjectOutputStream(out);
+			objOut.writeObject(model);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(objOut != null)
+					objOut.close();
+				if(out != null)
+					out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return out.toByteArray();
+	}
+	
 	private void updateTreeNode() {
 		TreeNodeImpl<EObject> node = new TreeNodeImpl<EObject>();
 		node.setData(this.rootModel);
@@ -108,7 +182,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		node.setData(eObject);
 		rootNode.addChild(eObject, node);
 		
-		List<EAttribute> attrs = dslUtil.getAttrs(eObject);
+		List<EObject> attrs = dslUtil.getAttrs(eObject);
 		for (EObject attr : attrs) {
 			TreeNodeImpl<EObject> attrNode = new TreeNodeImpl<EObject>();
 			attrNode.setData(attr);
@@ -121,29 +195,46 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	}
 	
 	public Object getValueFromParent(TreeNode<EObject> node) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		return dslUtil.getValue(node.getParent().getData(), (EAttribute)node.getData());
+		return dslUtil.getValue(node.getParent().getData(), node.getData());
 	}
 	
-	public String getType(TreeNode<EObject> node) {
-		if(((EAttribute)node.getData()).getEType().getInstanceTypeName() == "java.lang.String" ){
-			return "string";
-		} else if(((EAttribute)node.getData()).getEType().getInstanceTypeName() == "int") {
-			return "int";
-		} else {
-			if(((EAttribute)node.getData()).getEType() instanceof EEnum) {
-				return "enum";
+	public String getFieldType(TreeNode<EObject> node) {
+		if(node.getData() instanceof EReference) {
+			if(((EReference)node.getData()).isMany()) {
+				return "refAttrMany";
+			} else {
+				return "refAttrOne";
+			}
+		} else if(node.getData() instanceof EAttribute) {
+			if(((EAttribute)node.getData()).getEType().getInstanceTypeName() == "java.lang.String" ){
+				return "string";
+			} else if(((EAttribute)node.getData()).getEType().getInstanceTypeName() == "int") {
+				return "int";
+			} else {
+				if(((EAttribute)node.getData()).getEType() instanceof EEnum) {
+					return "enum";
+				}
 			}
 		}
 		return "";
 	}
+	
+	//passar para o dslutil
+	public List<EObject> getFieldValues(EObject eObject){
+		return dslUtil.getRefValues(this.rootModel, eObject);
+	}
+
 	public void updateEditProperty(TreeNode<EObject> node) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		clearEditProperties();
 		this.editNode = node;
 		Object value = getValueFromParent(node);
 		
-		String type = getType(node);
+		String type = getFieldType(node);
 		
 		if(value != null) {
-			if(type.equals("string") ){
+			if(type.equals("refAttr") ){
+				this.setRefAttrProperty(value);
+			} else if(type.equals("string") ){
 				this.setTextProperty(value.toString());
 			} else if(type.equals("int")) {
 				this.setIntProperty(Integer.parseInt(value.toString()));
@@ -153,8 +244,10 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		}
 	}
 	public void updateEditProperty() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		String type = getType(this.editNode);
-		if(type.equals("string") ){
+		String type = getFieldType(this.editNode);
+		if(type.equals("refAttr") ){
+			BeanUtils.setProperty(this.editNode.getParent().getData(), ((EReference)this.editNode.getData()).getName(), this.getRefAttrProperty());
+		} else if(type.equals("string") ){
 			BeanUtils.setProperty(this.editNode.getParent().getData(), ((EAttribute)this.editNode.getData()).getName(), this.getTextProperty());
 		} else if(type.equals("int")) {
 			BeanUtils.setProperty(this.editNode.getParent().getData(), ((EAttribute)this.editNode.getData()).getName(), this.getIntProperty());
@@ -171,27 +264,44 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		this.setIntProperty(0);
 	}
 
-	public String getType(EObject eObject) {
+	public String getItemType(EObject eObject) {
 		if(eObject instanceof EAttribute) {
 			return "attr";
 		} else if (eObject instanceof EReference) {
-			return "ref";
+			if(((EReference)eObject).isContainment()) {
+				return "ref";
+			} else {
+				return "attr";
+			}
 		}
 		return "ref";
 	}
+	
+	public String getName(String s) {
+		String className = s;
+		String[] r = className.split("(?=\\p{Lu})");
+		StringBuilder result = new StringBuilder();
+		for (String string : r) {
+			result.append(string + " ");
+		}
+		
+		String ret = result.toString();
+		if(ret.toLowerCase() == "model") {
+			return "Experiment";
+		} else {
+			return ret;
+		}
+	}
+	
 	public String getName(EObject eObject) {
 		if(eObject instanceof EAttribute) {
 			return ((EAttribute) eObject).getName();
+		} else if(eObject instanceof EReference && !((EReference)eObject).isContainment()) {
+			return ((EReference) eObject).getName();
 		} else {
 			String className = eObject.getClass().getInterfaces()[0].toString();
 			className = className.substring(className.lastIndexOf(".")+1);
-			String[] r = className.split("(?=\\p{Lu})");
-			StringBuilder result = new StringBuilder();
-			for (String string : r) {
-				result.append(string + " ");
-			}
-			
-			return result.toString();			
+			return getName(className);
 		}
 	}
 	
@@ -551,6 +661,14 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 
 	public void setEnumProperty(Enumerator enumProperty) {
 		this.enumProperty = enumProperty;
+	}
+
+	public Object getRefAttrProperty() {
+		return refAttrProperty;
+	}
+
+	public void setRefAttrProperty(Object refAttrProperty) {
+		this.refAttrProperty = refAttrProperty;
 	}
 
 }

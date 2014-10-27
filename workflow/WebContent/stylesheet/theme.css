@@ -221,7 +221,7 @@ table.radio input[type=radio] {
 	padding: 10px;
 }
 
-input[type=text],  input[type=password], textarea {
+input[type=text],  input[type=password], textarea, select {
 	width: 500px;
 }
 .rich-fileupload-list-decor {
@@ -271,6 +271,66 @@ label {
 .tableAnalysis, .tableAnalysis td, .tableAnalysis tr {
 	padding: 5px;	
 }
-.rich-tree-node-selected: {
-	border: none !important;
+
+.refNodeTitle {
+	font-size: 18px;
+	padding: 5px;
+	font-weight: normal !important;
+}
+.attrNodeTitle {
+	display: table-cell;
+  	vertical-align: middle;
+	font-size: 14px;
+	padding: 0px 5px;
+}
+.attrNodeTitleField {
+	white-space: normal;
+}
+.attrNodeTitleContent {
+	display: table-cell;
+	width: 150px;
+	height: 30px;
+	background: #f0f0f0;
+	vertical-align: middle;
+}
+.attrNodeContent {
+	width: 500px;
+	height: 30px;
+	background: #ddd;
+	vertical-align: middle;
+	display: block;
+	overflow: auto;
+}
+.rich-tree-node-selected, .rich-ddmenu-label-select, .rich-ddmenu-label-unselect {
+	border: 0px !important;
+	
+}
+.rich-ddmenu-label-select, .rich-ddmenu-label-unselect {
+	padding: 10px 6px;
+}
+.rich-tree-node-text {
+	padding: 10px 4px 1px 4px;
+}
+.refButton {
+	float: left;
+	padding-left: 10px;
+	font-size: 13px;
+}
+
+.rich-tree-node input[type=text], .rich-tree-node input[type=password], .rich-tree-node textarea, .rich-tree-node select {
+	width: 500px !important;
+	height: 25px !important;
+}
+
+.rich-tree-node a:visited {
+	color: #0090FF;
+}
+.rich-tree-node a:hover {
+	color: #0090FF;
+}
+.rich-tree-node a {
+	color: #ACBECE;
+}
+.tooltipData {
+    font-weight: bold;
 }

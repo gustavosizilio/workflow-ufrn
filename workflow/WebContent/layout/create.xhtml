@@ -11,9 +11,9 @@
 	<ui:define name="body">
 		<rich:panel header="#{messages['layout.text.new']}">
 	    	<ui:insert name="create" />
-	    	<h:commandButton action="#{action.save()}" value="#{messages['layout.text.save']}" styleClass="commit"/>
 		</rich:panel>
 		<rich:separator  height="4" lineType="double"/>
     	<h:commandButton action="#{action.list()}" value="#{messages['layout.text.list']}" />
+    	<h:commandButton action="#{action.save()}" value="#{messages['layout.text.save']}" />
 	</ui:define>
 </ui:composition>

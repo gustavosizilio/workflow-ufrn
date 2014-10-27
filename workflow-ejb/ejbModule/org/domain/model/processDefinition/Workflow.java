@@ -7,10 +7,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,8 +38,9 @@ public class Workflow extends GenericEntity {
 	@Enumerated(EnumType.STRING)
 	private DesignType designType;
 	
+	@Basic(fetch = FetchType.LAZY)
 	@Lob
-	private String definition;
+	private byte[] definition;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="workflow")
 	private List<ProcessDefinition> processDefinitions;
@@ -291,10 +294,10 @@ public class Workflow extends GenericEntity {
 	public void setQuestionnaires(List<Questionnaire> questionnaires) {
 		this.questionnaires = questionnaires;
 	}
-	public String getDefinition() {
+	public byte[] getDefinition() {
 		return definition;
 	}
-	public void setDefinition(String definition) {
+	public void setDefinition(byte[] definition) {
 		this.definition = definition;
 	}
 }

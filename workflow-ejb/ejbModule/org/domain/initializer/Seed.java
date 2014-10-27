@@ -33,8 +33,8 @@ public class Seed {
 		
 		createUsers(20);
 		
-		Workflow w = new Workflow(u);
-		persist(w);
+		//Workflow w = new Workflow(u);
+		//persist(w);
 	}
 
 	private void createUsers(int qnt) {

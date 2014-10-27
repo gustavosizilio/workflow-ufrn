@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
@@ -90,20 +91,21 @@ public class DSLUtil {
 	
 	public Object  getValue(EObject raiz, EObject attr) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		String methodGetName = null;
+		EObject raizCopy = EcoreUtil.copy(raiz); //fix a bug with jsf
 		if(attr instanceof EAttribute) {
 			methodGetName = "get"+Character.toUpperCase(((EAttribute)attr).getName().charAt(0)) + ((EAttribute)attr).getName().substring(1);
 		} else if (attr instanceof EReference) {
 			methodGetName = "get"+Character.toUpperCase(((EReference)attr).getName().charAt(0)) + ((EReference)attr).getName().substring(1);
 		}
 		if(methodGetName != null) {
-			Method mGet = raiz.getClass().getDeclaredMethod(methodGetName);
-			return mGet.invoke(raiz);
+			Method mGet = raizCopy.getClass().getDeclaredMethod(methodGetName);
+			return mGet.invoke(raizCopy);
 		} else {
 			return null;
 		}
 	} 
 	
-	public void  buildRef(EObject raiz, EReference ref, EClass refClass) throws Exception {
+	public EObject  buildRef(EObject raiz, EReference ref, EClass refClass) throws Exception {
 		EClassImpl eclazz = (EClassImpl) raiz.eClass();
 		EObject builtRef = factory.create(refClass);
 		
@@ -120,6 +122,7 @@ public class DSLUtil {
 			Method mSet = raiz.getClass().getDeclaredMethod(methodSetName, ref.getEReferenceType().getInstanceClass());
 			mSet.invoke(raiz, builtRef);
 		}
+		return builtRef;
 	}
 	
 	public List<EObject> getRefValues(EObject rootModel2, EObject eObject) {

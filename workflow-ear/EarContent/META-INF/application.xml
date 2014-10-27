@@ -8,7 +8,7 @@
 
 	<!-- JBIDE-4166 Workaround - Make sure we deploy this first, since this is referenced in xxx-ejb.jar--> 
 	<module>
-		<ejb>jboss-seam.jar</ejb>
+		<ejb>/lib/jboss-seam.jar</ejb>
 	</module>
 	
 	<module>

@@ -30,6 +30,7 @@ import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.Workflow;
 import org.domain.utils.ReadPropertiesFile;
 import org.domain.workflow.session.generic.CrudAction;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -49,8 +50,6 @@ import org.richfaces.model.TreeNode;
 import org.richfaces.model.TreeNodeImpl;
 import org.richfaces.model.UploadItem;
 
-import br.ufrn.dimap.ase.dsl.expdslv3.Task;
-
 
 @Name("crudWorkflow")
 @Restrict("#{identity.loggedIn}")
@@ -69,12 +68,13 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	private EObject rootModel;
 	private TreeNode<EObject> rootNode;
 	private TreeNode<EObject> editNode;
+	private EObject newNode;
 	
 	
 	private String textProperty;
 	private int intProperty;
 	private Enumerator enumProperty;
-	private Object refAttrProperty;
+	private Object refAttrManyProperty;
 	
 	
 	public CrudWorkflow() throws Exception {
@@ -95,7 +95,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		this.entity.setUser(user);
 		this.rootModel = dslUtil.getRootElement();
 		rootNode = new TreeNodeImpl<EObject>();
-		updateTreeNode();
+		updateTreeNode(null);
 	}
 	
 	@Override
@@ -169,15 +169,15 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		return out.toByteArray();
 	}
 	
-	private void updateTreeNode() {
+	private void updateTreeNode(EObject newNode) {
 		TreeNodeImpl<EObject> node = new TreeNodeImpl<EObject>();
 		node.setData(this.rootModel);
 		rootNode.addChild(this.rootModel, node);
 		for (EObject eObject : this.rootModel.eContents()) {
-			updateTreeNode(eObject, node);
+			updateTreeNode(eObject, node, newNode);
 		}
 	}
-	private void updateTreeNode(EObject eObject, TreeNode<EObject> rootNode) {
+	private void updateTreeNode(EObject eObject, TreeNode<EObject> rootNode, EObject newNode) {
 		TreeNodeImpl<EObject> node = new TreeNodeImpl<EObject>();
 		node.setData(eObject);
 		rootNode.addChild(eObject, node);
@@ -190,12 +190,52 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		}
 		
 		for (EObject o : eObject.eContents()) {
-			updateTreeNode(o, node);
+			updateTreeNode(o, node, newNode);
+		}
+		
+		if(newNode != null) {
+			this.setNewNode(newNode);
 		}
 	}
 	
-	public Object getValueFromParent(TreeNode<EObject> node) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		return dslUtil.getValue(node.getParent().getData(), node.getData());
+	public Boolean adviseNodeOpened(org.richfaces.component.UITree t) {
+		if (t.getData() == this.rootModel) {
+			return true;
+		}
+		if (t.getData() == this.newNode) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public Object getValueFromParent(TreeNode<EObject> node) {
+		Object o = null;
+		try {
+			EObject e1 = node.getParent().getData();
+			EObject e2 = node.getData();
+			o = dslUtil.getValue(e1, e2);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		if(o != null) {
+			if(o instanceof EList<?>) {
+				for (Object obj : (EList)o) {
+					if(obj instanceof EObject) {
+						sb.append(getName((EObject) obj)+"\n");
+					} else {
+						sb.append(obj.toString()+"\n");
+					}
+				}
+			} else {
+				sb.append(o.toString()+"\n");
+			}
+		}
+		
+		return sb.toString();
 	}
 	
 	public String getFieldType(TreeNode<EObject> node) {
@@ -216,7 +256,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 				}
 			}
 		}
-		return "";
+		return "none";
 	}
 	
 	//passar para o dslutil
@@ -233,7 +273,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		
 		if(value != null) {
 			if(type.equals("refAttr") ){
-				this.setRefAttrProperty(value);
+				this.setRefAttrManyProperty(value);
 			} else if(type.equals("string") ){
 				this.setTextProperty(value.toString());
 			} else if(type.equals("int")) {
@@ -246,7 +286,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	public void updateEditProperty() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		String type = getFieldType(this.editNode);
 		if(type.equals("refAttr") ){
-			BeanUtils.setProperty(this.editNode.getParent().getData(), ((EReference)this.editNode.getData()).getName(), this.getRefAttrProperty());
+			BeanUtils.setProperty(this.editNode.getParent().getData(), ((EReference)this.editNode.getData()).getName(), this.getRefAttrManyProperty());
 		} else if(type.equals("string") ){
 			BeanUtils.setProperty(this.editNode.getParent().getData(), ((EAttribute)this.editNode.getData()).getName(), this.getTextProperty());
 		} else if(type.equals("int")) {
@@ -294,22 +334,47 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	}
 	
 	public String getName(EObject eObject) {
+		StringBuilder sb = new StringBuilder();
 		if(eObject instanceof EAttribute) {
-			return ((EAttribute) eObject).getName();
-		} else if(eObject instanceof EReference && !((EReference)eObject).isContainment()) {
-			return ((EReference) eObject).getName();
-		} else {
-			String className = eObject.getClass().getInterfaces()[0].toString();
-			className = className.substring(className.lastIndexOf(".")+1);
-			return getName(className);
+			sb.append(((EAttribute) eObject).getName());
+		} else { 
+			boolean lookForName = false;
+			if(eObject instanceof EReference && !((EReference)eObject).isContainment()) {
+				sb.append(((EReference) eObject).getName());
+			} else {
+				String className = eObject.getClass().getInterfaces()[0].toString();
+				className = className.substring(className.lastIndexOf(".")+1);
+				sb.append(className);
+				lookForName = true;
+			}
+			if(lookForName) {
+				try {
+					String id = BeanUtils.getProperty(eObject, "id");
+					if(!id.equals("id") && id != null) {
+						sb.append(" [ "+id+" ]");
+					}
+				} catch (Exception e) {
+				}
+				try {
+					String name = BeanUtils.getProperty(eObject, "name");
+					if(!name.equals("name") && name != null) {
+						sb.append(" ( "+name+" )");
+					}
+				} catch (Exception e) {
+				}
+			}
 		}
+		
+		
+		return sb.toString();
 	}
 	
 	public void  buildRef(EObject raiz, EReferenceImpl ref, EClass refClass) {
 		try {
-			this.dslUtil.buildRef(raiz, ref, refClass);
-			this.updateTreeNode();
+			EObject o = this.dslUtil.buildRef(raiz, ref, refClass);
+			this.updateTreeNode(o);
 		} catch (Exception e) {
+			e.printStackTrace();
 			getFacesMessages().add(e.getMessage());
 		}
 	}
@@ -663,12 +728,20 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		this.enumProperty = enumProperty;
 	}
 
-	public Object getRefAttrProperty() {
-		return refAttrProperty;
+	public EObject getNewNode() {
+		return newNode;
 	}
 
-	public void setRefAttrProperty(Object refAttrProperty) {
-		this.refAttrProperty = refAttrProperty;
+	public void setNewNode(EObject newNode) {
+		this.newNode = newNode;
+	}
+
+	public Object getRefAttrManyProperty() {
+		return refAttrManyProperty;
+	}
+
+	public void setRefAttrManyProperty(Object refAttrManyProperty) {
+		this.refAttrManyProperty = refAttrManyProperty;
 	}
 
 }

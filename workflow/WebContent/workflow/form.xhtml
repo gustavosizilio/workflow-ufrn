@@ -9,14 +9,68 @@
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 
-	<h:panelGrid id="tree" columns="1" width="100%">
+<h:panelGroup id="panelForm" styleClass="panelForm">
+	<h:panelGroup styleClass="backNodePanel">
+		<a4j:commandLink value="Back" action="#{action.updateSelectedNode(action.selectedNode.parent)}"
+			rendered="#{action.selectedNode.parent.data != null}" reRender="panelForm"/>
+		<h:outputText value="#{action.getName(action.selectedNode.data)}"
+						styleClass="refNodeTitle" />
+		<rich:separator></rich:separator>
+		<h:panelGroup id="moreActions" styleClass="moreActions">
+			<ui:repeat value="#{action.getRefs(action.selectedNode.data)}" var="ref">
+				<ui:repeat value="#{action.dslUtil.findClasses(ref)}" var="eclass">
+					<a4j:commandButton styleClass="refButton"
+						value="New #{action.getName(eclass.name)}"
+						action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
+						reRender="panelForm" /><br style="clear: both;"  />
+				</ui:repeat>
+			</ui:repeat>
+			
+		<rich:separator></rich:separator>
+		</h:panelGroup>
+		<br />
+		<h:panelGroup id="itemChildren" styleClass="moreActions">
+			<ui:repeat value="#{action.getChildren(action.selectedNode)}" var="ref">
+				<a4j:commandButton value="#{action.getName(ref.data)}"
+					styleClass="refButton" action="#{action.updateSelectedNode(ref)}" reRender="panelForm"/>
+				<br style="clear: both;"  />
+			</ui:repeat>
+		</h:panelGroup>
+	</h:panelGroup>
+	
+	<h:panelGroup styleClass="nodePanel">
+		
+		<br />
+		<br />
+		<br />
+	</h:panelGroup>
+
+	
+	
+	
+	
+	<br style="clear: both;" />
+</h:panelGroup>
+
+
+
+
+
+
+
+
+
+
+
+
+	<h:panelGrid rendered="false" id="tree" columns="1" width="100%">
 		<rich:tree switchType="client" limitToList="true" value="#{action.rootNode}" var="item"
 			treeNodeVar="node" nodeFace="#{action.getItemType(item)}" reRender="tree" >
 			<rich:treeNode type="attr" icon="/img/attr.png"
 				iconLeaf="/img/attr.png">
 
 				<h:panelGrid columns="3">
-					<a4j:support ignoreDupResponses="true" eventsQueue="tq" rendered="#{node != null and (action.editNode == null or !action.editNode.data.equals(item))}"
+					<a4j:support ignoreDupResponses="true" eventsQueue="tq" rendered="#{node != null and (action.editNode == null or action.editNode != node)}"
                     	action="#{action.updateEditProperty(node)}" reRender="tree" event="onclick" />
                
 					<h:panelGroup class="attrNodeTitleContent">
@@ -25,22 +79,22 @@
 					</h:panelGroup>
 
 					<h:panelGroup class="attrNodeTitleField">
-				        
-						<h:panelGroup
-							rendered="#{node != null and (action.editNode == null or !action.editNode.data.equals(item))}">
-							<h:outputText value="#{action.getValueFromParent(node)}"
+				        <h:panelGroup
+							rendered="#{node != null and (action.editNode == null or action.editNode != node)}">
+							<h:outputText value="#{action.getValueFromParent(node, true)}"
 								styleClass="attrNodeContent">
 							</h:outputText>
 						</h:panelGroup>
 
 		
-						<h:panelGroup rendered="#{action.editNode.data.equals(item)}">
+						<h:panelGroup rendered="#{action.editNode == node}">
 
 							<h:panelGroup rendered="#{action.getFieldType(node) == 'refAttrMany'}">
-								<h:selectOneMenu value="#{action.refAttrManyProperty}">
-									<s:selectItems noSelectionLabel="---" value="#{action.getFieldValues(item)}"
+								<h:selectManyMenu style="height: 60px !important" value="#{action.refAttrManyProperty}">
+									<s:selectItems value="#{action.getFieldValues(item)}"
 										var="o" label="#{action.getName(o)}" />
-								</h:selectOneMenu>
+										<f:converter converterId="SimpleEObjectConverter"/>
+								</h:selectManyMenu>
 							</h:panelGroup>
 							
 							
@@ -63,7 +117,8 @@
 					
 					<h:panelGroup>
 						<a4j:commandLink ignoreDupResponses="true" eventsQueue="tq" 
-							action="#{action.updateEditProperty()}" reRender="tree">
+							action="#{action.updateEditProperty()}" reRender="tree"
+							rendered="#{action.editNode == node}">
 								<h:graphicImage value="/img/true.png" styleClass="pic" />
 								<h:outputText value="Save" />
 						</a4j:commandLink>

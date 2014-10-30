@@ -311,26 +311,56 @@ label {
 .rich-tree-node-text {
 	padding: 10px 4px 1px 4px;
 }
-.refButton {
+.refLink {
 	float: left;
 	padding-left: 10px;
 	font-size: 13px;
 }
+.refButton {
+	display: block;
+	float: left;
+	background-color: #C9DBEA;
+	/* border-color: #0090FF; */
+	/* padding-left: 10px; */
+	width: 100%;
+	border: solid 1px #84929D;
+	font-size: 13px !important;
+}
 
-.rich-tree-node input[type=text], .rich-tree-node input[type=password], .rich-tree-node textarea, .rich-tree-node select {
+.panelForm input[type=text], .panelForm input[type=password], .panelForm textarea, .panelForm select {
 	width: 500px !important;
 	height: 25px !important;
 }
 
-.rich-tree-node a:visited {
+.panelForm a:visited {
 	color: #0090FF;
 }
-.rich-tree-node a:hover {
+.panelForm a:hover {
 	color: #0090FF;
 }
-.rich-tree-node a {
+.panelForm a {
 	color: #ACBECE;
 }
 .tooltipData {
     font-weight: bold;
+}
+
+.backNodePanel{
+	width: 300px;
+	display: block;
+	float: left;
+	margin-right: 20px;
+}
+.nodePanel{
+	width: 600px;
+	display: block;
+	float: left;
+}
+.moreActions {
+	font-size: 14px !important;
+}
+.backNodeAction{
+	width: 300px;
+	font-size: 18px !important;
+	margin: 0px !important;
 }

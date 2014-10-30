@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
@@ -16,6 +15,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EClassImpl;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.impl.EReferenceImpl;
@@ -105,6 +105,10 @@ public class DSLUtil {
 		}
 	} 
 	
+	public void setValue(EObject data, EStructuralFeature refAttr, Object value) throws Exception {
+		data.eSet(refAttr, value);
+	}
+
 	public EObject  buildRef(EObject raiz, EReference ref, EClass refClass) throws Exception {
 		EClassImpl eclazz = (EClassImpl) raiz.eClass();
 		EObject builtRef = factory.create(refClass);
@@ -190,5 +194,6 @@ public class DSLUtil {
 	public Injector createInjector() {
 		return Guice.createInjector(new Expdslv3RuntimeModule());
 	}
+
 	
 }

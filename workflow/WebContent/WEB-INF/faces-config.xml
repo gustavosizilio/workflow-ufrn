@@ -16,5 +16,12 @@
 			<supported-locale>tr</supported-locale>
 		</locale-config>
 	</application>
+	
+	<converter>
+	  <converter-id>SimpleEObjectConverter</converter-id>
+	  <converter-class>  
+	    org.domain.utils.SimpleEObjectConverter
+	  </converter-class>
+	</converter>
 
 </faces-config>

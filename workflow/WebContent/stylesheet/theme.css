@@ -16,6 +16,14 @@ h1 {
 	margin-top: 0;
 }
 
+.hiddenBorders {
+	border: none !important;
+	padding: 0px !important;
+}
+.hiddenBorders td {
+	border: none !important;
+	padding: 0px !important;
+}
 input[type=submit], input[type=button] {
 	font-size: 11px;
 	margin: 5px 5px 5px 0;
@@ -285,6 +293,8 @@ label {
 }
 .attrNodeTitleField {
 	white-space: normal;
+	float: left;
+	margin-top: 5px;
 }
 .attrNodeTitleContent {
 	display: table-cell;
@@ -292,6 +302,8 @@ label {
 	height: 30px;
 	background: #f0f0f0;
 	vertical-align: middle;
+	float: left;
+	margin-top: 5px;
 }
 .attrNodeContent {
 	width: 500px;
@@ -318,6 +330,7 @@ label {
 }
 .refButton {
 	display: block;
+	white-space: normal;
 	float: left;
 	background-color: #C9DBEA;
 	/* border-color: #0090FF; */
@@ -325,6 +338,7 @@ label {
 	width: 100%;
 	border: solid 1px #84929D;
 	font-size: 13px !important;
+	margin: 5px 0px 5px 0px !important;
 }
 
 .panelForm input[type=text], .panelForm input[type=password], .panelForm textarea, .panelForm select {
@@ -352,15 +366,23 @@ label {
 	margin-right: 20px;
 }
 .nodePanel{
-	width: 600px;
+	width: 655px;
 	display: block;
 	float: left;
 }
 .moreActions {
 	font-size: 14px !important;
 }
-.backNodeAction{
+.backNodeAction {
 	width: 300px;
 	font-size: 18px !important;
 	margin: 0px !important;
+}
+.refButtonLeft {
+	float: left;
+	width: 180px !important;
+}
+.refButtonRight {
+	width: 110px !important;
+	float: right;
 }

@@ -24,17 +24,9 @@
       <div class="body">
 	  <a4j:status>
 	       <f:facet name="start">
-	       		<div class="rich-mpnl-mask-div-opaque rich-mpnl-mask-div" style="z-index: 1000000;">
-			       	<div class="rich-mp-container" id="waitCDiv" style="position: absolute; left: 643px; top: 365px; z-index: 9;"><div class="rich-mpnl-shadow" id="waitShadowDiv" style="width: 74px; height: 38px;"></div>
-				       	<div class=" rich-mpnl-content" id="waitContentDiv">
-				       	<table border="0" cellpadding="0" cellspacing="0" class="rich-mp-content-table" id="waitContentTable" style="width: 1px;height: 1px;"><tbody><tr style="height: 99%"><td class="rich-mpnl-body" valign="top">
-				       		<span>
-				        		#{messages['layout.messages.wait']}
-				        	</span>
-				        </td></tr></tbody></table>
-				        </div>
-			       	</div>
-	       		</div>
+	       		<rich:modalPanel>
+		       		<h:outputText value="#{messages['layout.messages.wait']}" />
+	       		</rich:modalPanel>
 	       </f:facet>
 	  </a4j:status>
     

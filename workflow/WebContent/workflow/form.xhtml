@@ -13,36 +13,63 @@
 	<h:panelGroup styleClass="backNodePanel">
 		<a4j:commandLink value="Back" action="#{action.updateSelectedNode(action.selectedNode.parent)}"
 			rendered="#{action.selectedNode.parent.data != null}" reRender="panelForm"/>
-		<h:outputText value="#{action.getName(action.selectedNode.data)}"
+		<h:outputText value="#{action.getName(action.selectedNode.data, false)}"
 						styleClass="refNodeTitle" />
 		<rich:separator></rich:separator>
 		<h:panelGroup id="moreActions" styleClass="moreActions">
-			<ui:repeat value="#{action.getRefs(action.selectedNode.data)}" var="ref">
-				<ui:repeat value="#{action.dslUtil.findClasses(ref)}" var="eclass">
+			<rich:dataGrid  styleClass="hiddenBorders"  value="#{action.getRefs(action.selectedNode.data)}" var="ref">
+				<rich:dataGrid  styleClass="hiddenBorders" value="#{action.dslUtil.findClasses(ref)}" var="eclass">
 					<a4j:commandButton styleClass="refButton"
 						value="New #{action.getName(eclass.name)}"
 						action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
 						reRender="panelForm" /><br style="clear: both;"  />
-				</ui:repeat>
-			</ui:repeat>
+				</rich:dataGrid>
+			</rich:dataGrid>
 			
 		<rich:separator></rich:separator>
 		</h:panelGroup>
 		<br />
 		<h:panelGroup id="itemChildren" styleClass="moreActions">
-			<ui:repeat value="#{action.getChildren(action.selectedNode)}" var="ref">
-				<a4j:commandButton value="#{action.getName(ref.data)}"
-					styleClass="refButton" action="#{action.updateSelectedNode(ref)}" reRender="panelForm"/>
-				<br style="clear: both;"  />
-			</ui:repeat>
+			<rich:dataGrid  styleClass="hiddenBorders" value="#{action.getRefs(action.selectedNode.data)}" var="ref">
+				<rich:dataGrid styleClass="hiddenBorders"  value="#{action.getChildren(action.selectedNode, ref)}" var="refNode">
+					<a4j:commandButton value="#{action.getName(refNode.data, true)}"
+						styleClass="refButton refButtonLeft" action="#{action.updateSelectedNode(refNode)}" reRender="panelForm"/>
+					
+					<a4j:commandButton value="Remove"
+						styleClass="refButton refButtonRight" action="#{action.removeRef(action.selectedNode, refNode.data, ref)}" reRender="panelForm"/>
+					
+					<br style="clear: both;"  />
+				</rich:dataGrid>
+			</rich:dataGrid>
 		</h:panelGroup>
 	</h:panelGroup>
 	
-	<h:panelGroup styleClass="nodePanel">
+	<h:panelGroup styleClass="nodePanel" rendered="#{action.selectedNode.data != action.rootModel}">
+		<h:outputText value="#{action.getName(action.selectedNode.data, true)}"
+						styleClass="refNodeTitle" />
+		<rich:separator></rich:separator>
+		<ui:repeat value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
 		
+			<h:panelGroup class="attrNodeTitleContent">
+				<h:outputText value="#{action.getName(attr[0], false)}: "
+					styleClass="attrNodeTitle" />
+			</h:panelGroup>
+
+			<h:panelGroup class="attrNodeTitleField">
+			
+				<h:panelGroup rendered="#{action.getFieldType(attr[0]) == 'string'}">
+					<h:inputTextarea value="#{attr[1]}" />
+				</h:panelGroup>
+			
+			</h:panelGroup>
+
+		</ui:repeat>
+		<br style="clear: both" />
 		<br />
-		<br />
-		<br />
+		
+		<a4j:commandButton value="Ok" action="#{action.updateAttrProperties}" reRender="panelForm" />
+		<h:outputText value="   " />
+		<a4j:commandButton value="Cancel" action="#{action.updateSelectedNode(action.selectedNode.parent)}" reRender="panelForm" />
 	</h:panelGroup>
 
 	

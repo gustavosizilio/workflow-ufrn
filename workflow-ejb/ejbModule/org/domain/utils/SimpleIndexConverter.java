@@ -6,9 +6,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
-import org.eclipse.emf.ecore.EObject;
-
-public class SimpleEObjectConverter implements Converter {  
+public class SimpleIndexConverter implements Converter {  
   
     public Object getAsObject(FacesContext ctx, UIComponent component, String value) {  
         if (value != null) {  
@@ -22,9 +20,7 @@ public class SimpleEObjectConverter implements Converter {
         if (value != null  
                 && !"".equals(value)) {  
   
-            EObject entity = (EObject) value;  
-  
-            // adiciona item como atributo do componente  
+            Object entity = (Object) value;  
             this.addAttribute(component, entity);  
             return entity.toString();
         }  
@@ -32,8 +28,8 @@ public class SimpleEObjectConverter implements Converter {
         return (String) value;  
     }  
   
-    protected void addAttribute(UIComponent component, EObject o) {  
-        String key = o.toString(); // codigo da empresa como chave neste caso  
+    protected void addAttribute(UIComponent component, Object o) {  
+        String key = o.toString();
         this.getAttributesFrom(component).put(key, o);  
     }  
   

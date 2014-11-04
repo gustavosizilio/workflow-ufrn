@@ -48,24 +48,59 @@
 		<h:outputText value="#{action.getName(action.selectedNode.data, true)}"
 						styleClass="refNodeTitle" />
 		<rich:separator></rich:separator>
-		<ui:repeat value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
+		<rich:dataGrid  styleClass="hiddenBorders" value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
 		
 			<h:panelGroup class="attrNodeTitleContent">
 				<h:outputText value="#{action.getName(attr[0], false)}: "
 					styleClass="attrNodeTitle" />
 			</h:panelGroup>
-
-			<h:panelGroup class="attrNodeTitleField">
 			
-				<h:panelGroup rendered="#{action.getFieldType(attr[0]) == 'string'}">
+			<h:panelGroup class="attrNodeTitleField">
+				
+				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'string'}">
 					<h:inputTextarea value="#{attr[1]}" />
+				</h:panelGroup>
+				
+				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'int'}">
+					<rich:inputNumberSpinner value="#{attr[1]}" converter="javax.faces.Integer" />
+				</h:panelGroup>
+				
+				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'enumOne'}">
+					<h:selectOneMenu value="#{attr[1]}" >
+						<s:selectItems value="#{attr[0].getEType().getDefaultValue().values()}"
+							var="enum" label="#{enum.literal}" noSelectionLabel="---" />
+						<s:convertEnum />
+					</h:selectOneMenu>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'enumMany'}">
+					<h:selectManyMenu value="#{attr[1]}" >
+						<s:selectItems value="#{attr[0].getEType().getDefaultValue().values()}"
+							var="enum" label="#{enum.literal}" />
+						<s:convertEnum />
+					</h:selectManyMenu>
+				</h:panelGroup>
+				
+				
+				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'refAttrOne'}">
+					<h:selectOneMenu value="#{attr[1]}">
+						<s:selectItems value="#{action.getFieldValues(attr[0])}"
+							var="o" label="#{action.getName(o, true)}" noSelectionLabel="---"  />
+							<f:converter converterId="SimpleIndexConverter"/>
+					</h:selectOneMenu>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'refAttrMany'}">
+					<h:selectManyMenu style="height: 60px !important" value="#{attr[1]}">
+						<s:selectItems value="#{action.getFieldValues(attr[0])}"
+							var="o" label="#{action.getName(o, true)}" />
+							<f:converter converterId="SimpleIndexConverter"/>
+					</h:selectManyMenu>
 				</h:panelGroup>
 			
 			</h:panelGroup>
+			<br style="clear: both" />
 
-		</ui:repeat>
+		</rich:dataGrid>
 		<br style="clear: both" />
-		<br />
 		
 		<a4j:commandButton value="Ok" action="#{action.updateAttrProperties}" reRender="panelForm" />
 		<h:outputText value="   " />
@@ -120,7 +155,7 @@
 								<h:selectManyMenu style="height: 60px !important" value="#{action.refAttrManyProperty}">
 									<s:selectItems value="#{action.getFieldValues(item)}"
 										var="o" label="#{action.getName(o)}" />
-										<f:converter converterId="SimpleEObjectConverter"/>
+										<f:converter converterId="SimpleIndexConverter"/>
 								</h:selectManyMenu>
 							</h:panelGroup>
 							

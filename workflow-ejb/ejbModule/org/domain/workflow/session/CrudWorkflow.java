@@ -229,10 +229,8 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		 List<EObject> attrs = this.dslUtil.getAttrs(raiz);
 		 this.attrProperties = new ArrayList<Object[]>();
 		 for (EObject object : attrs) {
-			 String type = this.getFieldType(object);
-			 if(type == "string") { 
-				 attrProperties.add(new Object[] {object, getValueFromParent(this.selectedNode.getData(), object, false)});
-			 }
+			 System.out.println(object);
+			 attrProperties.add(new Object[] {object, getValueFromParent(this.selectedNode.getData(), object, false)});
 		 }
 		 return attrProperties;
 	} 
@@ -287,7 +285,11 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 				return "int";
 			} else {
 				if(((EAttribute)node).getEType() instanceof EEnum) {
-					return "enum";
+					if(((EAttribute)node).isMany()) {
+						return "enumMany";
+					} else {
+						return "enumOne";
+					}
 				}
 			}
 		}

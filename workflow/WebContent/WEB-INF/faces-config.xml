@@ -18,9 +18,9 @@
 	</application>
 	
 	<converter>
-	  <converter-id>SimpleEObjectConverter</converter-id>
+	  <converter-id>SimpleIndexConverter</converter-id>
 	  <converter-class>  
-	    org.domain.utils.SimpleEObjectConverter
+	    org.domain.utils.SimpleIndexConverter
 	  </converter-class>
 	</converter>
 

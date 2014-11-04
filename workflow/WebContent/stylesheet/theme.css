@@ -292,6 +292,7 @@ label {
 	padding: 0px 5px;
 }
 .attrNodeTitleField {
+	width: 500px !important;
 	white-space: normal;
 	float: left;
 	margin-top: 5px;
@@ -366,7 +367,7 @@ label {
 	margin-right: 20px;
 }
 .nodePanel{
-	width: 655px;
+	width: 700px;
 	display: block;
 	float: left;
 }

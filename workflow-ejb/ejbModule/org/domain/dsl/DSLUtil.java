@@ -123,7 +123,7 @@ public class DSLUtil {
 			property.remove(obj);
 		} else {
 			Method mSet = raiz.getClass().getDeclaredMethod(methodSetName, ref.getEReferenceType().getInstanceClass());
-			mSet.invoke(raiz, null);
+			mSet.invoke(raiz, (Object) null);
 		}
 	}	
 	

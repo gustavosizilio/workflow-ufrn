@@ -15,7 +15,7 @@
 		 	<f:facet name="header">
             	<h:outputText value="#{messages['layout.text.workflow.experiment']}"/>
             </f:facet>
-			<h:outputText value="#{entity.title}" />
+			<h:outputText value="Experiment ##{entity.id}" />
 			<h:outputText value=" - #{messages['layout.text.workflow.startedAt']} " rendered="#{entity.started}" />
 			<h:outputText value="#{entity.startedAt}" rendered="#{entity.started}">
 				<f:convertDateTime pattern="MM/dd/yyyy HH:mm" />

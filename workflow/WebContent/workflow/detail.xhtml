@@ -1,186 +1,227 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:s="http://jboss.com/products/seam/taglib"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:a4j="http://richfaces.org/a4j"
-    template="/layout/detail.xhtml">
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="/layout/detail.xhtml">
 	<ui:param name="action" value="#{crudWorkflow}" />
 
 	<ui:define name="detail">
-		<h:panelGrid columns="2">
-			<h:outputLabel value="#{messages['layout.text.workflow.title']}:" for="title" />
-			<h:outputText id="title" value="#{crudWorkflow.entity.title}" />
-			<h:outputLabel value="#{messages['layout.text.workflow.description']}:" for="description" />
-			<h:outputText id="description" value="#{crudWorkflow.entity.description}" />
-		</h:panelGrid>
+		<rich:simpleTogglePanel switchType="client"
+			label="Experiment Definition" opened="true">
+
+			<h:panelGrid id="tree" columns="1" width="100%">
+				<rich:tree switchType="client" limitToList="true"
+					value="#{action.rootNode}" var="item" treeNodeVar="node"
+					nodeFace="#{action.getItemType(item)}" reRender="tree">
+					<rich:treeNode type="attr" icon="/img/attr.png"
+						iconLeaf="/img/attr.png">
+
+						<h:panelGrid columns="3">
+							<h:panelGroup class="attrNodeTitleContent">
+								<h:outputText value="#{action.getName(item, true)}: "
+									styleClass="attrNodeTitle" />
+							</h:panelGroup>
+
+							<h:panelGroup class="attrNodeTitleField">
+								<h:panelGroup>
+									<h:outputText
+										value="#{action.getValueFromParent(node.getParent().data, item, true)}"
+										styleClass="attrNodeContent">
+									</h:outputText>
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGrid>
+					</rich:treeNode>
+					<rich:treeNode type="ref" icon="/img/model.jpeg"
+						iconLeaf="/img/model.jpeg" expanded="#{action.newNode eq item}">
+						<h:outputText value="#{action.getName(item, true)}"
+							styleClass="refNodeTitle" />
+					</rich:treeNode>
+				</rich:tree>
+			</h:panelGrid>
+
+
+			<h:commandButton value="Deploy"
+				rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}" />
+			<h:commandButton action="#{action.edit(action.entity)}"
+				value="#{messages['layout.text.edit']}"
+				rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}" />
+		</rich:simpleTogglePanel>
 	</ui:define>
-	
+
 	<ui:define name="detailExtended">
 		<br />
-		<rich:panel id="workflowConfiguratioin" header="#{messages['layout.text.workflow.experimentConfiguration']}">
-		    <h:panelGrid columns="2" id="fileUpload" rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}">
-				<h:outputLabel value="#{messages['layout.text.workflow.deployDefinition']}:" for="description" />
-				<rich:fileUpload
-					uploadControlLabel="#{messages['layout.text.workflow.deploy']}"
-					immediateUpload="false"
-					listHeight="70px;"
-		            noDuplicate="true" listWidth="350px;" 
-		            locale="pt-BR" 
-		            autoclear="false"
-				            
-		            maxFilesQuantity="1" 
-		            cancelEntryControlLabel="#{messages['layout.text.workflow.clean']}"
-		            transferErrorLabel="#{messages['layout.messages.workflow.invalidFileConfiguration']}"         
-		            fileUploadListener="#{crudWorkflow.deployWorkflow}"
-		            onfileuploadcomplete="refreshPanel()">
-		        </rich:fileUpload>    
-	       </h:panelGrid>
-	       
-	       <rich:simpleTogglePanel switchType="client" label="#{messages['layout.text.workflow.experimentDesign']}" opened="true"
-	       						   rendered="#{crudWorkflow.entity.processDefinitions.size() gt 0}">
-	       		<h:panelGroup id="designConfigurationLinks">
-		       		<h:panelGroup rendered="#{crudWorkflow.entity.emptyDesign }">
-			       		<a4j:commandLink action="#" id="panelDesignConfigurationLink" reRender="designDefinition,designConfigurationLinks" value="[#{messages['layout.text.workflow.uploadFileConfiguration']}]">
-			       			<rich:componentControl for="panelDesignConfiguration" attachTo="panelDesignConfigurationLink" operation="show" event="onclick"/>
-			       		</a4j:commandLink>
-			       		<h:outputText value="&nbsp; | &nbsp;" />
-			       		<a4j:commandLink action="#{crudWorkflow.updateDesignTypeToManual}" reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.manual']}]</a4j:commandLink>	
-		       		</h:panelGroup>
-		       		<h:panelGroup rendered="#{not crudWorkflow.entity.emptyDesign }">
-			       		<a4j:commandLink action="#{crudWorkflow.clearDesign}" onclick="confirm('#{messages['layout.messages.areYouSure?']}')" reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.clearDesign']}]</a4j:commandLink>	
-		       		</h:panelGroup>
-	       		</h:panelGroup>
-	       		
-       			<br />
-       			<rich:separator></rich:separator>
-       			<br />
+		<rich:panel id="workflowConfiguratioin" rendered="#{crudWorkflow.entity.processDefinitions.size() != 0}"
+			header="#{messages['layout.text.workflow.experimentConfiguration']}">
+			<rich:simpleTogglePanel switchType="client"
+				label="#{messages['layout.text.workflow.experimentDesign']}"
+				opened="true"
+				rendered="#{crudWorkflow.entity.processDefinitions.size() gt 0}">
+				<h:panelGroup id="designConfigurationLinks">
+					<h:panelGroup rendered="#{crudWorkflow.entity.emptyDesign }">
+						<a4j:commandLink action="#" id="panelDesignConfigurationLink"
+							reRender="designDefinition,designConfigurationLinks"
+							value="[#{messages['layout.text.workflow.uploadFileConfiguration']}]">
+							<rich:componentControl for="panelDesignConfiguration"
+								attachTo="panelDesignConfigurationLink" operation="show"
+								event="onclick" />
+						</a4j:commandLink>
+						<h:outputText value="&nbsp; | &nbsp;" />
+						<a4j:commandLink action="#{crudWorkflow.updateDesignTypeToManual}"
+							reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.manual']}]</a4j:commandLink>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{not crudWorkflow.entity.emptyDesign }">
+						<a4j:commandLink action="#{crudWorkflow.clearDesign}"
+							onclick="confirm('#{messages['layout.messages.areYouSure?']}')"
+							reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.clearDesign']}]</a4j:commandLink>
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<br />
+				<rich:separator></rich:separator>
+				<br />
 				<h:panelGroup id="designDefinition">
 					<ui:include src="designConfiguration/MANUAL.xhtml" />
 					<ui:include src="designConfiguration/RCBD.xhtml" />
 					<ui:include src="designConfiguration/CRD.xhtml" />
 					<ui:include src="designConfiguration/LS.xhtml" />
-				</h:panelGroup>		       
-	       </rich:simpleTogglePanel>
-	       
-	       <rich:simpleTogglePanel switchType="client" label="#{messages['layout.text.workflow.artifactsConfiguration']}" opened="true"
-	       						   rendered="#{crudWorkflow.entity.inArtefacts.size() gt 0}">	
+				</h:panelGroup>
+			</rich:simpleTogglePanel>
 
-				<rich:dataTable	value="#{crudWorkflow.entity.inArtefacts}" var="artefact" id="artefacts">
+			<rich:simpleTogglePanel switchType="client"
+				label="#{messages['layout.text.workflow.artifactsConfiguration']}"
+				opened="true"
+				rendered="#{crudWorkflow.entity.inArtefacts.size() gt 0}">
+
+				<rich:dataTable value="#{crudWorkflow.entity.inArtefacts}"
+					var="artefact" id="artefacts">
 					<h:column>
 						<f:facet name="header">#{messages['layout.text.workflow.artifact']}</f:facet>
 						<h:outputText value="#{artefact.name}" />
 					</h:column>
 					<h:column>
 						<f:facet name="header">#{messages['layout.text.workflow.treatment']}</f:facet>
-						<h:outputText value="#{artefact.taskNode.processDefinition.name}" rendered="#{artefact.taskNode != null}" />
-						<h:outputText value="#{artefact.task.taskNode.processDefinition.name}" rendered="#{artefact.task != null}" />
+						<h:outputText value="#{artefact.taskNode.processDefinition.name}"
+							rendered="#{artefact.taskNode != null}" />
+						<h:outputText
+							value="#{artefact.task.taskNode.processDefinition.name}"
+							rendered="#{artefact.task != null}" />
 					</h:column>
 					<h:column>
 						<f:facet name="header">#{messages['layout.text.workflow.activity']} > #{messages['layout.text.workflow.task']}</f:facet>
-						<h:outputText value="#{artefact.task.taskNode.name} > #{artefact.task.name}" rendered="#{artefact.task != null}" />
-						<h:outputText value="#{artefact.taskNode.name}" rendered="#{artefact.taskNode != null}" />
+						<h:outputText
+							value="#{artefact.task.taskNode.name} > #{artefact.task.name}"
+							rendered="#{artefact.task != null}" />
+						<h:outputText value="#{artefact.taskNode.name}"
+							rendered="#{artefact.taskNode != null}" />
 					</h:column>
 					<h:column>
 						<f:facet name="header">#{messages['layout.text.actions']}</f:facet>
-						
+
 						<h:panelGroup rendered="#{artefact.artefactFiles.size() eq 0}">
-							<a4j:commandLink value="#{messages['layout.text.send']}" action="#{crudWorkflow.setCurrentArtefact(artefact)}" id="enviarModal"
-							 				 reRender="uploadArtefact">
-								<rich:componentControl for="panelArtefact" attachTo="enviarModal" operation="show" event="onclick"/>
+							<a4j:commandLink value="#{messages['layout.text.send']}"
+								action="#{crudWorkflow.setCurrentArtefact(artefact)}"
+								id="enviarModal" reRender="uploadArtefact">
+								<rich:componentControl for="panelArtefact"
+									attachTo="enviarModal" operation="show" event="onclick" />
 							</a4j:commandLink>
 						</h:panelGroup>
 						<h:panelGroup rendered="#{artefact.artefactFiles.size() gt 0}">
-							<a4j:commandLink value="#{messages['layout.text.remove']}" action="#{crudWorkflow.removeArtefact(artefact)}"
-							 				 reRender="artefacts">
+							<a4j:commandLink value="#{messages['layout.text.remove']}"
+								action="#{crudWorkflow.removeArtefact(artefact)}"
+								reRender="artefacts">
 							</a4j:commandLink>
 							<h:outputText value=" | " />
-							<h:commandLink value="#{messages['layout.text.download']}" action="#{sendFile.sendFile(artefact.artefactFiles.get(0))}"
-							 				 reRender="artefacts"
-							 				 target="_blank">
+							<h:commandLink value="#{messages['layout.text.download']}"
+								action="#{sendFile.sendFile(artefact.artefactFiles.get(0))}"
+								reRender="artefacts" target="_blank">
 							</h:commandLink>
-							
+
 						</h:panelGroup>
-						
+
 					</h:column>
 				</rich:dataTable>
-	       </rich:simpleTogglePanel>
-	    </rich:panel>
-	    
-	    <a4j:jsFunction name="refreshPanel" reRender="workflowConfiguratioin,processDefinition,actions" />
-	    <h:panelGroup id="actions">
-		    <h:commandButton value="#{messages['layout.text.undeploy']}" action="#{crudWorkflow.undeployWorkflow()}" rendered="#{crudWorkflow.entity.processDefinitions.size() > 0}" />
-	    </h:panelGroup>
+			</rich:simpleTogglePanel>
+		</rich:panel>
+
+		<a4j:jsFunction name="refreshPanel"
+			reRender="workflowConfiguratioin,processDefinition,actions" />
+		<h:panelGroup id="actions">
+			<h:commandButton value="#{messages['layout.text.undeploy']}"
+				action="#{crudWorkflow.undeployWorkflow()}"
+				rendered="#{crudWorkflow.entity.processDefinitions.size() > 0}" />
+		</h:panelGroup>
 	</ui:define>
-	
+
 	<ui:define name="modal">
 		<rich:modalPanel id="panelDesignConfiguration" autosized="true">
-	        <f:facet name="header">
-	            <h:panelGroup>
-	                <h:outputText value="#{messages['layout.text.workflow.uploadDesignConfiguration']}"></h:outputText>
-	            </h:panelGroup>
-	        </f:facet>
-	        <f:facet name="controls">
-	            <h:panelGroup>
-	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkpanelDesignConfiguration"/>
-	                <rich:componentControl for="panelDesignConfiguration" attachTo="hidelinkpanelDesignConfiguration" operation="hide" event="onclick"/>
-	            </h:panelGroup>
-	        </f:facet>
-	        <h:panelGroup id="uploadDesignConfiguration">
-	        <h:form enctype="multipart/form-data">
-	        		<a4j:jsFunction name="refreshModalDesignConfiguration" reRender="panelDesignConfiguration,designConfigurationLinks,designDefinition, 2" />
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText
+						value="#{messages['layout.text.workflow.uploadDesignConfiguration']}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/img/close.png" styleClass="hidelink"
+						id="hidelinkpanelDesignConfiguration" />
+					<rich:componentControl for="panelDesignConfiguration"
+						attachTo="hidelinkpanelDesignConfiguration" operation="hide"
+						event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:panelGroup id="uploadDesignConfiguration">
+				<h:form enctype="multipart/form-data">
+					<a4j:jsFunction name="refreshModalDesignConfiguration"
+						reRender="panelDesignConfiguration,designConfigurationLinks,designDefinition, 2" />
 					<rich:fileUpload
 						uploadControlLabel="#{messages['layout.text.send']}"
-						immediateUpload="false"
-						listHeight="70px;"
-			            noDuplicate="true" listWidth="350px;" 
-			            locale="pt-BR" 
-			            autoclear="false"
-				            
-			            maxFilesQuantity="1" 
-			            cancelEntryControlLabel="#{messages['layout.text.workflow.clean']}"
-			            transferErrorLabel="#{messages['layout.messages.workflow.invalidFileConfiguration']}"           
-			            fileUploadListener="#{crudWorkflow.uploadDesignConfiguration}"
-			            onfileuploadcomplete="refreshModalDesignConfiguration()">
-			        </rich:fileUpload>
-		    </h:form>
-	        </h:panelGroup>
-	    </rich:modalPanel>
-	
-		 <rich:modalPanel id="panelArtefact" autosized="true">
-	        <f:facet name="header">
-	            <h:panelGroup>
-	                <h:outputText value="#{messages['layout.text.upload']}"></h:outputText>
-	            </h:panelGroup>
-	        </f:facet>
-	        <f:facet name="controls">
-	            <h:panelGroup>
-	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelink"/>
-	                <rich:componentControl for="panelArtefact" attachTo="hidelink" operation="hide" event="onclick"/>
-	            </h:panelGroup>
-	        </f:facet>
-	        <h:panelGroup id="uploadArtefact">
-	        <h:form enctype="multipart/form-data">
-	        		<a4j:jsFunction name="refreshModal" reRender="panelArtefact,artefacts" />
+						immediateUpload="false" listHeight="70px;" noDuplicate="true"
+						listWidth="350px;" locale="pt-BR" autoclear="false"
+						maxFilesQuantity="1"
+						cancelEntryControlLabel="#{messages['layout.text.workflow.clean']}"
+						transferErrorLabel="#{messages['layout.messages.workflow.invalidFileConfiguration']}"
+						fileUploadListener="#{crudWorkflow.uploadDesignConfiguration}"
+						onfileuploadcomplete="refreshModalDesignConfiguration()">
+					</rich:fileUpload>
+				</h:form>
+			</h:panelGroup>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="panelArtefact" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages['layout.text.upload']}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/img/close.png" styleClass="hidelink"
+						id="hidelink" />
+					<rich:componentControl for="panelArtefact" attachTo="hidelink"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:panelGroup id="uploadArtefact">
+				<h:form enctype="multipart/form-data">
+					<a4j:jsFunction name="refreshModal"
+						reRender="panelArtefact,artefacts" />
 					<rich:fileUpload
 						uploadControlLabel="#{messages['layout.text.send']}"
-						immediateUpload="false"
-						listHeight="70px;"
-			            noDuplicate="true" listWidth="350px;" 
-			            locale="pt-BR" 
-			            autoclear="false"
-				            
-			            maxFilesQuantity="1" 
-			            cancelEntryControlLabel="#{messages['layout.text.workflow.clean']}"
-			            transferErrorLabel="#{messages['layout.messages.workflow.invalidFileConfiguration']}"           
-			            fileUploadListener="#{crudWorkflow.uploadArtefact}"
-			            onfileuploadcomplete="refreshModal()">
-			        </rich:fileUpload>
-		    </h:form>
-	        </h:panelGroup>
-	    </rich:modalPanel>
+						immediateUpload="false" listHeight="70px;" noDuplicate="true"
+						listWidth="350px;" locale="pt-BR" autoclear="false"
+						maxFilesQuantity="1"
+						cancelEntryControlLabel="#{messages['layout.text.workflow.clean']}"
+						transferErrorLabel="#{messages['layout.messages.workflow.invalidFileConfiguration']}"
+						fileUploadListener="#{crudWorkflow.uploadArtefact}"
+						onfileuploadcomplete="refreshModal()">
+					</rich:fileUpload>
+				</h:form>
+			</h:panelGroup>
+		</rich:modalPanel>
 	</ui:define>
 </ui:composition>

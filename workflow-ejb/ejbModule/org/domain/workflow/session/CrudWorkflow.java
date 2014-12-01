@@ -123,6 +123,14 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		return super.saveImpl();
 	}
 	
+	public String save(){
+		if (saveImpl()){
+			return detail(entity);
+		} else {
+			return getPage();
+		}
+	}
+	
 	public EObject transform(byte[] barray) throws IOException, ClassNotFoundException {
 		ByteArrayInputStream in = null;
 		JBossObjectInputStream objIn = null;

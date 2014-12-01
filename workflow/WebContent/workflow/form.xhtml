@@ -9,206 +9,133 @@
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 
-<h:panelGroup id="panelForm" styleClass="panelForm">
-	<h:panelGroup styleClass="backNodePanel">
-		<a4j:commandLink value="Back" action="#{action.updateSelectedNode(action.selectedNode.parent)}"
-			rendered="#{action.selectedNode.parent.data != null}" reRender="panelForm"/>
-		<h:outputText value="#{action.getName(action.selectedNode.data, false)}"
-						styleClass="refNodeTitle" />
-		<rich:separator></rich:separator>
-		<h:panelGroup id="moreActions" styleClass="moreActions">
-			<rich:dataGrid  styleClass="hiddenBorders"  value="#{action.getRefs(action.selectedNode.data)}" var="ref">
-				<rich:dataGrid  styleClass="hiddenBorders" value="#{action.dslUtil.findClasses(ref)}" var="eclass">
-					<a4j:commandButton styleClass="refButton"
-						value="New #{action.getName(eclass.name)}"
-						action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
-						reRender="panelForm" /><br style="clear: both;"  />
+	<h:panelGroup id="panelForm" styleClass="panelForm">
+		<h:panelGroup styleClass="backNodePanel">
+			<a4j:commandLink value="Back"
+				action="#{action.updateSelectedNode(action.selectedNode.parent)}"
+				rendered="#{action.selectedNode.parent.data != null}"
+				reRender="panelForm" />
+			<h:outputText
+				value="#{action.getName(action.selectedNode.data, false)}"
+				styleClass="refNodeTitle" />
+			<rich:separator></rich:separator>
+			<h:panelGroup id="moreActions" styleClass="moreActions">
+				<rich:dataGrid styleClass="hiddenBorders"
+					value="#{action.getRefs(action.selectedNode.data)}" var="ref">
+					<rich:dataGrid styleClass="hiddenBorders"
+						value="#{action.dslUtil.findClasses(ref)}" var="eclass">
+						<a4j:commandButton styleClass="refButton"
+							value="New #{action.getName(eclass.name)}"
+							action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
+							reRender="panelForm" />
+						<br style="clear: both;" />
+					</rich:dataGrid>
 				</rich:dataGrid>
-			</rich:dataGrid>
-			
-		<rich:separator></rich:separator>
-		</h:panelGroup>
-		<br />
-		<h:panelGroup id="itemChildren" styleClass="moreActions">
-			<rich:dataGrid  styleClass="hiddenBorders" value="#{action.getRefs(action.selectedNode.data)}" var="ref">
-				<rich:dataGrid styleClass="hiddenBorders"  value="#{action.getChildren(action.selectedNode, ref)}" var="refNode">
-					<a4j:commandButton value="#{action.getName(refNode.data, true)}"
-						styleClass="refButton refButtonLeft" action="#{action.updateSelectedNode(refNode)}" reRender="panelForm"/>
-					
-					<a4j:commandButton value="Remove"
-						styleClass="refButton refButtonRight" action="#{action.removeRef(action.selectedNode, refNode.data, ref)}" reRender="panelForm"/>
-					
-					<br style="clear: both;"  />
+
+				<rich:separator></rich:separator>
+			</h:panelGroup>
+			<br />
+			<h:panelGroup id="itemChildren" styleClass="moreActions">
+				<rich:dataGrid styleClass="hiddenBorders"
+					value="#{action.getRefs(action.selectedNode.data)}" var="ref">
+					<rich:dataGrid styleClass="hiddenBorders"
+						value="#{action.getChildren(action.selectedNode, ref)}"
+						var="refNode">
+						<a4j:commandButton value="#{action.getName(refNode.data, true)}"
+							styleClass="refButton refButtonLeft"
+							action="#{action.updateSelectedNode(refNode)}"
+							reRender="panelForm" />
+
+						<a4j:commandButton value="Remove"
+							styleClass="refButton refButtonRight"
+							action="#{action.removeRef(action.selectedNode, refNode.data, ref)}"
+							reRender="panelForm" />
+
+						<br style="clear: both;" />
+					</rich:dataGrid>
 				</rich:dataGrid>
-			</rich:dataGrid>
+			</h:panelGroup>
 		</h:panelGroup>
-	</h:panelGroup>
-	
-	<h:panelGroup styleClass="nodePanel" rendered="#{action.selectedNode.data != action.rootModel}">
-		<h:outputText value="#{action.getName(action.selectedNode.data, true)}"
-						styleClass="refNodeTitle" />
-		<rich:separator></rich:separator>
-		<rich:dataGrid  styleClass="hiddenBorders" value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
-		
-			<h:panelGroup class="attrNodeTitleContent">
-				<h:outputText value="#{action.getName(attr[0], false)}: "
-					styleClass="attrNodeTitle" />
-			</h:panelGroup>
-			
-			<h:panelGroup class="attrNodeTitleField">
-				
-				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'string'}">
-					<h:inputTextarea value="#{attr[1]}" />
+
+		<h:panelGroup styleClass="nodePanel"
+			rendered="#{action.selectedNode.data != action.rootModel}">
+			<h:outputText
+				value="#{action.getName(action.selectedNode.data, true)}"
+				styleClass="refNodeTitle" />
+			<rich:separator></rich:separator>
+			<rich:dataGrid styleClass="hiddenBorders"
+				value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
+
+				<h:panelGroup class="attrNodeTitleContent">
+					<h:outputText value="#{action.getName(attr[0], false)}: "
+						styleClass="attrNodeTitle" />
 				</h:panelGroup>
-				
-				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'int'}">
-					<rich:inputNumberSpinner value="#{attr[1]}" converter="javax.faces.Integer" />
+
+				<h:panelGroup class="attrNodeTitleField">
+
+					<h:panelGroup
+						rendered="#{action.getFieldType(attr[0]) eq 'string'}">
+						<h:inputTextarea value="#{attr[1]}" />
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'int'}">
+						<rich:inputNumberSpinner value="#{attr[1]}"
+							converter="javax.faces.Integer" />
+					</h:panelGroup>
+
+					<h:panelGroup
+						rendered="#{action.getFieldType(attr[0]) eq 'enumOne'}">
+						<h:selectOneMenu value="#{attr[1]}">
+							<s:selectItems
+								value="#{attr[0].getEType().getDefaultValue().values()}"
+								var="enum" label="#{enum.literal}" noSelectionLabel="---" />
+							<s:convertEnum />
+						</h:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{action.getFieldType(attr[0]) eq 'enumMany'}">
+						<h:selectManyMenu value="#{attr[1]}">
+							<s:selectItems
+								value="#{attr[0].getEType().getDefaultValue().values()}"
+								var="enum" label="#{enum.literal}" />
+							<s:convertEnum />
+						</h:selectManyMenu>
+					</h:panelGroup>
+
+
+					<h:panelGroup
+						rendered="#{action.getFieldType(attr[0]) eq 'refAttrOne'}">
+						<h:selectOneMenu value="#{attr[1]}">
+							<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
+								label="#{action.getName(o, true)}" noSelectionLabel="---" />
+							<f:converter converterId="SimpleIndexConverter" />
+						</h:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{action.getFieldType(attr[0]) eq 'refAttrMany'}">
+						<h:selectManyMenu value="#{attr[1]}">
+							<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
+								label="#{action.getName(o, true)}" />
+							<f:converter converterId="SimpleIndexConverter" />
+						</h:selectManyMenu>
+					</h:panelGroup>
+
 				</h:panelGroup>
-				
-				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'enumOne'}">
-					<h:selectOneMenu value="#{attr[1]}" >
-						<s:selectItems value="#{attr[0].getEType().getDefaultValue().values()}"
-							var="enum" label="#{enum.literal}" noSelectionLabel="---" />
-						<s:convertEnum />
-					</h:selectOneMenu>
-				</h:panelGroup>
-				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'enumMany'}">
-					<h:selectManyMenu value="#{attr[1]}" >
-						<s:selectItems value="#{attr[0].getEType().getDefaultValue().values()}"
-							var="enum" label="#{enum.literal}" />
-						<s:convertEnum />
-					</h:selectManyMenu>
-				</h:panelGroup>
-				
-				
-				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'refAttrOne'}">
-					<h:selectOneMenu value="#{attr[1]}">
-						<s:selectItems value="#{action.getFieldValues(attr[0])}"
-							var="o" label="#{action.getName(o, true)}" noSelectionLabel="---"  />
-							<f:converter converterId="SimpleIndexConverter"/>
-					</h:selectOneMenu>
-				</h:panelGroup>
-				<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'refAttrMany'}">
-					<h:selectManyMenu style="height: 60px !important" value="#{attr[1]}">
-						<s:selectItems value="#{action.getFieldValues(attr[0])}"
-							var="o" label="#{action.getName(o, true)}" />
-							<f:converter converterId="SimpleIndexConverter"/>
-					</h:selectManyMenu>
-				</h:panelGroup>
-			
-			</h:panelGroup>
+				<br style="clear: both" />
+
+			</rich:dataGrid>
 			<br style="clear: both" />
 
-		</rich:dataGrid>
-		<br style="clear: both" />
-		
-		<a4j:commandButton value="Ok" action="#{action.updateAttrProperties}" reRender="panelForm" />
-		<h:outputText value="   " />
-		<a4j:commandButton value="Cancel" action="#{action.updateSelectedNode(action.selectedNode.parent)}" reRender="panelForm" />
+			<a4j:commandButton value="Ok" action="#{action.updateAttrProperties}"
+				reRender="panelForm" />
+			<h:outputText value="   " />
+			<a4j:commandButton value="Cancel"
+				action="#{action.updateSelectedNode(action.selectedNode.parent)}"
+				reRender="panelForm" />
+		</h:panelGroup>
+
+
+		<br style="clear: both;" />
 	</h:panelGroup>
-
-	
-	
-	
-	
-	<br style="clear: both;" />
-</h:panelGroup>
-
-
-
-
-
-
-
-
-
-
-
-
-	<h:panelGrid rendered="false" id="tree" columns="1" width="100%">
-		<rich:tree switchType="client" limitToList="true" value="#{action.rootNode}" var="item"
-			treeNodeVar="node" nodeFace="#{action.getItemType(item)}" reRender="tree" >
-			<rich:treeNode type="attr" icon="/img/attr.png"
-				iconLeaf="/img/attr.png">
-
-				<h:panelGrid columns="3">
-					<a4j:support ignoreDupResponses="true" eventsQueue="tq" rendered="#{node != null and (action.editNode == null or action.editNode != node)}"
-                    	action="#{action.updateEditProperty(node)}" reRender="tree" event="onclick" />
-               
-					<h:panelGroup class="attrNodeTitleContent">
-						<h:outputText value="#{action.getName(item)}: "
-							styleClass="attrNodeTitle" />
-					</h:panelGroup>
-
-					<h:panelGroup class="attrNodeTitleField">
-				        <h:panelGroup
-							rendered="#{node != null and (action.editNode == null or action.editNode != node)}">
-							<h:outputText value="#{action.getValueFromParent(node, true)}"
-								styleClass="attrNodeContent">
-							</h:outputText>
-						</h:panelGroup>
-
-		
-						<h:panelGroup rendered="#{action.editNode == node}">
-
-							<h:panelGroup rendered="#{action.getFieldType(node) == 'refAttrMany'}">
-								<h:selectManyMenu style="height: 60px !important" value="#{action.refAttrManyProperty}">
-									<s:selectItems value="#{action.getFieldValues(item)}"
-										var="o" label="#{action.getName(o)}" />
-										<f:converter converterId="SimpleIndexConverter"/>
-								</h:selectManyMenu>
-							</h:panelGroup>
-							
-							
-							
-							<h:panelGroup rendered="#{action.getFieldType(node) == 'string'}">
-								<h:inputTextarea value="#{action.textProperty}" />
-							</h:panelGroup>
-							<h:panelGroup rendered="#{action.getFieldType(node) == 'int'}">
-								<h:inputText value="#{action.intProperty}" />
-							</h:panelGroup>
-							<h:panelGroup rendered="#{action.getFieldType(node) == 'enum'}">
-								<h:selectOneMenu value="#{action.enumProperty}" >
-									<s:selectItems value="#{action.enumProperty.values()}"
-										var="enum" label="#{enum.literal}" />
-									<s:convertEnum />
-								</h:selectOneMenu>
-							</h:panelGroup>
-						</h:panelGroup>
-					</h:panelGroup>
-					
-					<h:panelGroup>
-						<a4j:commandLink ignoreDupResponses="true" eventsQueue="tq" 
-							action="#{action.updateEditProperty()}" reRender="tree"
-							rendered="#{action.editNode == node}">
-								<h:graphicImage value="/img/true.png" styleClass="pic" />
-								<h:outputText value="Save" />
-						</a4j:commandLink>
-					</h:panelGroup>
-				</h:panelGrid>
-
-			</rich:treeNode>
-			<rich:treeNode type="ref" icon="/img/model.jpeg"
-				iconLeaf="/img/model.jpeg" expanded="#{action.newNode eq item}">
-				<h:outputText value="#{action.getName(item)}"
-					styleClass="refNodeTitle" />
-				<h:panelGroup rendered="#{item != null and action.dslUtil.getRefs(item).size() > 0}">
-					<rich:separator></rich:separator>
-					<ui:repeat value="#{action.dslUtil.getRefs(item)}" var="ref">
-						<ui:repeat value="#{action.dslUtil.findClasses(ref)}" var="eclass">
-							<a4j:commandLink styleClass="refButton"
-								value="New #{action.getName(eclass.name)}"
-								action="#{action.buildRef(item, ref, eclass)}"
-								reRender="tree" />
-						</ui:repeat>
-					</ui:repeat>
-					<br />
-					<br />
-					<br />
-				</h:panelGroup>
-			</rich:treeNode>
-
-		</rich:tree>
-	</h:panelGrid>
 
 </ui:composition>

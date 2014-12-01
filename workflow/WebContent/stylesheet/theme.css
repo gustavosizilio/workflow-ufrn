@@ -298,9 +298,9 @@ label {
 	margin-top: 5px;
 }
 .attrNodeTitleContent {
-	display: table-cell;
+	display: table;
 	width: 150px;
-	height: 30px;
+	height: 50px;
 	background: #f0f0f0;
 	vertical-align: middle;
 	float: left;
@@ -308,7 +308,7 @@ label {
 }
 .attrNodeContent {
 	width: 500px;
-	height: 30px;
+	height: 50px;
 	background: #ddd;
 	vertical-align: middle;
 	display: block;
@@ -344,7 +344,8 @@ label {
 
 .panelForm input[type=text], .panelForm input[type=password], .panelForm textarea, .panelForm select {
 	width: 500px !important;
-	height: 25px !important;
+	height: 50px !important;
+	background: none;
 }
 
 .panelForm a:visited {

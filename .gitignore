@@ -1,4 +1,6 @@
 .metadata/*
+*.DS_Store
 workflow-ejb/build/*
 workflow-test/bin/*
 workflow/build/*
+ExpDSLTool/bin/*

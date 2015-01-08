@@ -18,6 +18,15 @@
 			<h:outputText
 				value="#{action.getName(action.selectedNode.data, false)}"
 				styleClass="refNodeTitle" />
+				
+			<rich:panel styleClass="hint" rendered="#{action.getHint(action.selectedNode.data) != null}">
+				<rich:toolTip>
+		            <span style="white-space:nowrap">
+		                <h:outputText value="#{action.getHint(action.selectedNode.data)}" />
+		            </span>
+		        </rich:toolTip>
+			</rich:panel>
+			
 			<rich:separator></rich:separator>
 			<h:panelGroup id="moreActions" styleClass="moreActions">
 				<rich:dataGrid styleClass="hiddenBorders"
@@ -28,6 +37,16 @@
 							value="New #{action.getName(eclass.name)}"
 							action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
 							reRender="panelForm" />
+							
+							
+						<rich:panel styleClass="hint" rendered="#{action.getHint(eclass) != null}">
+							<rich:toolTip>
+					            <span style="white-space:nowrap">
+					                <h:outputText value="#{action.getHint(eclass)}" />
+					            </span>
+					        </rich:toolTip>
+						</rich:panel>
+						
 						<br style="clear: both;" />
 					</rich:dataGrid>
 				</rich:dataGrid>
@@ -67,8 +86,17 @@
 				value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
 
 				<h:panelGroup class="attrNodeTitleContent">
+					<rich:panel styleClass="hint" rendered="#{action.getHint(attr[0]) != null}">
+						<rich:toolTip>
+				            <span style="white-space:nowrap">
+				                <h:outputText value="#{action.getHint(attr[0])}" />
+				            </span>
+				        </rich:toolTip>
+					</rich:panel>
+					
 					<h:outputText value="#{action.getName(attr[0], false)}: "
 						styleClass="attrNodeTitle" />
+						
 				</h:panelGroup>
 
 				<h:panelGroup class="attrNodeTitleField">

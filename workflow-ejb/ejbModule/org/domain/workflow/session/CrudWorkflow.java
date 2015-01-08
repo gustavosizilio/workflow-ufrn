@@ -10,9 +10,12 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Map.Entry;
 
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -38,12 +41,15 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.impl.EAttributeImpl;
+import org.eclipse.emf.ecore.impl.EClassImpl;
 import org.eclipse.emf.ecore.impl.EReferenceImpl;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.security.Restrict;
+import org.jboss.seam.core.SeamResourceBundle;
 import org.jboss.serial.io.JBossObjectInputStream;
 import org.jboss.serial.io.JBossObjectOutputStream;
 import org.richfaces.event.UploadEvent;
@@ -360,10 +366,41 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		}
 		
 		String ret = result.toString();
-		if(ret.toLowerCase() == "model") {
+		if(ret.toLowerCase().trim().equals("model")) {
 			return "Experiment";
 		} else {
-			return ret;
+			return ret.trim();
+		}
+	}
+	
+	public String getHint(EObject eObject) {
+		if(eObject == null)
+			return null;
+		
+		try {
+			String className = null;
+			if(eObject instanceof EClassImpl) {
+				className = ((EClassImpl)eObject).getName();
+			} else if (eObject instanceof EAttributeImpl || eObject instanceof EReference ) {
+				className = this.selectedNode.getData().getClass().getInterfaces()[0].toString();
+				className = className.substring(className.lastIndexOf(".")+1);
+				if(eObject instanceof EReference) {
+					className = className + "." + ((EReference) eObject).getName();
+				} else if (eObject instanceof EAttributeImpl) {
+					className = className + "." + ((EAttributeImpl)eObject).getName();
+				}
+			} else {
+				className = eObject.getClass().getInterfaces()[0].toString();
+				className = className.substring(className.lastIndexOf(".")+1);
+			}
+			String hintKey = "layout.formalization.hint." + getName(className).replaceAll(" ", "");
+			Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+			ResourceBundle resourceBundle = SeamResourceBundle.getBundle();
+			String bundleMessage = resourceBundle.getString(hintKey);
+			return bundleMessage;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 	

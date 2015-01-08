@@ -290,6 +290,7 @@ label {
   	vertical-align: middle;
 	font-size: 14px;
 	padding: 0px 5px;
+	width: 100%;
 }
 .attrNodeTitleField {
 	width: 500px !important;
@@ -336,7 +337,7 @@ label {
 	background-color: #C9DBEA;
 	/* border-color: #0090FF; */
 	/* padding-left: 10px; */
-	width: 100%;
+	width: 90%;
 	border: solid 1px #84929D;
 	font-size: 13px !important;
 	margin: 5px 0px 5px 0px !important;
@@ -387,4 +388,14 @@ label {
 .refButtonRight {
 	width: 110px !important;
 	float: right;
+}
+.hint {
+	display: inline-block;
+	height: 100%;
+	width: 20px;
+	border: none;
+	background: url(../img/hint.png) no-repeat center center;
+}
+.attrNodeTitleContent .hint {
+	float: left;
 }

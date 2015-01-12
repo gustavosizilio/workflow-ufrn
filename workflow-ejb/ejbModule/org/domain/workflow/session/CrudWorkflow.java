@@ -335,8 +335,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		}
 		
 		clearEditProperties();
-		this.updateSelectedNode(this.selectedNode.getParent());
-		
+		//this.updateSelectedNode(this.selectedNode.getParent());
 	}
 
 	public void clearEditProperties() {
@@ -454,7 +453,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	public void  removeRef(TreeNodeImpl<EObject> raiz, EObject obj, EReferenceImpl ref) {
 		try {
 			this.dslUtil.removeRef(raiz.getData(), obj, ref);
-			this.updateTreeNode(raiz.getParent().getData());
+			this.updateTreeNode(raiz.getData());
 		} catch (Exception e) {
 			e.printStackTrace();
 			getFacesMessages().add(e.getMessage());

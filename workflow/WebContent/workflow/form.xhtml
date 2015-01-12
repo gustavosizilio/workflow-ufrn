@@ -153,9 +153,14 @@
 
 			</rich:dataGrid>
 			<br style="clear: both" />
-
-			<a4j:commandButton value="Ok" action="#{action.updateAttrProperties}"
+			
+			<a4j:commandButton value="Save and continue" action="#{action.updateAttrProperties}"
 				reRender="panelForm" />
+			<h:outputText value="   " />
+			<a4j:commandButton value="Save and back" action="#{action.updateAttrProperties}">
+				<a4j:support event="oncomplete" action="#{action.updateSelectedNode(action.selectedNode.getParent())}"
+				reRender="panelForm" />
+			</a4j:commandButton>
 			<h:outputText value="   " />
 			<a4j:commandButton value="Cancel"
 				action="#{action.updateSelectedNode(action.selectedNode.parent)}"

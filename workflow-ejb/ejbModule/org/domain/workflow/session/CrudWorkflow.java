@@ -77,6 +77,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	private TreeNode<EObject> selectedNode;
 	private EObject newNode;
 	private List<Object[]> attrProperties;
+	private EReferenceImpl selectedRef;
 	
 	
 	public CrudWorkflow() throws Exception {
@@ -243,7 +244,6 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		 List<EObject> attrs = this.dslUtil.getAttrs(raiz);
 		 this.attrProperties = new ArrayList<Object[]>();
 		 for (EObject object : attrs) {
-			 System.out.println(object);
 			 attrProperties.add(new Object[] {object, getValueFromParent(this.selectedNode.getData(), object, false)});
 		 }
 		 return attrProperties;
@@ -399,7 +399,6 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			String bundleMessage = resourceBundle.getString(hintKey);
 			return bundleMessage;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -443,6 +442,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	public void  buildRef(EObject raiz, EReferenceImpl ref, EClass refClass) {
 		try {
 			EObject o = this.dslUtil.buildRef(raiz, ref, refClass);
+			this.setSelectedRef(ref);
 			this.updateTreeNode(o);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -799,6 +799,14 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 
 	public void setRootModel(EObject rootModel) {
 		this.rootModel = rootModel;
+	}
+
+	public EReferenceImpl getSelectedRef() {
+		return selectedRef;
+	}
+
+	public void setSelectedRef(EReferenceImpl selectedRef) {
+		this.selectedRef = selectedRef;
 	}
 
 }

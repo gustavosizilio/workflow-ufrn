@@ -161,7 +161,7 @@
 				action="#{action.updateSelectedNode(action.selectedNode.parent)}"
 				reRender="panelForm" />
 				<h:outputText value="   " />
-			<a4j:commandButton value="Cancel and Remove"
+			<a4j:commandButton value="Cancel and Remove" rendered="#{action.selectedRef != null}"
 				action="#{action.removeRef(action.selectedNode.parent, action.selectedNode.data, action.selectedRef)}">
 				<a4j:support action="#{action.updateSelectedNode(action.selectedNode.parent)}"
 					reRender="panelForm" event="oncomplete"/>

@@ -317,6 +317,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	public void updateSelectedNode(TreeNode<EObject> node){
 		clearEditProperties();
 		this.selectedNode = node;
+		this.selectedRef = null;
 	}
 
 	public void updateAttrProperties() throws Exception {

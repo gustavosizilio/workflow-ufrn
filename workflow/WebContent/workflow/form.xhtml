@@ -36,9 +36,8 @@
 						<a4j:commandButton styleClass="refButton"
 							value="New #{action.getName(eclass.name)}"
 							action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
-							reRender="panelForm" />
-							
-							
+							reRender="panelForm" disabled="#{(action.getRefsObjects(action.selectedNode.data, ref).size > 0 and !ref.isMany())}" />
+						
 						<rich:panel styleClass="hint" rendered="#{action.getHint(eclass) != null}">
 							<rich:toolTip>
 					            <span style="white-space:nowrap">
@@ -67,6 +66,7 @@
 
 						<a4j:commandButton value="Remove"
 							styleClass="refButton refButtonRight"
+							onclick="if (! confirm('Really want to do that?')) return false"
 							action="#{action.removeRef(action.selectedNode, refNode.data, ref)}"
 							reRender="panelForm" />
 

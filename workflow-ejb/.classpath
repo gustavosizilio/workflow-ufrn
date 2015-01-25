@@ -3,16 +3,6 @@
 	<classpathentry kind="src" path="ejbModule"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="RCaller-2.1.1-SNAPSHOT.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.jboss.ide.eclipse.as.core.server.runtime.runtimeTarget/JBoss 5.1 Runtime">
-		<attributes>
-			<attribute name="owner.project.facets" value="jst.ejb"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
-		<attributes>
-			<attribute name="owner.project.facets" value="java"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/DSL.jar"/>
 	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/antlr-runtime.jar"/>
 	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/commons-beanutils.jar"/>
@@ -381,5 +371,63 @@
 	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/richfaces-api.jar"/>
 	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/richfaces-impl.jar"/>
 	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/richfaces-ui.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/JPDL.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/lpg.runtime.java_2.0.17.v201004271640.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml_3.1.0.v20110518-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.common_3.1.0.v20110518-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.common.source_3.1.0.v20110518-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.common.ui_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.common.ui.source_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.cst.parser_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.cst.parser.source_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.debug.core_1.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.debug.core.source_1.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.debug.ui_1.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.debug.ui.source_1.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.ecore.imperativeocl_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.ecore.imperativeocl.source_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.editor.ui_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.editor.ui.source_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.emf.util_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.emf.util.source_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.emf.util.ui_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.emf.util.ui.source_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.ocl_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.ocl.source_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.project_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.project.source_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.runtime_3.1.0.v20110518-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.runtime.source_3.1.0.v20110518-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.runtime.ui_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.runtime.ui.source_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.samples_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.source_3.1.0.v20110518-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.trace.edit_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.trace.edit.source_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.m2m.qvt.oml.ui_3.1.0.v20101214-1530.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.equinox.common_3.6.0.v20110523.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl_3.1.0.v20120206-0606.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.doc_3.1.1.v20120206-0606.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.ecore_3.1.2.v20111015-2027.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.ecore.edit_3.1.0.v20110526-1523.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.ecore.edit.source_3.1.0.v20110526-1523.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.ecore.source_3.1.2.v20111015-2027.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.edit_3.1.0.v20120206-0606.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.edit.source_3.1.0.v20120206-0606.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.source_3.1.0.v20120206-0606.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.uml_3.1.0.v20120206-0606.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.uml.edit_3.1.0.v20110526-1523.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.uml.edit.source_3.1.0.v20110526-1523.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.ocl.uml.source_3.1.0.v20120206-0606.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.jboss.ide.eclipse.as.core.server.runtime.runtimeTarget/JBoss 5.1 Runtime">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.ejb"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 7 [1.7.0_67]">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

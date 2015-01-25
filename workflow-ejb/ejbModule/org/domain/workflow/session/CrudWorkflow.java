@@ -1,7 +1,5 @@
 package org.domain.workflow.session;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,8 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -22,8 +20,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.domain.dao.UserDAO;
 import org.domain.dao.WorkflowDAO;
 import org.domain.dataManager.DesignConfigurationManager;
-import org.domain.dataManager.WorkflowManager;
-import org.domain.dsl.DSLUtil;
+import org.domain.dsl.EXPDSLUtil;
 import org.domain.exception.ValidationException;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Artefact;
@@ -32,6 +29,7 @@ import org.domain.model.processDefinition.DesignType;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.Workflow;
+import org.domain.utils.PathBuilder;
 import org.domain.utils.ReadPropertiesFile;
 import org.domain.workflow.session.generic.CrudAction;
 import org.eclipse.emf.common.util.EList;
@@ -50,8 +48,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.security.Restrict;
 import org.jboss.seam.core.SeamResourceBundle;
-import org.jboss.serial.io.JBossObjectInputStream;
-import org.jboss.serial.io.JBossObjectOutputStream;
 import org.richfaces.event.UploadEvent;
 import org.richfaces.model.TreeNode;
 import org.richfaces.model.TreeNodeImpl;
@@ -71,7 +67,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	private Map<String,List<User>> usersSelectedToShuffle;
 	private ProcessDefinition processDefinitionProperty;
 	private Artefact currentArtefact;
-	private DSLUtil dslUtil;
+	private EXPDSLUtil dslUtil;
 	private EObject rootModel;
 	private TreeNode<EObject> rootNode;
 	private TreeNode<EObject> selectedNode;
@@ -83,7 +79,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	public CrudWorkflow() throws Exception {
 		super(Workflow.class);
 		this.setUsersSelectedToShuffle(new Hashtable<String,List<User>>());
-		dslUtil = DSLUtil.getInstance();
+		dslUtil = EXPDSLUtil.getInstance();
 	}
 	
 	@Override
@@ -102,6 +98,23 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		this.selectedNode = this.rootNode.getChild(this.getRootModel());
 	}
 	
+	@Override
+	protected void detailImpl(){
+		try {
+			clearEditProperties();
+			this.setRootModel(transform(this.entity.getDefinition()));
+			this.rootNode = new TreeNodeImpl<EObject>();
+			updateTreeNode(null);
+			this.selectedNode = this.rootNode.getChild(this.getRootModel());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+		
 	@Override
 	protected void editImpl(){
 		try {
@@ -127,6 +140,22 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		try {
+			String experimentPath = PathBuilder.getExperimentMyexpPath(this.entity);
+			dslUtil.convertEcoreToExpText(this.rootModel, experimentPath);
+			String xmiPath = PathBuilder.getExperimentXMIPath(this.entity);
+			dslUtil.convertEcoreToXMI(this.rootModel, xmiPath);
+			System.out.println("created:"+experimentPath );
+			System.out.println("created:"+xmiPath );
+			this.entity.setSuccessCompiled(true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			addError(e.getMessage());
+			this.entity.setSuccessCompiled(false);
+		}
+		
 		return super.saveImpl();
 	}
 	
@@ -139,50 +168,11 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	}
 	
 	public EObject transform(byte[] barray) throws IOException, ClassNotFoundException {
-		ByteArrayInputStream in = null;
-		JBossObjectInputStream objIn = null;
-		EObject model = null;
-		try {
-			in = new ByteArrayInputStream(barray);
-			objIn = new JBossObjectInputStream(in);
-			model = (EObject) objIn.readObject();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(objIn != null)
-					objIn.close();
-				if(in != null)
-					in.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return model;
+		return dslUtil.transform(barray);
 	}
 	
 	public byte[] transform(EObject model) throws IOException {
-		ByteArrayOutputStream out = null;
-		JBossObjectOutputStream objOut = null;
-		try {
-			out = new ByteArrayOutputStream();
-			objOut = new JBossObjectOutputStream(out);
-			objOut.writeObject(model);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(objOut != null)
-					objOut.close();
-				if(out != null)
-					out.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return out.toByteArray();
+		return dslUtil.transform(model);
 	}
 	
 	private void updateTreeNode(EObject newNode) {
@@ -457,19 +447,6 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		} catch (Exception e) {
 			e.printStackTrace();
 			getFacesMessages().add(e.getMessage());
-		}
-	}
-	
-	//TODO parse jpdl
-	public void deployWorkflow(UploadEvent event) throws Exception {
-	    UploadItem item = event.getUploadItem();
-	    WorkflowManager jpdl = new WorkflowManager(item.getFile().getAbsolutePath(), this.entity, this.seamDao);
-	    try {
-			jpdl.executeTransformations();
-		} catch (ValidationException e) {
-			addErrors(e.getErrors());
-		} catch (Exception e) {
-			throw e;
 		}
 	}
 	
@@ -757,11 +734,11 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		this.usersSelectedToShuffle = usersSelectedToShuffle;
 	}
 
-	public DSLUtil getDslUtil() {
+	public EXPDSLUtil getDslUtil() {
 		return dslUtil;
 	}
 
-	public void setDslUtil(DSLUtil dslUtil) {
+	public void setDslUtil(EXPDSLUtil dslUtil) {
 		this.dslUtil = dslUtil;
 	}
 

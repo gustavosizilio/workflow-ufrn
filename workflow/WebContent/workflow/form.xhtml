@@ -11,7 +11,7 @@
 
 	<h:panelGroup id="panelForm" styleClass="panelForm">
 		<h:panelGroup styleClass="backNodePanel">
-			<a4j:commandLink value="Back"
+			<a4j:commandLink value="#{messages['layout.text.back']}"
 				action="#{action.updateSelectedNode(action.selectedNode.parent)}"
 				rendered="#{action.selectedNode.parent.data != null}"
 				reRender="panelForm" />
@@ -34,7 +34,7 @@
 					<rich:dataGrid styleClass="hiddenBorders"
 						value="#{action.dslUtil.findClasses(ref)}" var="eclass">
 						<a4j:commandButton styleClass="refButton"
-							value="New #{action.getName(eclass.name)}"
+							value="#{messages['layout.text.new']} #{action.getName(eclass.name)}"
 							action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
 							reRender="panelForm" disabled="#{(action.getRefsObjects(action.selectedNode.data, ref).size > 0 and !ref.isMany())}" />
 						
@@ -64,7 +64,7 @@
 							action="#{action.updateSelectedNode(refNode)}"
 							reRender="panelForm" />
 
-						<a4j:commandButton value="Remove"
+						<a4j:commandButton value="#{messages['layout.text.remove']}"
 							styleClass="refButton refButtonRight"
 							onclick="if (! confirm('Really want to do that?')) return false"
 							action="#{action.removeRef(action.selectedNode, refNode.data, ref)}"
@@ -154,19 +154,19 @@
 			</rich:dataGrid>
 			<br style="clear: both" />
 			
-			<a4j:commandButton value="Save and continue" action="#{action.updateAttrProperties}"
+			<a4j:commandButton value="#{messages['layout.text.updateAndContinue']}" action="#{action.updateAttrProperties}"
 				reRender="panelForm" />
 			<h:outputText value="   " />
-			<a4j:commandButton value="Save and back" action="#{action.updateAttrProperties}">
+			<a4j:commandButton value="#{messages['layout.text.updateAndBack']}" action="#{action.updateAttrProperties}">
 				<a4j:support event="oncomplete" action="#{action.updateSelectedNode(action.selectedNode.getParent())}"
 				reRender="panelForm" />
 			</a4j:commandButton>
 			<h:outputText value="   " />
-			<a4j:commandButton value="Cancel"
+			<a4j:commandButton value="#{messages['layout.text.cancel']}"
 				action="#{action.updateSelectedNode(action.selectedNode.parent)}"
 				reRender="panelForm" />
 				<h:outputText value="   " />
-			<a4j:commandButton value="Cancel and Remove" rendered="#{action.selectedRef != null}"
+			<a4j:commandButton value="#{messages['layout.text.cancelAndRemove']}" rendered="#{action.selectedRef != null}"
 				action="#{action.removeRef(action.selectedNode.parent, action.selectedNode.data, action.selectedRef)}">
 				<a4j:support action="#{action.updateSelectedNode(action.selectedNode.parent)}"
 					reRender="panelForm" event="oncomplete"/>

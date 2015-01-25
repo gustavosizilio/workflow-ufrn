@@ -56,6 +56,8 @@ public class Workflow extends GenericEntity {
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="workflow")
 	private List<Observation> observations;
 	
+	private boolean successCompiled;
+	
 	public Workflow() {
 		this.questionnaires = new ArrayList<Questionnaire>();
 		this.setProcessDefinitions(new ArrayList<ProcessDefinition>());
@@ -299,5 +301,11 @@ public class Workflow extends GenericEntity {
 	}
 	public void setDefinition(byte[] definition) {
 		this.definition = definition;
+	}
+	public boolean isSuccessCompiled() {
+		return successCompiled;
+	}
+	public void setSuccessCompiled(boolean successCompiled) {
+		this.successCompiled = successCompiled;
 	}
 }

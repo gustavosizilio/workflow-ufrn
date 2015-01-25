@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="ASCII"?>
+<expdslv3:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:expdslv3="http://www.ufrn.br/dimap/ase/dsl/Expdslv3">
+  <elements name="LPSComprehension" description="LPS Comprehension Experiment">
+    <experiments type="Other" replication="3">
+      <author identifier="FeigenspanJanet" name="Janet Feigenspan"/>
+      <author identifier="KastnerChristian" name="Christian Kastner"/>
+      <author identifier="ApelSven" name="Sven Apel"/>
+      <author identifier="LiebigJorg" name="Jorg Liebig"/>
+      <author identifier="SchulzeMichael" name="Michael Schulze"/>
+      <author identifier="DachseltRaimund" name="Raimund Dachselt"/>
+      <author identifier="PapendieckMaria" name="Maria Papendieck"/>
+      <author identifier="LeichThomas" name="Thomas Leich"/>
+      <author identifier="SaakeGunter" name="Gunter Saake"/>
+      <abstract xsi:type="expdslv3:SimpleAbstract" description="This study is to evaluate whether background colors improve program comprehension in preprocessor-based SPLs &#xD;&#xA;compared to ifdef directives, by means of a medium-sized Java-based SPL with four optional features."/>
+      <keyword description="Empirical software engineering"/>
+      <keyword description="Software visualization"/>
+      <keyword description="Program comprehension"/>
+      <keyword description="Software product lines"/>
+      <keyword description="Preprocessors"/>
+      <keyword description="FeatureCommander"/>
+      <goal xsi:type="expdslv3:SimpleGoal" name="G1_Comprehesion" description="The objective of this experiment is to evaluate the effect of background colors on program comprehension in &#xD;&#xA;preprocessor-based SPLs"/>
+      <researchHypothesis name="RH01" description="In static tasks, colors speed up program comprehension compared to ifdef directives." goal="//@elements.0/@experiments/@goal.0"/>
+      <researchHypothesis name="RH02" description="In maintenance tasks, there are no differences in response time between colors and ifdef directives." goal="//@elements.0/@experiments/@goal.0"/>
+      <researchHypothesis name="RH03" description="There are no differences in the number of correctly solved tasks between colors and ifdef directives" goal="//@elements.0/@experiments/@goal.0"/>
+      <researchHypothesis name="RH04" description="Subjects estimate better performance with background colors than with ifdef directives." goal="//@elements.0/@experiments/@goal.0"/>
+      <depVar name="correctness" description="Number of correctly solved tasks " rh="//@elements.0/@experiments/@researchHypothesis.2"/>
+      <depVar name="responseTime1" description="Response times for static tasks " scaleType="Interval" rh="//@elements.0/@experiments/@researchHypothesis.0"/>
+      <depVar name="responseTime2" description="response times for maintenance tasks" scaleType="Interval" rh="//@elements.0/@experiments/@researchHypothesis.1"/>
+      <depVar name="subjectPreference" description="Whether subjects prefer the color version over the ifdef version" scaleType="Nominal" rh="//@elements.0/@experiments/@researchHypothesis.3">
+        <range name="Color"/>
+        <range name="IFDeF"/>
+      </depVar>
+      <factor name="LPSTechnique" description="The kind of thechnique used: Colors code and ifdef directives" scaleType="Nominal">
+        <range name="colors"/>
+        <range name="ifdef"/>
+      </factor>
+      <doe xsi:type="expdslv3:OTHER" name="between subjects"/>
+      <parameter name="ParticipantSchoolingLevel" description="Level of Participant Schooling" scaleType="Ordinal">
+        <range name="GraduateStudent"/>
+      </parameter>
+      <parameter name="SPLLevel" description="Level of SPL used as material" scaleType="Ordinal">
+        <range name="mediumSized"/>
+      </parameter>
+      <parameter name="programmingExperience" description="Feigenspan Questionnaire" scaleType="Ordinal">
+        <range name="veryLow"/>
+        <range name="low"/>
+        <range name="medium"/>
+        <range name="high"/>
+        <range name="veryHigh"/>
+      </parameter>
+    </experiments>
+    <process name="P1">
+      <role>Participant</role>
+      <task name="S1" description="Question 1 &#xfffd; For each feature, locate all files containing feature code and mark the results" next="//@elements.0/@process.0/@task.1">
+        <artefacts name="LPSSpecification" description="LPS"/>
+      </task>
+      <task name="S2" description="Question 2 &#xfffd; locate shared code (i.e. code that concerned more than one feature)" next="//@elements.0/@process.0/@task.2">
+        <artefacts name="LPSSpecification" description="LPS"/>
+      </task>
+      <task name="M1" description="Question 3 &#xfffd; If pictures in an album should be sorted by views, they are displayed unsorted anyway. &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Feature, in which the bug occurs: CountViews." next="//@elements.0/@process.0/@task.3">
+        <artefacts name="LPSSpecification" description="LPS"/>
+      </task>
+      <task name="M2" description="Question 4 &#xfffd; In the next task you have to work with the source code closely. You get a bug description and&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; should locate the bug, explain, why it occurs and suggest a solution." next="//@elements.0/@process.0/@task.4">
+        <artefacts name="LPSSpecification" description="LPS"/>
+      </task>
+      <task name="M3" description="Question 5 &#xfffd; BUG Y" next="//@elements.0/@process.0/@task.5">
+        <artefacts name="LPSSpecification" description="E1"/>
+      </task>
+      <task name="M4" description="Question 6 &#xfffd; BUG Z" questionnaire="//@elements.0/@questionnaire.0">
+        <artefacts name="LPSSpecification" description="E1"/>
+        <fields variable="cont" textField="Number:"/>
+      </task>
+    </process>
+    <process name="P2">
+      <role>Participant</role>
+      <task name="S1" description="Question 1 &#xfffd; For each feature, locate all files containing feature code and mark the results" next="//@elements.0/@process.1/@task.1">
+        <artefacts name="LPSSpecification" description="LPS"/>
+      </task>
+      <task name="S2" description="Question 2 &#xfffd; locate shared code (i.e. code that concerned more than one feature)" next="//@elements.0/@process.1/@task.2">
+        <artefacts name="LPSSpecification" description="LPS"/>
+      </task>
+      <task name="M1" description="Question 3 &#xfffd; If pictures in an album should be sorted by views, they are displayed unsorted anyway. &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Feature, in which the bug occurs: CountViews." next="//@elements.0/@process.1/@task.3">
+        <artefacts name="LPSSpecification" description="LPS"/>
+      </task>
+      <task name="M2" description="Question 4 &#xfffd; In the next task you have to work with the source code closely. You get a bug description and&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;should locate the bug, explain, why it occurs and suggest a solution." next="//@elements.0/@process.1/@task.4">
+        <artefacts name="LPSSpecification" description="LPS"/>
+      </task>
+      <task name="M3" description="Question 5 &#xfffd; BUG Y" next="//@elements.0/@process.1/@task.5">
+        <artefacts name="LPSSpecification" description="E1"/>
+      </task>
+      <task name="M4" description="Question 6 &#xfffd; BUG Z">
+        <artefacts name="LPSSpecification" description="E1"/>
+      </task>
+    </process>
+    <questionnaire name="PreferenceFeedback" questionnaireType="Post">
+      <question name="Q1Researchtheme" description="What is your research theme?"/>
+      <question name="Q2ExperienceExp" description="Have you ever designed an experiment?" type="SingleChoice" req="1">
+        <alternatives description="Yes"/>
+        <alternatives description="No"/>
+      </question>
+      <question name="Q3_NumberExperiments" description="How much experiments have you planned:" type="MultipleChoice">
+        <alternatives description="No one"/>
+        <alternatives description="Only one"/>
+        <alternatives description="Between 1 and 3"/>
+        <alternatives description="Over 3"/>
+      </question>
+      <question name="Q4ExperienceReplication" description="If yes, have you already worked with experiment replication?" type="SingleChoice" req="1">
+        <alternatives description="Yes"/>
+        <alternatives description="No"/>
+      </question>
+      <question name="Q5TestExperienceDetails" description="Describe your previous experience working with experimentation:" type="ParagraphText"/>
+    </questionnaire>
+    <questionnaire name="ProgrammingExperience">
+      <question name="Name" description="What is your name:"/>
+      <question name="EnrolmentYear" description="Enrollment year "/>
+      <question name="ProgYears" description="Years of programming "/>
+      <question name="CoursesNumber" description="Number of programming courses "/>
+      <question name="Q1Experience" description="Java Experience:" type="SingleChoice" req="1">
+        <alternatives description="very inexperienced"/>
+        <alternatives description="inexperienced"/>
+        <alternatives description="mediocre"/>
+        <alternatives description="experienced"/>
+        <alternatives description="very experienced"/>
+      </question>
+      <question name="Q2Experience" description="C Experience?" type="SingleChoice" req="1">
+        <alternatives description="very inexperienced"/>
+        <alternatives description="inexperienced"/>
+        <alternatives description="mediocre"/>
+        <alternatives description="experienced"/>
+        <alternatives description="very experienced"/>
+      </question>
+      <question name="Q3Experience" description="Haskell Experience?" type="SingleChoice" req="1">
+        <alternatives description="very inexperienced"/>
+        <alternatives description="inexperienced"/>
+        <alternatives description="mediocre"/>
+        <alternatives description="experienced"/>
+        <alternatives description="very experienced"/>
+      </question>
+      <question name="Q4Experience" description="Prolog Experience?" type="SingleChoice" req="1">
+        <alternatives description="very inexperienced"/>
+        <alternatives description="inexperienced"/>
+        <alternatives description="mediocre"/>
+        <alternatives description="experienced"/>
+        <alternatives description="very experienced"/>
+      </question>
+      <question name="Q5Experience" description="Further programming languages (with experience >= 3) "/>
+      <question name="Q6Experience" description="Functional paradigm Experience?" type="SingleChoice" req="1">
+        <alternatives description="very inexperienced"/>
+        <alternatives description="inexperienced"/>
+        <alternatives description="mediocre"/>
+        <alternatives description="experienced"/>
+        <alternatives description="very experienced"/>
+      </question>
+      <question name="Q7Experience" description="Imperative paradigm Experience?" type="SingleChoice" req="1">
+        <alternatives description="very inexperienced"/>
+        <alternatives description="inexperienced"/>
+        <alternatives description="mediocre"/>
+        <alternatives description="experienced"/>
+        <alternatives description="very experienced"/>
+      </question>
+      <question name="Q8Experience" description="Object-oriented paradigm Experience?" type="SingleChoice" req="1">
+        <alternatives description="very inexperienced"/>
+        <alternatives description="inexperienced"/>
+        <alternatives description="mediocre"/>
+        <alternatives description="experienced"/>
+        <alternatives description="very experienced"/>
+      </question>
+      <question name="Q9Experience" description="Worked in a company:" type="SingleChoice" req="1">
+        <alternatives description="Yes"/>
+        <alternatives description="No"/>
+      </question>
+      <question name="Q10Experience" description=" Number of years in a company "/>
+      <question name="Q11Experience" description="Size of projects (LOC) :" type="SingleChoice">
+        <alternatives description="&lt; 900"/>
+        <alternatives description="900-40,000"/>
+        <alternatives description=">40,000"/>
+      </question>
+      <question name="Q12Experience" description="Programming experience compared to students of this course?" type="SingleChoice" req="1">
+        <alternatives description="very inexperienced"/>
+        <alternatives description="inexperienced"/>
+        <alternatives description="mediocre"/>
+        <alternatives description="experienced"/>
+        <alternatives description="very experienced"/>
+      </question>
+      <question name="Q13Experience" description="Programming experience compared to programming experts?" type="SingleChoice" req="1">
+        <alternatives description="very inexperienced"/>
+        <alternatives description="inexperienced"/>
+        <alternatives description="mediocre"/>
+        <alternatives description="experienced"/>
+        <alternatives description="very experienced"/>
+      </question>
+    </questionnaire>
+  </elements>
+</expdslv3:Model>

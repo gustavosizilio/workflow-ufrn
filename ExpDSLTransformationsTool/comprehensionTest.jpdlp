@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="ASCII"?>
+<explP:Model xmlns:explP="urn:jbpm.org:jpdl-3.1Plus">
+  <elements>
+    <processDefinition name="P1" quantity="3">
+      <startState name="Starting">
+        <transition name="startTransitionS1" to="S1"/>
+      </startState>
+      <endState name="End"/>
+      <swimlane>
+        <assignment actorId="Participant"/>
+      </swimlane>
+      <taskNode name="S1" description="Question 1 &#xfffd; For each feature, locate all files containing feature code and mark the results">
+        <transition name="S1_Transition" to="S2"/>
+        <artefacts name="LPSSpecification" type="input" description="LPS"/>
+      </taskNode>
+      <taskNode name="S2" description="Question 2 &#xfffd; locate shared code (i.e. code that concerned more than one feature)">
+        <transition name="S2_Transition" to="M1"/>
+        <artefacts name="LPSSpecification" type="input" description="LPS"/>
+      </taskNode>
+      <taskNode name="M1" description="Question 3 &#xfffd; If pictures in an album should be sorted by views, they are displayed unsorted anyway. &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Feature, in which the bug occurs: CountViews.">
+        <transition name="M1_Transition" to="M2"/>
+        <artefacts name="LPSSpecification" type="input" description="LPS"/>
+      </taskNode>
+      <taskNode name="M2" description="Question 4 &#xfffd; In the next task you have to work with the source code closely. You get a bug description and&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; should locate the bug, explain, why it occurs and suggest a solution.">
+        <transition name="M2_Transition" to="M3"/>
+        <artefacts name="LPSSpecification" type="input" description="LPS"/>
+      </taskNode>
+      <taskNode name="M3" description="Question 5 &#xfffd; BUG Y">
+        <transition name="M3_Transition" to="M4"/>
+        <artefacts name="LPSSpecification" type="input" description="E1"/>
+      </taskNode>
+      <taskNode name="M4" description="Question 6 &#xfffd; BUG Z">
+        <transition name="M4transition" to="End"/>
+        <artefacts name="LPSSpecification" type="input" description="E1"/>
+        <fields name="cont"/>
+        <questionnaires name="PreferenceFeedback"/>
+      </taskNode>
+    </processDefinition>
+    <processDefinition name="P2" quantity="3">
+      <startState name="Starting">
+        <transition name="startTransitionS1" to="S1"/>
+      </startState>
+      <endState name="End"/>
+      <swimlane>
+        <assignment actorId="Participant"/>
+      </swimlane>
+      <taskNode name="S1" description="Question 1 &#xfffd; For each feature, locate all files containing feature code and mark the results">
+        <transition name="S1_Transition" to="S2"/>
+        <artefacts name="LPSSpecification" type="input" description="LPS"/>
+      </taskNode>
+      <taskNode name="S2" description="Question 2 &#xfffd; locate shared code (i.e. code that concerned more than one feature)">
+        <transition name="S2_Transition" to="M1"/>
+        <artefacts name="LPSSpecification" type="input" description="LPS"/>
+      </taskNode>
+      <taskNode name="M1" description="Question 3 &#xfffd; If pictures in an album should be sorted by views, they are displayed unsorted anyway. &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Feature, in which the bug occurs: CountViews.">
+        <transition name="M1_Transition" to="M2"/>
+        <artefacts name="LPSSpecification" type="input" description="LPS"/>
+      </taskNode>
+      <taskNode name="M2" description="Question 4 &#xfffd; In the next task you have to work with the source code closely. You get a bug description and&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;should locate the bug, explain, why it occurs and suggest a solution.">
+        <transition name="M2_Transition" to="M3"/>
+        <artefacts name="LPSSpecification" type="input" description="LPS"/>
+      </taskNode>
+      <taskNode name="M3" description="Question 5 &#xfffd; BUG Y">
+        <transition name="M3_Transition" to="M4"/>
+        <artefacts name="LPSSpecification" type="input" description="E1"/>
+      </taskNode>
+      <taskNode name="M4" description="Question 6 &#xfffd; BUG Z">
+        <transition name="M4transition" to="End"/>
+        <artefacts name="LPSSpecification" type="input" description="E1"/>
+      </taskNode>
+    </processDefinition>
+    <questionnaires name="PreferenceFeedback" type="Post">
+      <question description="What is your research theme?" type="text"/>
+      <question description="Have you ever designed an experiment?" type="checkBox">
+        <option description="Yes"/>
+        <option description="No"/>
+      </question>
+      <question description="How much experiments have you planned:" type="checkBox">
+        <option description="No one"/>
+        <option description="Only one"/>
+        <option description="Between 1 and 3"/>
+        <option description="Over 3"/>
+      </question>
+      <question description="If yes, have you already worked with experiment replication?" type="checkBox">
+        <option description="Yes"/>
+        <option description="No"/>
+      </question>
+      <question description="Describe your previous experience working with experimentation:" type="paragraphText"/>
+    </questionnaires>
+    <questionnaires name="ProgrammingExperience">
+      <question description="What is your name:" type="text"/>
+      <question description="Enrollment year " type="text"/>
+      <question description="Years of programming " type="text"/>
+      <question description="Number of programming courses " type="text"/>
+      <question description="Java Experience:" type="checkBox">
+        <option description="very inexperienced"/>
+        <option description="inexperienced"/>
+        <option description="mediocre"/>
+        <option description="experienced"/>
+        <option description="very experienced"/>
+      </question>
+      <question description="C Experience?" type="checkBox">
+        <option description="very inexperienced"/>
+        <option description="inexperienced"/>
+        <option description="mediocre"/>
+        <option description="experienced"/>
+        <option description="very experienced"/>
+      </question>
+      <question description="Haskell Experience?" type="checkBox">
+        <option description="very inexperienced"/>
+        <option description="inexperienced"/>
+        <option description="mediocre"/>
+        <option description="experienced"/>
+        <option description="very experienced"/>
+      </question>
+      <question description="Prolog Experience?" type="checkBox">
+        <option description="very inexperienced"/>
+        <option description="inexperienced"/>
+        <option description="mediocre"/>
+        <option description="experienced"/>
+        <option description="very experienced"/>
+      </question>
+      <question description="Further programming languages (with experience >= 3) " type="text"/>
+      <question description="Functional paradigm Experience?" type="checkBox">
+        <option description="very inexperienced"/>
+        <option description="inexperienced"/>
+        <option description="mediocre"/>
+        <option description="experienced"/>
+        <option description="very experienced"/>
+      </question>
+      <question description="Imperative paradigm Experience?" type="checkBox">
+        <option description="very inexperienced"/>
+        <option description="inexperienced"/>
+        <option description="mediocre"/>
+        <option description="experienced"/>
+        <option description="very experienced"/>
+      </question>
+      <question description="Object-oriented paradigm Experience?" type="checkBox">
+        <option description="very inexperienced"/>
+        <option description="inexperienced"/>
+        <option description="mediocre"/>
+        <option description="experienced"/>
+        <option description="very experienced"/>
+      </question>
+      <question description="Worked in a company:" type="checkBox">
+        <option description="Yes"/>
+        <option description="No"/>
+      </question>
+      <question description=" Number of years in a company " type="text"/>
+      <question description="Size of projects (LOC) :" type="checkBox">
+        <option description="&lt; 900"/>
+        <option description="900-40,000"/>
+        <option description=">40,000"/>
+      </question>
+      <question description="Programming experience compared to students of this course?" type="checkBox">
+        <option description="very inexperienced"/>
+        <option description="inexperienced"/>
+        <option description="mediocre"/>
+        <option description="experienced"/>
+        <option description="very experienced"/>
+      </question>
+      <question description="Programming experience compared to programming experts?" type="checkBox">
+        <option description="very inexperienced"/>
+        <option description="inexperienced"/>
+        <option description="mediocre"/>
+        <option description="experienced"/>
+        <option description="very experienced"/>
+      </question>
+    </questionnaires>
+    <plan>
+      <goals id="G1_Comprehesion" description="The objective of this experiment is to evaluate the effect of background colors on program comprehension in &#xD;&#xA;preprocessor-based SPLs"/>
+      <hypothesis description="In static tasks, colors speed up program comprehension compared to ifdef directives." id="RH01"/>
+      <hypothesis description="In maintenance tasks, there are no differences in response time between colors and ifdef directives." id="RH02"/>
+      <hypothesis description="There are no differences in the number of correctly solved tasks between colors and ifdef directives" id="RH03"/>
+      <hypothesis description="Subjects estimate better performance with background colors than with ifdef directives." id="RH04"/>
+      <design/>
+      <context name="ParticipantSchoolingLevel" description="Level of Participant Schooling" scale="Ordinal">
+        <range name="GraduateStudent"/>
+      </context>
+      <context name="SPLLevel" description="Level of SPL used as material" scale="Ordinal">
+        <range name="mediumSized"/>
+      </context>
+      <context name="programmingExperience" description="Feigenspan Questionnaire" scale="Ordinal">
+        <range name="veryLow"/>
+        <range name="low"/>
+        <range name="medium"/>
+        <range name="high"/>
+        <range name="veryHigh"/>
+      </context>
+      <depVariables relatesToRH="/0/@elements.0/@plan.0/@hypothesis.2" name="correctness" description="Number of correctly solved tasks " scale="Integer"/>
+      <depVariables relatesToRH="/0/@elements.0/@plan.0/@hypothesis.0" name="responseTime1" description="Response times for static tasks " scale="Interval"/>
+      <depVariables relatesToRH="/0/@elements.0/@plan.0/@hypothesis.1" name="responseTime2" description="response times for maintenance tasks" scale="Interval"/>
+      <depVariables relatesToRH="/0/@elements.0/@plan.0/@hypothesis.3" name="subjectPreference" description="Whether subjects prefer the color version over the ifdef version" scale="Nominal">
+        <range name="Color"/>
+        <range name="IFDeF"/>
+      </depVariables>
+      <factors name="LPSTechnique" description="The kind of thechnique used: Colors code and ifdef directives" scale="Nominal">
+        <range name="colors"/>
+        <range name="ifdef"/>
+      </factors>
+    </plan>
+  </elements>
+</explP:Model>

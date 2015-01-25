@@ -16,5 +16,6 @@
 		<rich:separator  height="4" lineType="double"/>
     	<h:commandButton action="#{action.list()}" value="#{messages['layout.text.list']}" />
     	<h:commandButton action="#{action.edit(action.entity)}" value="#{messages['layout.text.edit']}" />
+    	<ui:insert name="buttonsExtended" />
 	</ui:define>
 </ui:composition>

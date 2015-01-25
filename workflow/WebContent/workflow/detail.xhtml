@@ -10,49 +10,43 @@
 	<ui:param name="action" value="#{crudWorkflow}" />
 
 	<ui:define name="detail">
-		<rich:simpleTogglePanel switchType="client"
-			label="Experiment Definition" opened="true">
+		<h:panelGrid id="tree" columns="1" width="100%">
+			<rich:tree switchType="client" limitToList="true"
+				value="#{action.rootNode}" var="item" treeNodeVar="node"
+				nodeFace="#{action.getItemType(item)}" reRender="tree">
+				<rich:treeNode type="attr" icon="/img/attr.png"
+					iconLeaf="/img/attr.png">
 
-			<h:panelGrid id="tree" columns="1" width="100%">
-				<rich:tree switchType="client" limitToList="true"
-					value="#{action.rootNode}" var="item" treeNodeVar="node"
-					nodeFace="#{action.getItemType(item)}" reRender="tree">
-					<rich:treeNode type="attr" icon="/img/attr.png"
-						iconLeaf="/img/attr.png">
+					<h:panelGrid columns="3">
+						<h:panelGroup class="attrNodeTitleContent">
+							<h:outputText value="#{action.getName(item, true)}: "
+								styleClass="attrNodeTitle" />
+						</h:panelGroup>
 
-						<h:panelGrid columns="3">
-							<h:panelGroup class="attrNodeTitleContent">
-								<h:outputText value="#{action.getName(item, true)}: "
-									styleClass="attrNodeTitle" />
+						<h:panelGroup class="attrNodeTitleField">
+							<h:panelGroup>
+								<h:outputText
+									value="#{action.getValueFromParent(node.getParent().data, item, true)}"
+									styleClass="attrNodeContent">
+								</h:outputText>
 							</h:panelGroup>
-
-							<h:panelGroup class="attrNodeTitleField">
-								<h:panelGroup>
-									<h:outputText
-										value="#{action.getValueFromParent(node.getParent().data, item, true)}"
-										styleClass="attrNodeContent">
-									</h:outputText>
-								</h:panelGroup>
-							</h:panelGroup>
-						</h:panelGrid>
-					</rich:treeNode>
-					<rich:treeNode type="ref" icon="/img/model.jpeg"
-						iconLeaf="/img/model.jpeg" expanded="#{action.newNode eq item}">
-						<h:outputText value="#{action.getName(item, true)}"
-							styleClass="refNodeTitle" />
-					</rich:treeNode>
-				</rich:tree>
-			</h:panelGrid>
-
-
-			<h:commandButton value="Deploy"
-				rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}" />
-			<h:commandButton action="#{action.edit(action.entity)}"
-				value="#{messages['layout.text.edit']}"
-				rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}" />
-		</rich:simpleTogglePanel>
+						</h:panelGroup>
+					</h:panelGrid>
+				</rich:treeNode>
+				<rich:treeNode type="ref" icon="/img/model.jpeg"
+					iconLeaf="/img/model.jpeg" expanded="#{action.newNode eq item}">
+					<h:outputText value="#{action.getName(item, true)}"
+						styleClass="refNodeTitle" />
+				</rich:treeNode>
+			</rich:tree>
+		</h:panelGrid>
 	</ui:define>
-
+	<ui:define name="buttonsExtended">
+		<h:commandButton value="#{messages['layout.text.workflow.deploy']}"
+					rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}"
+					disabled="#{!crudWorkflow.entity.successCompiled}"
+					action="#{executer.deployWorkflows(crudWorkflow.entity)}" />
+	</ui:define>
 	<ui:define name="detailExtended">
 		<br />
 		<rich:panel id="workflowConfiguratioin" rendered="#{crudWorkflow.entity.processDefinitions.size() != 0}"

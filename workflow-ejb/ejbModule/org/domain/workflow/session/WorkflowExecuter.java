@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.domain.dao.SeamDAO;
 import org.domain.dao.UserAssignmentDAO;
+import org.domain.dsl.EXPDSLUtil;
+import org.domain.dsl.JPDLDSLUtil;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Artefact;
 import org.domain.model.processDefinition.ArtefactFile;
@@ -23,11 +25,14 @@ import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Transition;
 import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.UserExecution;
+import org.domain.model.processDefinition.Workflow;
 import org.domain.model.processDefinition.metric.Metric;
 import org.domain.model.processDefinition.metric.Question;
 import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.model.processDefinition.metric.UserAnswer;
+import org.domain.utils.PathBuilder;
 import org.domain.utils.ReadPropertiesFile;
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.FlushModeType;
@@ -65,6 +70,17 @@ public class WorkflowExecuter {
 	private Task currentTask;
 	private Questionnaire currentQuestionnaire;
 	private Metric currentMetric;
+	
+	
+	public void deployWorkflows(Workflow workflow) throws Exception {
+		try {
+			String experimentJpdlPath = PathBuilder.getExperimentJpdlPath(workflow);
+			JPDLDSLUtil.getInstance().convertXMIToJPDL(PathBuilder.getExperimentXMIPath(workflow), experimentJpdlPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+			((FacesMessages) Component.getInstance(FacesMessages.class)).add(e.getMessage());
+		}
+	}
 	
 	public String init(ProcessDefinition process, UserAssignment ua){
 		if(process.canExecute(ua)){

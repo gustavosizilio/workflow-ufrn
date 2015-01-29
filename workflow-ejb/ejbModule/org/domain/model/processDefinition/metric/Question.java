@@ -131,32 +131,24 @@ public class Question {
 		this.options = options;
 	}
 	
-	public UserAnswer getUserAnswer(User u, Metric m, TaskNode task) {
+	public UserAnswer getUserAnswer(User u, TaskNode task) {
 		UserAnswer an = null;
 		for (UserAnswer a : getUserAnswers()) {
 			if(a.getUser().getId().equals(u.getId())){
-				if(m != null) {
-					if(a.getMetric() != null && a.getMetric().getId().equals(m.getId())){
-						if(task != null) {
-							if(a.getTaskNode() != null && a.getTaskNode().getId().equals(task.getId())){
-								an = a;
-							}
-						} else {
-							if(a.getTaskNode() == null)
-								an = a;
-						}
+				if(task != null) {
+					if(a.getTaskNode() != null && a.getTaskNode().getId().equals(task.getId())){
+						an = a;
 					}
 				} else {
-					if(a.getMetric()  == null)
-							an = a;
-				}
+					if(a.getTaskNode() == null)
+						an = a;
+				}		
 			}
 		}
 		if (an == null){
 			an = new UserAnswer(u);
 			an.setQuestion(this);
 			an.setCreatedAt(new GregorianCalendar());
-			an.setMetric(m);
 			an.setTaskNode(task);
 			getUserAnswers().add(an);
 		}
@@ -164,7 +156,7 @@ public class Question {
 	}
 	
 	public UserAnswer getUserAnswer(User u) {
-		return getUserAnswer(u, null, null);
+		return getUserAnswer(u, null);
 	}
 
 	public List<UserAnswer> getUserAnswers() {
@@ -175,8 +167,8 @@ public class Question {
 		this.userAnswers = userAnswers;
 	}
 
-	public boolean isFinished(User user, Metric metric, TaskNode task) {
-		UserAnswer an = this.getUserAnswer(user, metric, task);
+	public boolean isFinished(User user, TaskNode task) {
+		UserAnswer an = this.getUserAnswer(user, task);
 		if(an == null || an.getAnswer() == null || an.getAnswer().isEmpty()){
 			return false;
 		}

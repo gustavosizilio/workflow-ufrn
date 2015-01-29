@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.domain.dao.SeamDAO;
 import org.domain.dao.UserAssignmentDAO;
-import org.domain.dsl.EXPDSLUtil;
+import org.domain.dataManager.WorkflowManager;
 import org.domain.dsl.JPDLDSLUtil;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Artefact;
@@ -26,7 +26,6 @@ import org.domain.model.processDefinition.Transition;
 import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.UserExecution;
 import org.domain.model.processDefinition.Workflow;
-import org.domain.model.processDefinition.metric.Metric;
 import org.domain.model.processDefinition.metric.Question;
 import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.model.processDefinition.metric.UserAnswer;
@@ -69,13 +68,18 @@ public class WorkflowExecuter {
 	private Artefact currentArtefact;
 	private Task currentTask;
 	private Questionnaire currentQuestionnaire;
-	private Metric currentMetric;
 	
 	
 	public void deployWorkflows(Workflow workflow) throws Exception {
 		try {
 			String experimentJpdlPath = PathBuilder.getExperimentJpdlPath(workflow);
 			JPDLDSLUtil.getInstance().convertXMIToJPDL(PathBuilder.getExperimentXMIPath(workflow), experimentJpdlPath);
+			
+			//deploy jpdl
+			WorkflowManager manager = new WorkflowManager(experimentJpdlPath, workflow,seamDao);
+			manager.executeTransformations();
+			seamDao.merge(workflow);
+			seamDao.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
 			((FacesMessages) Component.getInstance(FacesMessages.class)).add(e.getMessage());
@@ -316,8 +320,8 @@ public class WorkflowExecuter {
 					return false;
 				}
 			}	
-			for (Metric metric : currentTaskNode.getQuestionnaireMetrics()) {
-				if(!metric.finishedByUser(user, this.currentTaskNode)){
+			for (Questionnaire q : currentTaskNode.getQuestionnaires()) {
+				if(!q.isFinished(user, this.currentTaskNode)){
 					facesMessages.add(Severity.ERROR, "You should complete all questionnaires!");
 					return false;
 				}
@@ -330,16 +334,13 @@ public class WorkflowExecuter {
 		this.currentArtefact = artefact;
 	}
 	
-	public void setCurrentQuestionnaire(Metric m, Questionnaire questionnaire){
-		this.currentMetric = m;
-		this.currentQuestionnaire = questionnaire;
-	}
 	public void setCurrentQuestionnaire(Questionnaire questionnaire){
 		this.currentQuestionnaire = questionnaire;
 	}
+	
 	public void saveQuestionnaire(){
 		for (Question q : this.currentQuestionnaire.getQuestions()) {
-			UserAnswer uan = q.getUserAnswer(user, this.currentMetric, this.currentTaskNode);
+			UserAnswer uan = q.getUserAnswer(user, this.currentTaskNode);
 			if(uan.getId() == null ||  uan.getId() == 0){
 				seamDao.persist(uan);
 			} else {
@@ -504,13 +505,5 @@ public class WorkflowExecuter {
 
 	public void setCurrentTaskExecution(TaskExecution currentTaskExecution) {
 		this.currentTaskExecution = currentTaskExecution;
-	}
-
-	public Metric getCurrentMetric() {
-		return currentMetric;
-	}
-
-	public void setCurrentMetric(Metric currentMetric) {
-		this.currentMetric = currentMetric;
 	}
 }

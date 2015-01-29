@@ -1,7 +1,5 @@
 package org.domain.dsl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -24,9 +22,10 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.impl.EReferenceImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.jboss.serial.io.JBossObjectInputStream;
-import org.jboss.serial.io.JBossObjectOutputStream;
 
 import br.ufrn.dimap.ase.dsl.Expdslv3RuntimeModule;
 
@@ -63,6 +62,8 @@ public class EXPDSLUtil {
 		factory.getEPackage().eClass();
 		factory.eClass();
 		//EPackage.Registry.INSTANCE.put(factory.getEPackage().getNsURI(), factory.getEPackage());
+		
+		createInjectorAndDoEMFRegistration();
 	}
 	
 	public EObject getRootElement() {
@@ -74,13 +75,15 @@ public class EXPDSLUtil {
 	
 	public List<EObject>  getAttrs(EObject raiz){
 		List<EObject> attrs = new ArrayList<EObject>();
-		EClassImpl eclazz = (EClassImpl) raiz.eClass();
-		for (EObject eObject : eclazz.eContents()) {
-			if(eObject instanceof EAttribute) {
-				attrs.add((EAttribute) eObject);
-			} else if(eObject instanceof EReference) {
-				if(!((EReferenceImpl)eObject).isContainment()) {
-					attrs.add((EReferenceImpl)eObject);
+		if(raiz != null) {
+			EClassImpl eclazz = (EClassImpl) raiz.eClass();
+			for (EObject eObject : eclazz.eContents()) {
+				if(eObject instanceof EAttribute) {
+					attrs.add((EAttribute) eObject);
+				} else if(eObject instanceof EReference) {
+					if(!((EReferenceImpl)eObject).isContainment()) {
+						attrs.add((EReferenceImpl)eObject);
+					}
 				}
 			}
 		}
@@ -90,23 +93,26 @@ public class EXPDSLUtil {
 	@SuppressWarnings("unchecked")
 	public List<EObject> getRefsObjects(EObject raiz, EReference ref) {
 		List<EObject> refObjects = new ArrayList<EObject>();
-		Object o = raiz.eGet(ref);
-		if(o instanceof List<?>) {
-			refObjects.addAll((List<EObject>) o);
-		} else if (o instanceof EObject) {
-			refObjects.add((EObject) o);
+		if(raiz != null) {
+			Object o = raiz.eGet(ref);
+			if(o instanceof List<?>) {
+				refObjects.addAll((List<EObject>) o);
+			} else if (o instanceof EObject) {
+				refObjects.add((EObject) o);
+			}
 		}
-		
 		return refObjects;
 	}
 	
 	public List<EReference>  getRefs(EObject raiz){
 		List<EReference> refs = new ArrayList<EReference>();
-		EClassImpl eclazz = (EClassImpl) raiz.eClass();
-		for (EObject eObject : eclazz.eContents()) {
-			if(eObject instanceof EReference) {
-				if(((EReferenceImpl)eObject).isContainment()) {
-					refs.add((EReferenceImpl)eObject);
+		if(raiz != null) {
+			EClassImpl eclazz = (EClassImpl) raiz.eClass();
+			for (EObject eObject : eclazz.eContents()) {
+				if(eObject instanceof EReference) {
+					if(((EReferenceImpl)eObject).isContainment()) {
+						refs.add((EReferenceImpl)eObject);
+					}
 				}
 			}
 		}
@@ -114,7 +120,10 @@ public class EXPDSLUtil {
 	} 
 	
 	public Object  getValue(EObject raiz, EStructuralFeature attr) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		return raiz.eGet((EStructuralFeature)attr);
+		if(raiz != null)
+			return raiz.eGet((EStructuralFeature)attr);
+		else
+			return null;
 	} 
 	
 	public void setValue(EObject data, EStructuralFeature refAttr, Object value) throws Exception {
@@ -190,6 +199,31 @@ public class EXPDSLUtil {
 		return derivedClasses;
 	}
 
+	public static void main(String[] args) {
+		try {
+			EXPDSLUtil util = EXPDSLUtil.getInstance();
+			util.convertExpTextToEcore("/Users/buda/workspace/workspace_experimento/workflow-ufrn/ArtefatosMyExp/comprehensionLPSTest.expdslv3");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public EObject convertExpTextToEcore(String path) throws IOException {
+		String newPath = path.substring(0, path.lastIndexOf(".")+1)+factory.getEPackage().getNsPrefix();
+		File afile = new File(path);
+		afile.renameTo(new File(newPath));
+		
+		Injector injector = createInjectorAndDoEMFRegistration();
+		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
+		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+		
+		Resource resource = resourceSet.getResource(URI.createURI(newPath), true);
+		return resource.getContents().get(0);
+		
+	}
+	
 	public void convertEcoreToExpText(EObject model, String path) throws IOException {
 		Injector injector = createInjectorAndDoEMFRegistration();
 		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
@@ -214,58 +248,27 @@ public class EXPDSLUtil {
 		xmiResource.save(null);
 	}
 	
-	
-	public EObject transform(byte[] barray) throws IOException, ClassNotFoundException {
-		ByteArrayInputStream in = null;
-		JBossObjectInputStream objIn = null;
-		EObject model = null;
-		try {
-			in = new ByteArrayInputStream(barray);
-			objIn = new JBossObjectInputStream(in);
-			model = (EObject) objIn.readObject();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(objIn != null)
-					objIn.close();
-				if(in != null)
-					in.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return model;
-	}
-	
-	public byte[] transform(EObject model) throws IOException {
-		ByteArrayOutputStream out = null;
-		JBossObjectOutputStream objOut = null;
-		try {
-			out = new ByteArrayOutputStream();
-			objOut = new JBossObjectOutputStream(out);
-			objOut.writeObject(model);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(objOut != null)
-					objOut.close();
-				if(out != null)
-					out.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return out.toByteArray();
+	public EObject convertXMIToEcore(String path) throws IOException {
+		Injector injector = createInjectorAndDoEMFRegistration();
+		
+		XMIResource resource = new XMIResourceImpl(URI.createURI(path));
+	    resource.load(null);
+	    //System.out.println( resource.getContents().get(0) );
+		//XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
+		//resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+		
+		//Resource resource = resourceSet.getResource(URI.createURI(path), true);
+		//return resource.getContents().get(0);
+	    
+	    return resource.getContents().get(0);
 	}
 	
 	public Injector createInjectorAndDoEMFRegistration() {
-		org.eclipse.xtext.common.TerminalsStandaloneSetup.doSetup();
-		injector = createInjector();
-		register(injector);
+		if(injector == null) {
+			org.eclipse.xtext.common.TerminalsStandaloneSetup.doSetup();
+			injector = createInjector();
+			register(injector);
+		}
 		return injector;
 	}
 	
@@ -276,8 +279,8 @@ public class EXPDSLUtil {
 
 		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector.getInstance(org.eclipse.xtext.resource.IResourceFactory.class);
 		org.eclipse.xtext.resource.IResourceServiceProvider serviceProvider = injector.getInstance(org.eclipse.xtext.resource.IResourceServiceProvider.class);
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(factory.getEPackage().getNsPrefix(), resourceFactory);
 		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(factory.getEPackage().getNsPrefix(), serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(factory.getEPackage().getNsPrefix(), resourceFactory);
 	}
 	
 	public Injector createInjector() {

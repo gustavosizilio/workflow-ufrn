@@ -35,8 +35,6 @@ public class UserAnswer {
 	@ManyToOne
 	private Question question;
 	@ManyToOne
-	private Metric metric;
-	@ManyToOne
 	private TaskNode taskNode;
 	
 	public UserAnswer() {
@@ -98,14 +96,6 @@ public class UserAnswer {
 
 	public void setQuestion(Question question) {
 		this.question = question;
-	}
-
-	public Metric getMetric() {
-		return metric;
-	}
-
-	public void setMetric(Metric metric) {
-		this.metric = metric;
 	}
 
 	public List<String> getAnswerAsList() {

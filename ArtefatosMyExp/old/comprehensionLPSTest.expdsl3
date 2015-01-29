@@ -1,0 +1,271 @@
+Experiment LPSComprehension "LPS Comprehension Experiment" 
+
+Experimental Design
+
+Authorship  {
+FeigenspanJanet "Janet Feigenspan"
+KastnerChristian  "Christian Kastner"
+ApelSven "Sven Apel"
+LiebigJorg  "Jorg Liebig"
+SchulzeMichael  "Michael Schulze"
+DachseltRaimund  "Raimund Dachselt"
+PapendieckMaria  "Maria Papendieck" 
+LeichThomas  "Thomas Leich"
+SaakeGunter  "Gunter Saake"
+}
+
+Abstract {
+"This study is to evaluate whether background colors improve program comprehension in preprocessor-based SPLs 
+compared to ifdef directives, by means of a medium-sized Java-based SPL with four optional features."
+}
+
+Keywords {
+"Empirical software engineering"
+"Software visualization"
+"Program comprehension"
+"Software product lines"
+"Preprocessors"
+"FeatureCommander" 
+}
+
+Goals {
+G1_Comprehesion "The objective of this experiment is to evaluate the effect of background colors on program comprehension in 
+preprocessor-based SPLs" 
+}	
+
+Research Hypotheses {
+
+RH01 "In static tasks, colors speed up program comprehension compared to ifdef directives." relates to G1_Comprehesion
+RH02 "In maintenance tasks, there are no differences in response time between colors and ifdef directives." relates to G1_Comprehesion
+RH03 "There are no differences in the number of correctly solved tasks between colors and ifdef directives" relates to G1_Comprehesion
+RH04 "Subjects estimate better performance with background colors than with ifdef directives." relates to G1_Comprehesion
+}
+
+Dependent Variables {
+	correctness "Number of correctly solved tasks " Scale Absolute  relates to RH RH03
+    responseTime1 "Response times for static tasks " Scale Interval relates to RH RH01
+    responseTime2 "response times for maintenance tasks" Scale Interval relates to RH RH02
+    subjectPreference "Whether subjects prefer the color version over the ifdef version" Scale Nominal Range {Color IFDeF} relates to RH RH04   
+}
+
+Factors {
+    LPSTechnique "The kind of thechnique used: Colors code and ifdef directives" Scale Nominal Range {colors ifdef}
+  }
+
+DoE = Other ("between subjects")
+
+Context {
+	ParticipantSchoolingLevel "Level of Participant Schooling" Scale Ordinal Range {GraduateStudent}
+	SPLLevel "Level of SPL used as material" Scale Ordinal Range {mediumSized}
+	programmingExperience  "Feigenspan Questionnaire" Scale Ordinal Range{veryLow low medium high veryHigh}//como avaliar -pois é resultado de um questionário?
+
+}    
+
+Internal Replication  3   
+        
+Process P1 to  {	
+	Role Participant
+	
+	Task S1 description "Question 1 – For each feature, locate all files containing feature code and mark the results" to S2 {	
+		artefacts LPSSpecification description "LPS" type input
+	
+	}	
+	Task S2 description "Question 2 – locate shared code (i.e. code that concerned more than one feature)" to M1 {			
+		artefacts LPSSpecification description "LPS" type input
+	           	
+	}
+	Task M1 description "Question 3 – If pictures in an album should be sorted by views, they are displayed unsorted anyway. 
+						 Feature, in which the bug occurs: CountViews." to M2 {			
+		artefacts LPSSpecification description "LPS" type input		
+	
+
+	}
+	Task M2 description "Question 4 – In the next task you have to work with the source code closely. You get a bug description and
+						 should locate the bug, explain, why it occurs and suggest a solution." to M3 {			
+		artefacts LPSSpecification description "LPS" type input		
+	
+
+
+	}
+	Task M3 description "Question 5 – BUG Y" to M4 {			
+		artefacts LPSSpecification description "E1" type input		
+	
+	}
+	Task M4 description "Question 6 – BUG Z" {			
+		artefacts LPSSpecification description "E1" type input
+		quest PreferenceFeedback
+		field cont "Number:"
+		
+	
+	}
+
+}
+
+//Process2
+Process P2 to  {	
+	Role Participant
+	
+		Task S1 description "Question 1 – For each feature, locate all files containing feature code and mark the results" to S2 {	
+		artefacts LPSSpecification description "LPS" type input
+		
+	}	
+	Task S2 description "Question 2 – locate shared code (i.e. code that concerned more than one feature)" to M1 {			
+		artefacts LPSSpecification description "LPS" type input
+		           	
+	}
+	Task M1 description "Question 3 – If pictures in an album should be sorted by views, they are displayed unsorted anyway. 
+						 Feature, in which the bug occurs: CountViews." to M2 {			
+		artefacts LPSSpecification description "LPS" type input		
+		
+
+	}
+	Task M2 description "Question 4 – In the next task you have to work with the source code closely. You get a bug description and
+							should locate the bug, explain, why it occurs and suggest a solution." to M3 {			
+		artefacts LPSSpecification description "LPS" type input		
+
+
+
+	}
+	Task M3 description "Question 5 – BUG Y" to M4 {			
+		artefacts LPSSpecification description "E1" type input		
+		
+	}
+	Task M4 description "Question 6 – BUG Z" {			
+		artefacts LPSSpecification description "E1" type input		
+	
+	}
+	
+	
+}
+
+Questionnaires 
+
+//TODO
+// Alterar sintaxe para ficar próxima da decl. mais resumida... incluir tipo Scale
+Questionnaire  PreferenceFeedback type Post {
+	
+Q1Researchtheme{
+	description "What is your research theme?"
+	type Text }
+	
+Q2ExperienceExp {
+	description "Have you ever designed an experiment?"
+	type SingleChoice
+	required 1
+	{ "Yes"  "No"} 
+}
+
+Q3_NumberExperiments {
+	description "How much experiments have you planned:"
+	type MultipleChoice
+	{"No one" "Only one" "Between 1 and 3" "Over 3"}
+}
+
+Q4ExperienceReplication {
+	description "If yes, have you already worked with experiment replication?"
+	type SingleChoice
+	required 1
+	{ "Yes"  "No"}
+}
+	
+Q5TestExperienceDetails {
+	description "Describe your previous experience working with experimentation:"
+	type ParagraphText
+}
+}
+
+Questionnaire  ProgrammingExperience type Pre {
+Name {
+	description "What is your name:"
+	type Text
+	}
+EnrolmentYear {
+	description "Enrollment year "
+	type Text
+
+	}
+ProgYears {
+	description "Years of programming "
+	type Text
+}
+CoursesNumber {
+	description "Number of programming courses "
+	type Text
+}
+
+
+
+Q1Experience{
+	description "Java Experience:"
+	type SingleChoice
+	required 1 {"very inexperienced" "inexperienced" "mediocre" "experienced" "very experienced"}
+	} 
+	
+
+Q2Experience {
+	description "C Experience?"
+	type SingleChoice
+	required 1 {"very inexperienced" "inexperienced" "mediocre" "experienced" "very experienced"}
+}
+	
+Q3Experience {
+	description "Haskell Experience?"
+	type SingleChoice
+	required 1 {"very inexperienced" "inexperienced" "mediocre" "experienced" "very experienced"}
+	}
+	
+Q4Experience {
+	description "Prolog Experience?"
+	type SingleChoice
+	required 1 {"very inexperienced" "inexperienced" "mediocre" "experienced" "very experienced"}
+	}
+Q5Experience {
+	description "Further programming languages (with experience >= 3) "
+	type Text
+}
+	
+Q6Experience {
+	description "Functional paradigm Experience?"
+	type SingleChoice
+	required 1 {"very inexperienced" "inexperienced" "mediocre" "experienced" "very experienced"}
+	}
+Q7Experience {
+	description "Imperative paradigm Experience?"
+	type SingleChoice
+	required 1 {"very inexperienced" "inexperienced" "mediocre" "experienced" "very experienced"}
+	}
+Q8Experience {
+	description "Object-oriented paradigm Experience?"
+	type SingleChoice
+	required 1 {"very inexperienced" "inexperienced" "mediocre" "experienced" "very experienced"}
+	}
+
+
+Q9Experience {
+	description "Worked in a company:"
+	type SingleChoice
+	required 1
+	{ "Yes"  "No"}
+}
+
+Q10Experience {
+	description " Number of years in a company "
+	type Text
+}
+
+Q11Experience {
+	description "Size of projects (LOC) :"
+	type SingleChoice {"< 900" "900-40,000" ">40,000"}
+}
+Q12Experience {
+	description "Programming experience compared to students of this course?"
+	type SingleChoice
+	required 1 {"very inexperienced" "inexperienced" "mediocre" "experienced" "very experienced"}
+}
+Q13Experience {
+	description "Programming experience compared to programming experts?"
+	type SingleChoice
+	required 1 {"very inexperienced" "inexperienced" "mediocre" "experienced" "very experienced"}
+}
+
+}

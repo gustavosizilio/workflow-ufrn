@@ -21,8 +21,6 @@ import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Transition;
 import org.domain.model.processDefinition.Workflow;
 import org.domain.model.processDefinition.dataType.ArtefactType;
-import org.domain.model.processDefinition.metric.Metric;
-import org.domain.model.processDefinition.metric.MetricType;
 import org.domain.model.processDefinition.metric.Question;
 import org.domain.model.processDefinition.metric.QuestionOption;
 import org.domain.model.processDefinition.metric.QuestionType;
@@ -44,15 +42,14 @@ public class WorkflowManager extends XMLManager{
 		this.file = file;
 	}
 	private Map<String, Questionnaire> questionnaires; 
-	private Map<String, Metric> metrics;
 	private List<ProcessDefinition> processDefinitions;
 	public void executeTransformations() throws ParserConfigurationException, SAXException, IOException, ValidationException{
 		extractQuestionnaires();
-		extractMetrics();
+		//extractMetrics();
 		extractProcessDefinitions();
 	}
 
-	private void extractMetrics() throws ParserConfigurationException, SAXException, IOException, ValidationException {
+	/*private void extractMetrics() throws ParserConfigurationException, SAXException, IOException, ValidationException {
 		metrics = new HashMap<String, Metric>();
 		
 		Element docEle = getDOM().getDocumentElement();
@@ -86,6 +83,7 @@ public class WorkflowManager extends XMLManager{
 		}
 	    seamDao.flush();
 	}
+	*/
 	
 	private void extractQuestionnaires() throws ParserConfigurationException, SAXException, IOException, ValidationException {
 		questionnaires = new HashMap<String, Questionnaire>();
@@ -314,11 +312,11 @@ public class WorkflowManager extends XMLManager{
 				artefact.setTaskNode(taskNode);
 				taskNode.getArtefacts().add(artefact);
 			}
-			if(extraxtName(node.getNodeName()).equals(Elements.METRICS)){
+			/*if(extraxtName(node.getNodeName()).equals(Elements.METRICS)){
 				Metric metric = metrics.get(getAttribute(node, Elements.NAME));
 				metric.getTaskNodes().add(taskNode);
 				taskNode.getMetrics().add(metric);
-			}
+			}*/
 		}
 		
 		return taskNode;

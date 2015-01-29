@@ -9,15 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.domain.model.User;
 import org.domain.model.processDefinition.dataType.ArtefactType;
-import org.domain.model.processDefinition.metric.Metric;
-import org.domain.model.processDefinition.metric.MetricType;
+import org.domain.model.processDefinition.metric.Questionnaire;
 
 @Entity
 public class TaskNode {
@@ -35,19 +33,19 @@ public class TaskNode {
 	private StartState startState;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Artefact> artefacts;
-	@ManyToMany(cascade={CascadeType.MERGE,CascadeType.REMOVE})
-	private List<Metric> metrics;
 	@OneToMany(mappedBy="taskNode",cascade=CascadeType.ALL)
 	private List<UserExecution> userExecutions;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Task> tasks;
+	@OneToMany(cascade=CascadeType.MERGE, mappedBy="taskNode")
+	private List<Questionnaire> questionnaires;
 		
 	public TaskNode() {
 		this.userExecutions = new ArrayList<UserExecution>();
 		this.artefacts = new ArrayList<Artefact>();
 		this.tasks = new ArrayList<Task>();
 		this.transitions = new ArrayList<Transition>();
-		this.metrics = new ArrayList<Metric>();
+		this.setQuestionnaires(new ArrayList<Questionnaire>());
 	}
 	
 	public Long getId() {
@@ -156,31 +154,12 @@ public class TaskNode {
 		this.tasks = tasks;
 	}
 
-	public List<Metric> getMetrics() {
-		return metrics;
-	}
-	
-	public List<Metric> getCollectedDataMetrics() {
-		List<Metric> metrics = new ArrayList<Metric>();
-		for (Metric m : getMetrics()) {
-			if(m.getMetricType().equals(MetricType.COLLECTED_DATA)){
-				metrics.add(m);
-			}
-		}
-		return metrics;
-	}
-	
-	public List<Metric> getQuestionnaireMetrics() {
-		List<Metric> metrics = new ArrayList<Metric>();
-		for (Metric m : getMetrics()) {
-			if(m.getMetricType().equals(MetricType.QUEST)){
-				metrics.add(m);
-			}
-		}
-		return metrics;
+	public List<Questionnaire> getQuestionnaires() {
+		return questionnaires;
 	}
 
-	public void setMetrics(List<Metric> metrics) {
-		this.metrics = metrics;
+	public void setQuestionnaires(List<Questionnaire> questionnaires) {
+		this.questionnaires = questionnaires;
 	}
+
 }

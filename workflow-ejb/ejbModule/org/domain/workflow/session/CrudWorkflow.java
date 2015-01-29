@@ -74,6 +74,8 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	private EObject newNode;
 	private List<Object[]> attrProperties;
 	private EReferenceImpl selectedRef;
+	private boolean loadFromFile;
+	private String myexpPath;
 	
 	
 	public CrudWorkflow() throws Exception {
@@ -102,16 +104,17 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	protected void detailImpl(){
 		try {
 			clearEditProperties();
-			this.setRootModel(transform(this.entity.getDefinition()));
+			
+			String xmiPath = PathBuilder.getExperimentXMIPath(this.entity);
+			this.rootModel = dslUtil.convertXMIToEcore(xmiPath);
+			
 			this.rootNode = new TreeNodeImpl<EObject>();
 			updateTreeNode(null);
 			this.selectedNode = this.rootNode.getChild(this.getRootModel());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			addError(e.getMessage());
 		}
 	}
 		
@@ -119,35 +122,36 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	protected void editImpl(){
 		try {
 			clearEditProperties();
-			this.setRootModel(transform(this.entity.getDefinition()));
+			
+			String xmiPath = PathBuilder.getExperimentXMIPath(this.entity);
+			this.rootModel = dslUtil.convertXMIToEcore(xmiPath);
+			
 			this.rootNode = new TreeNodeImpl<EObject>();
 			updateTreeNode(null);
 			this.selectedNode = this.rootNode.getChild(this.getRootModel());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			addError(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
 	protected boolean saveImpl(){
+		boolean ret = super.saveImpl();
+		
 		try {
-			this.entity.setDefinition(transform(this.getRootModel()));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			String xmiPath = PathBuilder.getExperimentXMIPath(this.entity);
+			dslUtil.convertEcoreToXMI(this.rootModel, xmiPath);
+		} catch (Exception e) {
+			System.err.println("failed to transform model....");
 			e.printStackTrace();
+			addError(e.getMessage());
 		}
 		
 		try {
 			String experimentPath = PathBuilder.getExperimentMyexpPath(this.entity);
 			dslUtil.convertEcoreToExpText(this.rootModel, experimentPath);
-			String xmiPath = PathBuilder.getExperimentXMIPath(this.entity);
-			dslUtil.convertEcoreToXMI(this.rootModel, xmiPath);
-			System.out.println("created:"+experimentPath );
-			System.out.println("created:"+xmiPath );
 			this.entity.setSuccessCompiled(true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -156,7 +160,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			this.entity.setSuccessCompiled(false);
 		}
 		
-		return super.saveImpl();
+		return ret;
 	}
 	
 	public String save(){
@@ -167,20 +171,14 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		}
 	}
 	
-	public EObject transform(byte[] barray) throws IOException, ClassNotFoundException {
-		return dslUtil.transform(barray);
-	}
-	
-	public byte[] transform(EObject model) throws IOException {
-		return dslUtil.transform(model);
-	}
-	
 	private void updateTreeNode(EObject newNode) {
 		TreeNodeImpl<EObject> node = new TreeNodeImpl<EObject>();
 		node.setData(this.getRootModel());
 		rootNode.addChild(this.getRootModel(), node);
-		for (EObject eObject : this.getRootModel().eContents()) {
-			updateTreeNode(eObject, node, newNode);
+		if(this.getRootModel() != null) {
+			for (EObject eObject : this.getRootModel().eContents()) {
+				updateTreeNode(eObject, node, newNode);
+			}
 		}
 	}
 	
@@ -394,39 +392,45 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	}
 	
 	public String getName(EObject eObject, boolean includeLookForName) {
-		StringBuilder sb = new StringBuilder();
-		if(eObject instanceof EAttribute) {
-			sb.append(((EAttribute) eObject).getName());
-		} else { 
-			boolean lookForName = false;
-			if(eObject instanceof EReference && !((EReference)eObject).isContainment()) {
-				sb.append(((EReference) eObject).getName());
-			} else {
-				String className = eObject.getClass().getInterfaces()[0].toString();
-				className = className.substring(className.lastIndexOf(".")+1);
-				sb.append(getName(className));
-				lookForName = true;
-			}
-			if(lookForName && includeLookForName) {
-				try {
-					String id = BeanUtils.getProperty(eObject, "id");
-					if(!id.equals("id") && !id.isEmpty()  && id != null) {
-						sb.append(" ["+id+"]");
+		if(eObject != null) {
+			StringBuilder sb = new StringBuilder();
+			if(eObject instanceof EAttribute) {
+				sb.append(((EAttribute) eObject).getName());
+			} else { 
+				boolean lookForName = false;
+				if(eObject instanceof EReference && !((EReference)eObject).isContainment()) {
+					sb.append(((EReference) eObject).getName());
+				} else {
+					if(eObject.getClass() != null && eObject.getClass().getInterfaces() != null && eObject.getClass().getInterfaces()[0] != null) {
+						String className = eObject.getClass().getInterfaces()[0].toString();
+						className = className.substring(className.lastIndexOf(".")+1);
+						sb.append(getName(className));
+						lookForName = true;
 					}
-				} catch (Exception e) {
 				}
-				try {
-					String name = BeanUtils.getProperty(eObject, "name");
-					if(!name.equals("name") && !name.isEmpty()  && name != null) {
-						sb.append(" ("+name+")");
+				if(lookForName && includeLookForName) {
+					try {
+						String id = BeanUtils.getProperty(eObject, "id");
+						if(!id.equals("id") && !id.isEmpty()  && id != null) {
+							sb.append(" ["+id+"]");
+						}
+					} catch (Exception e) {
 					}
-				} catch (Exception e) {
+					try {
+						String name = BeanUtils.getProperty(eObject, "name");
+						if(!name.equals("name") && !name.isEmpty()  && name != null) {
+							sb.append(" ("+name+")");
+						}
+					} catch (Exception e) {
+					}
 				}
 			}
+			
+			
+			return sb.toString();
+		} else {
+			return "";
 		}
-		
-		
-		return sb.toString();
 	}
 	
 	public void  buildRef(EObject raiz, EReferenceImpl ref, EClass refClass) {
@@ -449,6 +453,17 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			getFacesMessages().add(e.getMessage());
 		}
 	}
+	
+	public void useUploadFile() {
+		this.loadFromFile = true;
+	} 
+	public void useEditor() {
+		this.loadFromFile = false;
+	} 
+	public void clearExpFilePath() {
+		this.setMyexpPath(null);
+	} 
+	
 	
 	public String undeployWorkflow() {
 		clearDesign();
@@ -615,6 +630,31 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		seamDao.merge(w);
 		seamDao.flush();
 	}
+	public void uploadExpFile(UploadEvent event) {
+		setMyexpPath(event.getUploadItem().getFile().getAbsolutePath());
+	}
+	public void deployExpFile() {
+		try {
+			EObject eObject = dslUtil.convertExpTextToEcore(this.getMyexpPath());
+			if(eObject != null) {
+				System.out.println(this.rootModel);
+				System.out.println(eObject);
+				this.rootModel = eObject;
+				this.rootNode = new TreeNodeImpl<EObject>();
+				
+				updateTreeNode(null);
+				this.selectedNode = this.rootNode.getChild(this.getRootModel());
+				this.myexpPath = null;
+				this.loadFromFile = false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			this.myexpPath = null;
+			e.printStackTrace();
+			addError(e.getMessage());
+		}
+	}
+	
 	
 	public void updateDesignTypeToManual(){
 		try {
@@ -680,7 +720,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			}
 			seamDao.merge(this.entity);
 		} catch(Exception e){
-			getFacesMessages().add("Erro ao importar design");
+			getFacesMessages().add("Failed to import design");
 		}
 	}
 	
@@ -784,6 +824,22 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 
 	public void setSelectedRef(EReferenceImpl selectedRef) {
 		this.selectedRef = selectedRef;
+	}
+
+	public boolean isLoadFromFile() {
+		return loadFromFile;
+	}
+
+	public void setLoadFromFile(boolean loadFromFile) {
+		this.loadFromFile = loadFromFile;
+	}
+
+	public String getMyexpPath() {
+		return myexpPath;
+	}
+
+	public void setMyexpPath(String myexpPath) {
+		this.myexpPath = myexpPath;
 	}
 
 }

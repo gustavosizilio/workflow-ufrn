@@ -16,7 +16,6 @@ import javax.persistence.OneToOne;
 
 import org.domain.model.User;
 import org.domain.model.generic.GenericEntity;
-import org.domain.model.processDefinition.metric.Metric;
 import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.model.processDefinition.metric.QuestionnaireType;
 

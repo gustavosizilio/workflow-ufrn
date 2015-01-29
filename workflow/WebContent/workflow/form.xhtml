@@ -11,13 +11,20 @@
 
 	<h:panelGroup id="panelForm" styleClass="panelForm">
 		<h:panelGroup styleClass="backNodePanel">
-			<a4j:commandLink value="#{messages['layout.text.back']}"
+			<a4j:commandLink eventsQueue="q" value="#{messages['layout.text.back']}"
 				action="#{action.updateSelectedNode(action.selectedNode.parent)}"
 				rendered="#{action.selectedNode.parent.data != null}"
 				reRender="panelForm" />
 			<h:outputText
 				value="#{action.getName(action.selectedNode.data, false)}"
 				styleClass="refNodeTitle" />
+				
+			<a4j:commandLink eventsQueue="q" action="#{action.useUploadFile}" value="[#{messages['layout.text.workflow.loadFromExpFile']}]"
+				rendered="#{action.selectedNode.parent.data == null and !action.loadFromFile}" reRender="panelForm" >
+			</a4j:commandLink>
+			<a4j:commandLink eventsQueue="q" action="#{action.useEditor}" value="[#{messages['layout.text.workflow.backToEditor']}]"
+				rendered="#{action.selectedNode.parent.data == null and action.loadFromFile}" reRender="panelForm">
+			</a4j:commandLink>
 				
 			<rich:panel styleClass="hint" rendered="#{action.getHint(action.selectedNode.data) != null}">
 				<rich:toolTip>
@@ -27,150 +34,177 @@
 		        </rich:toolTip>
 			</rich:panel>
 			
-			<rich:separator></rich:separator>
-			<h:panelGroup id="moreActions" styleClass="moreActions">
-				<rich:dataGrid styleClass="hiddenBorders"
-					value="#{action.getRefs(action.selectedNode.data)}" var="ref">
+			<h:panelGroup rendered="#{!action.loadFromFile}">
+				<rich:separator></rich:separator>
+				<h:panelGroup id="moreActions" styleClass="moreActions">
 					<rich:dataGrid styleClass="hiddenBorders"
-						value="#{action.dslUtil.findClasses(ref)}" var="eclass">
-						<a4j:commandButton styleClass="refButton"
-							value="#{messages['layout.text.new']} #{action.getName(eclass.name)}"
-							action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
-							reRender="panelForm" disabled="#{(action.getRefsObjects(action.selectedNode.data, ref).size > 0 and !ref.isMany())}" />
-						
-						<rich:panel styleClass="hint" rendered="#{action.getHint(eclass) != null}">
+						value="#{action.getRefs(action.selectedNode.data)}" var="ref">
+						<rich:dataGrid styleClass="hiddenBorders"
+							value="#{action.dslUtil.findClasses(ref)}" var="eclass">
+							<a4j:commandButton eventsQueue="q" styleClass="refButton"
+								value="#{messages['layout.text.new']} #{action.getName(eclass.name)}"
+								action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
+								reRender="panelForm" disabled="#{(action.getRefsObjects(action.selectedNode.data, ref).size > 0 and !ref.isMany())}" />
+							
+							<rich:panel styleClass="hint" rendered="#{action.getHint(eclass) != null}">
+								<rich:toolTip>
+						            <span style="white-space:nowrap">
+						                <h:outputText value="#{action.getHint(eclass)}" />
+						            </span>
+						        </rich:toolTip>
+							</rich:panel>
+							
+							<br style="clear: both;" />
+						</rich:dataGrid>
+					</rich:dataGrid>
+	
+					<rich:separator></rich:separator>
+				</h:panelGroup>
+				<br />
+				<h:panelGroup id="itemChildren" styleClass="moreActions">
+					<rich:dataGrid styleClass="hiddenBorders"
+						value="#{action.getRefs(action.selectedNode.data)}" var="ref">
+						<rich:dataGrid styleClass="hiddenBorders"
+							value="#{action.getChildren(action.selectedNode, ref)}"
+							var="refNode">
+							<a4j:commandButton eventsQueue="q" value="#{action.getName(refNode.data, true)}"
+								styleClass="refButton refButtonLeft"
+								action="#{action.updateSelectedNode(refNode)}"
+								reRender="panelForm" />
+	
+							<a4j:commandButton eventsQueue="q" value="#{messages['layout.text.remove']}"
+								styleClass="refButton refButtonRight"
+								onclick="if (! confirm('Really want to do that?')) return false"
+								action="#{action.removeRef(action.selectedNode, refNode.data, ref)}"
+								reRender="panelForm" />
+	
+							<br style="clear: both;" />
+						</rich:dataGrid>
+					</rich:dataGrid>
+				</h:panelGroup>
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="nodePanel" >
+			<h:panelGroup rendered="#{action.loadFromFile}"> 
+				<h:panelGroup rendered="#{action.myexpPath == null}">
+					<a4j:jsFunction name="refreshPanel" reRender="panelForm" />
+					<rich:fileUpload
+						uploadControlLabel="#{messages['layout.text.send']}"
+						immediateUpload="false"
+						listHeight="70px;"
+			            noDuplicate="true" listWidth="350px;" 
+			            locale="pt-BR" 
+			            autoclear="false"
+			            maxFilesQuantity="1" 
+			            cancelEntryControlLabel="#{messages['layout.text.workflow.clean']}"
+			            transferErrorLabel="#{messages['layout.messages.fileUploadError']}"           
+			            fileUploadListener="#{action.uploadExpFile}"
+			            onfileuploadcomplete="refreshPanel()">		            
+			        </rich:fileUpload>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{action.myexpPath != null}">
+					<a4j:commandButton reRender="panelForm" action="#{action.deployExpFile}" value="messages['layout.messages.deployExpFile']"/>
+					<h:outputText value="   " />
+					<a4j:commandButton reRender="panelForm" action="#{action.clearExpFilePath}" value="messages['layout.messages.cancel']"/>
+				</h:panelGroup>
+			</h:panelGroup>
+			
+			<h:panelGroup rendered="#{!action.loadFromFile and action.selectedNode.data != action.rootModel}"> 
+				<h:outputText
+					value="#{action.getName(action.selectedNode.data, true)}"
+					styleClass="refNodeTitle" />
+				<rich:separator></rich:separator>
+				<rich:dataGrid styleClass="hiddenBorders"
+					value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
+	
+					<h:panelGroup class="attrNodeTitleContent">
+						<rich:panel styleClass="hint" rendered="#{action.getHint(attr[0]) != null}">
 							<rich:toolTip>
 					            <span style="white-space:nowrap">
-					                <h:outputText value="#{action.getHint(eclass)}" />
+					                <h:outputText value="#{action.getHint(attr[0])}" />
 					            </span>
 					        </rich:toolTip>
 						</rich:panel>
 						
-						<br style="clear: both;" />
-					</rich:dataGrid>
+						<h:outputText value="#{action.getName(attr[0], false)}: "
+							styleClass="attrNodeTitle" />
+							
+					</h:panelGroup>
+	
+					<h:panelGroup class="attrNodeTitleField">
+	
+						<h:panelGroup
+							rendered="#{action.getFieldType(attr[0]) eq 'string'}">
+							<h:inputTextarea value="#{attr[1]}" />
+						</h:panelGroup>
+	
+						<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'int'}">
+							<rich:inputNumberSpinner value="#{attr[1]}"
+								converter="javax.faces.Integer" />
+						</h:panelGroup>
+	
+						<h:panelGroup
+							rendered="#{action.getFieldType(attr[0]) eq 'enumOne'}">
+							<h:selectOneMenu value="#{attr[1]}">
+								<s:selectItems
+									value="#{attr[0].getEType().getDefaultValue().values()}"
+									var="enum" label="#{enum.literal}" noSelectionLabel="---" />
+								<s:convertEnum />
+							</h:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup
+							rendered="#{action.getFieldType(attr[0]) eq 'enumMany'}">
+							<h:selectManyMenu value="#{attr[1]}">
+								<s:selectItems
+									value="#{attr[0].getEType().getDefaultValue().values()}"
+									var="enum" label="#{enum.literal}" />
+								<s:convertEnum />
+							</h:selectManyMenu>
+						</h:panelGroup>
+	
+	
+						<h:panelGroup
+							rendered="#{action.getFieldType(attr[0]) eq 'refAttrOne'}">
+							<h:selectOneMenu value="#{attr[1]}">
+								<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
+									label="#{action.getName(o, true)}" noSelectionLabel="---" />
+								<f:converter converterId="SimpleIndexConverter" />
+							</h:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup
+							rendered="#{action.getFieldType(attr[0]) eq 'refAttrMany'}">
+							<h:selectManyMenu value="#{attr[1]}">
+								<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
+									label="#{action.getName(o, true)}" />
+								<f:converter converterId="SimpleIndexConverter" />
+							</h:selectManyMenu>
+						</h:panelGroup>
+	
+					</h:panelGroup>
+					<br style="clear: both" />
+	
 				</rich:dataGrid>
-
-				<rich:separator></rich:separator>
-			</h:panelGroup>
-			<br />
-			<h:panelGroup id="itemChildren" styleClass="moreActions">
-				<rich:dataGrid styleClass="hiddenBorders"
-					value="#{action.getRefs(action.selectedNode.data)}" var="ref">
-					<rich:dataGrid styleClass="hiddenBorders"
-						value="#{action.getChildren(action.selectedNode, ref)}"
-						var="refNode">
-						<a4j:commandButton value="#{action.getName(refNode.data, true)}"
-							styleClass="refButton refButtonLeft"
-							action="#{action.updateSelectedNode(refNode)}"
-							reRender="panelForm" />
-
-						<a4j:commandButton value="#{messages['layout.text.remove']}"
-							styleClass="refButton refButtonRight"
-							onclick="if (! confirm('Really want to do that?')) return false"
-							action="#{action.removeRef(action.selectedNode, refNode.data, ref)}"
-							reRender="panelForm" />
-
-						<br style="clear: both;" />
-					</rich:dataGrid>
-				</rich:dataGrid>
-			</h:panelGroup>
-		</h:panelGroup>
-
-		<h:panelGroup styleClass="nodePanel"
-			rendered="#{action.selectedNode.data != action.rootModel}">
-			<h:outputText
-				value="#{action.getName(action.selectedNode.data, true)}"
-				styleClass="refNodeTitle" />
-			<rich:separator></rich:separator>
-			<rich:dataGrid styleClass="hiddenBorders"
-				value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
-
-				<h:panelGroup class="attrNodeTitleContent">
-					<rich:panel styleClass="hint" rendered="#{action.getHint(attr[0]) != null}">
-						<rich:toolTip>
-				            <span style="white-space:nowrap">
-				                <h:outputText value="#{action.getHint(attr[0])}" />
-				            </span>
-				        </rich:toolTip>
-					</rich:panel>
-					
-					<h:outputText value="#{action.getName(attr[0], false)}: "
-						styleClass="attrNodeTitle" />
-						
-				</h:panelGroup>
-
-				<h:panelGroup class="attrNodeTitleField">
-
-					<h:panelGroup
-						rendered="#{action.getFieldType(attr[0]) eq 'string'}">
-						<h:inputTextarea value="#{attr[1]}" />
-					</h:panelGroup>
-
-					<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'int'}">
-						<rich:inputNumberSpinner value="#{attr[1]}"
-							converter="javax.faces.Integer" />
-					</h:panelGroup>
-
-					<h:panelGroup
-						rendered="#{action.getFieldType(attr[0]) eq 'enumOne'}">
-						<h:selectOneMenu value="#{attr[1]}">
-							<s:selectItems
-								value="#{attr[0].getEType().getDefaultValue().values()}"
-								var="enum" label="#{enum.literal}" noSelectionLabel="---" />
-							<s:convertEnum />
-						</h:selectOneMenu>
-					</h:panelGroup>
-					<h:panelGroup
-						rendered="#{action.getFieldType(attr[0]) eq 'enumMany'}">
-						<h:selectManyMenu value="#{attr[1]}">
-							<s:selectItems
-								value="#{attr[0].getEType().getDefaultValue().values()}"
-								var="enum" label="#{enum.literal}" />
-							<s:convertEnum />
-						</h:selectManyMenu>
-					</h:panelGroup>
-
-
-					<h:panelGroup
-						rendered="#{action.getFieldType(attr[0]) eq 'refAttrOne'}">
-						<h:selectOneMenu value="#{attr[1]}">
-							<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
-								label="#{action.getName(o, true)}" noSelectionLabel="---" />
-							<f:converter converterId="SimpleIndexConverter" />
-						</h:selectOneMenu>
-					</h:panelGroup>
-					<h:panelGroup
-						rendered="#{action.getFieldType(attr[0]) eq 'refAttrMany'}">
-						<h:selectManyMenu value="#{attr[1]}">
-							<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
-								label="#{action.getName(o, true)}" />
-							<f:converter converterId="SimpleIndexConverter" />
-						</h:selectManyMenu>
-					</h:panelGroup>
-
-				</h:panelGroup>
 				<br style="clear: both" />
-
-			</rich:dataGrid>
-			<br style="clear: both" />
-			
-			<a4j:commandButton value="#{messages['layout.text.updateAndContinue']}" action="#{action.updateAttrProperties}"
-				reRender="panelForm" />
-			<h:outputText value="   " />
-			<a4j:commandButton value="#{messages['layout.text.updateAndBack']}" action="#{action.updateAttrProperties}">
-				<a4j:support event="oncomplete" action="#{action.updateSelectedNode(action.selectedNode.getParent())}"
-				reRender="panelForm" />
-			</a4j:commandButton>
-			<h:outputText value="   " />
-			<a4j:commandButton value="#{messages['layout.text.cancel']}"
-				action="#{action.updateSelectedNode(action.selectedNode.parent)}"
-				reRender="panelForm" />
+				
+				<a4j:commandButton eventsQueue="q" value="#{messages['layout.text.updateAndContinue']}" action="#{action.updateAttrProperties}"
+					reRender="panelForm" />
 				<h:outputText value="   " />
-			<a4j:commandButton value="#{messages['layout.text.cancelAndRemove']}" rendered="#{action.selectedRef != null}"
-				action="#{action.removeRef(action.selectedNode.parent, action.selectedNode.data, action.selectedRef)}">
-				<a4j:support action="#{action.updateSelectedNode(action.selectedNode.parent)}"
-					reRender="panelForm" event="oncomplete"/>
-			</a4j:commandButton>
+				<a4j:commandButton eventsQueue="q" value="#{messages['layout.text.updateAndBack']}" action="#{action.updateAttrProperties}">
+					<a4j:support event="oncomplete" action="#{action.updateSelectedNode(action.selectedNode.getParent())}"
+					reRender="panelForm" />
+				</a4j:commandButton>
+				<h:outputText value="   " />
+				<a4j:commandButton eventsQueue="q" value="#{messages['layout.text.cancel']}"
+					action="#{action.updateSelectedNode(action.selectedNode.parent)}"
+					reRender="panelForm" />
+					<h:outputText value="   " />
+				<a4j:commandButton eventsQueue="q" value="#{messages['layout.text.cancelAndRemove']}" rendered="#{action.selectedRef != null}"
+					action="#{action.removeRef(action.selectedNode.parent, action.selectedNode.data, action.selectedRef)}">
+					<a4j:support action="#{action.updateSelectedNode(action.selectedNode.parent)}"
+						reRender="panelForm" event="oncomplete"/>
+				</a4j:commandButton>
+			</h:panelGroup>
 		</h:panelGroup>
 
 

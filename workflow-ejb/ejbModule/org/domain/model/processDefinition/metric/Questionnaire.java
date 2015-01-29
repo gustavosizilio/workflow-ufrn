@@ -28,19 +28,18 @@ public class Questionnaire {
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private Workflow workflow;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="questionnaire")
-	private List<Metric> metrics;
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="questionnaire")
 	private List<Question> questions;
 	@Enumerated(EnumType.STRING)
 	private QuestionnaireType questionnaireType;
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private ProcessDefinition process;
+	@ManyToOne(cascade=CascadeType.REFRESH)
+	private TaskNode taskNode;
 	@Transient
 	private String processName;
 	
 	
 	public Questionnaire(String name) {
-		this.metrics = new ArrayList<Metric>();
 		this.questions = new ArrayList<Question>();
 		this.name = name;
 	}
@@ -65,13 +64,6 @@ public class Questionnaire {
 	public void setQuestions(List<Question> questions) {
 		this.questions = questions;
 	}
-	public List<Metric> getMetrics() {
-		return metrics;
-	}
-	public void setMetrics(List<Metric> metrics) {
-		this.metrics = metrics;
-	}
-	
 	public QuestionnaireType getQuestionnaireType() {
 		return questionnaireType;
 	}
@@ -96,9 +88,9 @@ public class Questionnaire {
 	public void setWorkflow(Workflow workflow) {
 		this.workflow = workflow;
 	}
-	public boolean isFinished(User user, Metric metric, TaskNode task) {
+	public boolean isFinished(User user, TaskNode task) {
 		for (Question q : this.getQuestions()) {
-			if(!q.isFinished(user, metric, task))
+			if(!q.isFinished(user, task))
 				return false;
 		}
 		return true;
@@ -109,5 +101,11 @@ public class Questionnaire {
 				return false;
 		}
 		return true;
+	}
+	public TaskNode getTaskNode() {
+		return taskNode;
+	}
+	public void setTaskNode(TaskNode taskNode) {
+		this.taskNode = taskNode;
 	}
 }

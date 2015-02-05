@@ -267,7 +267,7 @@ public class WorkflowConfiguration {
 		seamDao.refresh(getEntity());
 		if(userProperty != null && getProcessDefinitionProperty() != null && !getProcessDefinitionProperty().getUsers().contains(userProperty)
 				&& getEntity().isManualDesign() ){
-			UserAssignment userAssignment = new UserAssignment(userProperty, getProcessDefinitionProperty());
+			UserAssignment userAssignment = new UserAssignment(userProperty, getProcessDefinitionProperty(), null);
 			seamDao.persist(userAssignment);
 			seamDao.refresh(getProcessDefinitionProperty());
 

@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.domain.model.User;
 import org.domain.model.processDefinition.dataType.ArtefactType;
 
 @Entity
@@ -35,9 +34,9 @@ public class Artefact {
 		this.artefactFiles = new ArrayList<ArtefactFile>();
 	}
 	
-	public ArtefactFile getUserArtefactFile(User currentUser){
+	public ArtefactFile getUserArtefactFile(UserAssignment userAssignment){
 		for (ArtefactFile artefactFile : artefactFiles) {
-			if(artefactFile.getUserExecution() != null && artefactFile.getUserExecution().getUser().equals(currentUser)){
+			if(artefactFile.getUserExecution() != null && artefactFile.getUserExecution().getUserAssignment().equals(userAssignment)){
 				return artefactFile;
 			}
 		}

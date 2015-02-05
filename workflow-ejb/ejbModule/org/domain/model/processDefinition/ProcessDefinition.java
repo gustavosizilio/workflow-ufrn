@@ -234,9 +234,9 @@ public class ProcessDefinition extends GenericEntity{
 		return users;
 	}
 	
-	public boolean startedByUser(User u){
+	public boolean startedByUserAssignment(UserAssignment userAssignment){
 		for (TaskNode taskNode : getTaskNodes()) {
-			if(taskNode.startedByUser(u))
+			if(taskNode.startedByUserAssignment(userAssignment))
 				return true;
 		}
 		return false;

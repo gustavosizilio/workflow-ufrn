@@ -45,6 +45,7 @@ public class WorkflowExecuter {
 	@In("userAssignmentDao") protected UserAssignmentDAO userAssignmentDao;
 	@In("seamDao") protected SeamDAO seamDao;
 	@In("user") protected User user;
+	
 	@In
 	private FacesMessages facesMessages;
 	
@@ -52,6 +53,7 @@ public class WorkflowExecuter {
 	private static final String WORKFLOW_EXECUTE_XHTML = "/workflow/execute.xhtml";
 	private List<UserAssignment> entities;
 	
+	private UserAssignment userAssignment;
 	private ProcessDefinition currentProcess;
 	private TaskNode currentTaskNode;
 	private UserExecution currentUserExecution;
@@ -65,6 +67,7 @@ public class WorkflowExecuter {
 	private Questionnaire currentQuestionnaire;
 	
 	public String init(ProcessDefinition process, UserAssignment ua){
+		this.userAssignment = ua;
 		if(process.canExecute(ua)){
 			this.setCurrentProcess(process);
 			this.setStartState(process.getStartState());
@@ -141,9 +144,9 @@ public class WorkflowExecuter {
 		setCurrentTaskExecution(null);
 		if(currentTaskNode != null) {
 			for (Task task : currentTaskNode.getTasks()) {
-				if(task.startedByUser(user) && !task.finishedByUser(user)){
+				if(task.startedByUserAssignment(userAssignment) && !task.finishedByUserAssignment(userAssignment)){
 					setCurrentTask(task);
-					setCurrentTaskExecution(currentTask.getTaskExecutionByUser(user));
+					setCurrentTaskExecution(currentTask.getTaskExecutionByUserAssignment(userAssignment));
 					stopBreakCurrentTask();
 					stopBreakOthersTasks();
 					break;
@@ -160,7 +163,7 @@ public class WorkflowExecuter {
 	}
 	
 	private void stopBreakCurrentTask() {
-		TaskExecution taskExecution = this.currentTask.getTaskExecutionByUser(user);
+		TaskExecution taskExecution = this.currentTask.getTaskExecutionByUserAssignment(userAssignment);
 		for (Break break1 : taskExecution.getBreakes()) {
 			if(break1.getFinishedAt() == null){
 				break1.setFinishedAt(new GregorianCalendar());
@@ -174,7 +177,7 @@ public class WorkflowExecuter {
 	private void stopBreakOthersTasks() {
 		for (Task task : this.currentTaskNode.getTasks()) {
 			if(!task.equals(this.currentTask)){
-				TaskExecution taskExecution = task.getTaskExecutionByUser(user);
+				TaskExecution taskExecution = task.getTaskExecutionByUserAssignment(userAssignment);
 				if(taskExecution != null){
 					for (Break break1 : taskExecution.getBreakes()) {
 						if(break1.getFinishedAt() == null){
@@ -190,9 +193,9 @@ public class WorkflowExecuter {
 
 	private void breakOthersTasks() {
 		for (Task task : currentTaskNode.getTasks()) {
-			TaskExecution taskExecution = task.getTaskExecutionByUser(user);
+			TaskExecution taskExecution = task.getTaskExecutionByUserAssignment(userAssignment);
 			if(taskExecution != null && !taskExecution.equals(currentTaskExecution) && !taskExecution.isFinished()){
-				Break newBreak = new Break(task.getTaskExecutionByUser(user), true);
+				Break newBreak = new Break(task.getTaskExecutionByUserAssignment(userAssignment), true);
 				newBreak.setReason("Starting another task");
 				this.seamDao.persist(newBreak);
 				
@@ -205,8 +208,8 @@ public class WorkflowExecuter {
 
 	private void startTaskExecution() {
 		if(this.currentTask != null){
-			if(!this.currentTask.startedByUser(user)){
-					TaskExecution taskExecution = new TaskExecution(user, true);
+			if(!this.currentTask.startedByUserAssignment(userAssignment)){
+					TaskExecution taskExecution = new TaskExecution(userAssignment, true);
 					taskExecution.setTask(currentTask);
 					seamDao.persist(taskExecution);
 					currentTask.getTaskExecutions().add(taskExecution);
@@ -214,14 +217,14 @@ public class WorkflowExecuter {
 					seamDao.flush();
 					setCurrentTaskExecution(taskExecution);
 			} else {
-				setCurrentTaskExecution(currentTask.getTaskExecutionByUser(user));
+				setCurrentTaskExecution(currentTask.getTaskExecutionByUserAssignment(userAssignment));
 			}
 		}
 	}
 	
 	public void finishTaskExecution() {
 		if(currentTaskExecution != null && currentTask != null){
-			if(!currentTask.finishedByUser(user)){
+			if(!currentTask.finishedByUserAssignment(userAssignment)){
 				if(validateCurrentTask()){
 					currentTaskExecution.finish();			
 					seamDao.merge(currentTaskExecution);
@@ -282,7 +285,7 @@ public class WorkflowExecuter {
 	private boolean validatePreProcessQuestionnaires() {
 		if(isStartingState()){
 			for (Questionnaire q : this.currentProcess.getPreQuestionnaires()) {
-				if(!q.isFinished(user)){
+				if(!q.isFinished(userAssignment)){
 					facesMessages.add(Severity.ERROR, "You should complete all questionnaires!");
 					return false;
 				}
@@ -294,13 +297,13 @@ public class WorkflowExecuter {
 	private boolean validateCurrentTaskNode() {
 		if(currentTaskNode != null){
 			for (Task task : currentTaskNode.getTasks()) {
-				if(!task.finishedByUser(user)){
+				if(!task.finishedByUserAssignment(userAssignment)){
 					facesMessages.add(Severity.ERROR, "You should finish all tasks!");
 					return false;
 				}
 			}	
 			for (Questionnaire q : currentTaskNode.getQuestionnaires()) {
-				if(!q.isFinished(user, this.currentTaskNode)){
+				if(!q.isFinished(userAssignment, this.currentTaskNode)){
 					facesMessages.add(Severity.ERROR, "You should complete all questionnaires!");
 					return false;
 				}
@@ -319,7 +322,7 @@ public class WorkflowExecuter {
 	
 	public void saveQuestionnaire(){
 		for (Question q : this.currentQuestionnaire.getQuestions()) {
-			UserAnswer uan = q.getUserAnswer(user, this.currentTaskNode);
+			UserAnswer uan = q.getUserAssignmentAnswer(userAssignment, this.currentTaskNode);
 			if(uan.getId() == null ||  uan.getId() == 0){
 				seamDao.persist(uan);
 			} else {
@@ -371,8 +374,8 @@ public class WorkflowExecuter {
 	
 	private void startUserExecution() {
 		if(currentTaskNode != null){
-			if(!currentTaskNode.startedByUser(user)){
-					UserExecution userExecution = new UserExecution(user, true);
+			if(!currentTaskNode.startedByUserAssignment(userAssignment)){
+					UserExecution userExecution = new UserExecution(userAssignment, true);
 					userExecution.setTaskNode(currentTaskNode);
 					seamDao.persist(userExecution);
 					currentTaskNode.getUserExecutions().add(userExecution);
@@ -384,14 +387,14 @@ public class WorkflowExecuter {
 					seamDao.flush();
 					currentUserExecution = userExecution;
 			} else {
-				setCurrentUserExecution(currentTaskNode.getUserExecutionByUser(user));
+				setCurrentUserExecution(currentTaskNode.getUserExecutionByUserAssignment(userAssignment));
 			}
 		}
 	}
 
 	private void finishUserExecution() {
 		if(currentUserExecution != null && currentTaskNode != null){
-			if(!currentTaskNode.finishedByUser(user)){
+			if(!currentTaskNode.finishedByUserAssignment(userAssignment)){
 				currentUserExecution.finish();			
 				seamDao.merge(currentUserExecution);
 				seamDao.flush();
@@ -484,5 +487,13 @@ public class WorkflowExecuter {
 
 	public void setCurrentTaskExecution(TaskExecution currentTaskExecution) {
 		this.currentTaskExecution = currentTaskExecution;
+	}
+
+	public UserAssignment getUserAssignment() {
+		return userAssignment;
+	}
+
+	public void setUserAssignment(UserAssignment userAssignment) {
+		this.userAssignment = userAssignment;
 	}
 }

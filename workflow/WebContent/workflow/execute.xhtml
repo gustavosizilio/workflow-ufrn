@@ -134,7 +134,7 @@
 			<ui:repeat var="q" value="#{executer.currentProcess.preQuestionnaires}">
 					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
 					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
-					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(user)}" />
+					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(executer.userAssignment)}" />
 				    </a4j:commandButton>
 			</ui:repeat>
 		</h:panelGroup>
@@ -143,7 +143,7 @@
 			<ui:repeat var="q" value="#{executer.currentProcess.postQuestionnaires}">
 					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
 					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
-					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(user)}" />
+					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(executer.userAssignment)}" />
 				    </a4j:commandButton>
 			</ui:repeat>
 		</h:panelGroup>
@@ -206,7 +206,7 @@
 		        		<h3><h:outputText value="Questionnaire: #{executer.currentQuestionnaire.name}" /></h3>
 		        		<ui:include src="questionnaireFields.xhtml" >
 		        			<ui:param name="questions" value="#{executer.currentQuestionnaire.questions}" />
-		        			<ui:param name="disabledFields" value="#{executer.currentQuestionnaire.isFinished(user, executer.currentTaskNode)}" />
+		        			<ui:param name="disabledFields" value="#{executer.currentQuestionnaire.isFinished(executer.userAssignment, executer.currentTaskNode)}" />
 		        			<ui:param name="taskNode" value="#{executer.currentTaskNode}" />
 		        		</ui:include>
 		        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaireMetric" onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )" />

@@ -16,8 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
-import org.domain.model.User;
 import org.domain.model.processDefinition.TaskNode;
+import org.domain.model.processDefinition.UserAssignment;
 
 @Entity
 public class Question {
@@ -131,10 +131,10 @@ public class Question {
 		this.options = options;
 	}
 	
-	public UserAnswer getUserAnswer(User u, TaskNode task) {
+	public UserAnswer getUserAssignmentAnswer(UserAssignment userAssignment, TaskNode task) {
 		UserAnswer an = null;
 		for (UserAnswer a : getUserAnswers()) {
-			if(a.getUser().getId().equals(u.getId())){
+			if(a.getUserAssignment().equals(userAssignment)){
 				if(task != null) {
 					if(a.getTaskNode() != null && a.getTaskNode().getId().equals(task.getId())){
 						an = a;
@@ -146,7 +146,7 @@ public class Question {
 			}
 		}
 		if (an == null){
-			an = new UserAnswer(u);
+			an = new UserAnswer(userAssignment);
 			an.setQuestion(this);
 			an.setCreatedAt(new GregorianCalendar());
 			an.setTaskNode(task);
@@ -155,8 +155,8 @@ public class Question {
 		return an;
 	}
 	
-	public UserAnswer getUserAnswer(User u) {
-		return getUserAnswer(u, null);
+	public UserAnswer getUserAssignmentAnswer(UserAssignment userAssignment) {
+		return getUserAssignmentAnswer(userAssignment, null);
 	}
 
 	public List<UserAnswer> getUserAnswers() {
@@ -167,15 +167,15 @@ public class Question {
 		this.userAnswers = userAnswers;
 	}
 
-	public boolean isFinished(User user, TaskNode task) {
-		UserAnswer an = this.getUserAnswer(user, task);
+	public boolean isFinished(UserAssignment userAssignment, TaskNode task) {
+		UserAnswer an = this.getUserAssignmentAnswer(userAssignment, task);
 		if(an == null || an.getAnswer() == null || an.getAnswer().isEmpty()){
 			return false;
 		}
 		return true;
 	}
-	public boolean isFinished(User user) {
-		UserAnswer an = this.getUserAnswer(user);
+	public boolean isFinished(UserAssignment userAssignment) {
+		UserAnswer an = this.getUserAssignmentAnswer(userAssignment);
 		if(an == null || an.getAnswer() == null || an.getAnswer().isEmpty()){
 			return false;
 		}

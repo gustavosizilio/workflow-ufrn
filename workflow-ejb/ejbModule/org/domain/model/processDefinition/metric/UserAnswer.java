@@ -15,8 +15,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.domain.model.User;
 import org.domain.model.processDefinition.TaskNode;
+import org.domain.model.processDefinition.UserAssignment;
 
 @Entity
 public class UserAnswer {
@@ -24,7 +24,7 @@ public class UserAnswer {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@OneToOne(cascade=CascadeType.REFRESH)
-	private User user;
+	private UserAssignment userAssignment;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar createdAt;
 	private String answer;
@@ -41,8 +41,8 @@ public class UserAnswer {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public UserAnswer(User u) {
-		this.user = u;
+	public UserAnswer(UserAssignment userAssignment) {
+		this.userAssignment = userAssignment;
 	}
 	
 	/*public Object getValue(){
@@ -52,16 +52,6 @@ public class UserAnswer {
 		
 		return answer;
 	}*/
-
-
-	public User getUser() {
-		return user;
-	}
-
-
-	public void setUser(User user) {
-		this.user = user;
-	}
 
 
 	public Calendar getCreatedAt() {
@@ -120,5 +110,13 @@ public class UserAnswer {
 
 	public void setTaskNode(TaskNode taskNode) {
 		this.taskNode = taskNode;
+	}
+
+	public UserAssignment getUserAssignment() {
+		return userAssignment;
+	}
+
+	public void setUserAssignment(UserAssignment userAssignment) {
+		this.userAssignment = userAssignment;
 	}
 }

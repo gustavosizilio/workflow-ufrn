@@ -111,6 +111,16 @@ public class UserAssignment implements Comparable<UserAssignment>{
 		}
 		return 0;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj!= null && obj instanceof UserAssignment) {
+			return ((UserAssignment)obj).getId().equals(this.getId());
+		}
+		
+		return false;
+	}
+	
 	public String getKeyFactors() {
 		return keyFactors;
 	}

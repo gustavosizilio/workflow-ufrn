@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.domain.model.User;
 import org.domain.model.processDefinition.dataType.ArtefactType;
 import org.domain.model.processDefinition.metric.Questionnaire;
 
@@ -114,24 +113,24 @@ public class TaskNode {
 		this.userExecutions = userExecutions;
 	}
 	
-	public boolean startedByUser(User user){
-		if(getUserExecutionByUser(user) != null){
+	public boolean startedByUserAssignment(UserAssignment userAssignment){
+		if(getUserExecutionByUserAssignment(userAssignment) != null){
 			return true;
 		} else {
 			return false;
 		}
 	}
-	public boolean finishedByUser(User user){
-		UserExecution userExecution = getUserExecutionByUser(user);
+	public boolean finishedByUserAssignment(UserAssignment userAssignment){
+		UserExecution userExecution = getUserExecutionByUserAssignment(userAssignment);
 		if(userExecution != null && userExecution.getFinishedAt() != null){
 			return true;
 		} else {
 			return false;
 		}
 	}
-	public UserExecution getUserExecutionByUser(User user){
+	public UserExecution getUserExecutionByUserAssignment(UserAssignment userAssignment){
 		for (UserExecution userExecution : userExecutions) {
-			if(userExecution.getUser().equals(user)){
+			if(userExecution.getUserAssignment().equals(userAssignment)){
 				return userExecution;
 			}
 		}

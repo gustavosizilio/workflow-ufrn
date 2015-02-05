@@ -16,15 +16,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.domain.model.User;
-
 @Entity
 public class UserExecution {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@OneToOne(cascade=CascadeType.REFRESH)
-	private User user;
+	private UserAssignment userAssignment;
 	@ManyToOne
 	private TaskNode taskNode;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -43,9 +41,9 @@ public class UserExecution {
 		this.artefactFiles = new ArrayList<ArtefactFile>();
 		this.breakes = new ArrayList<Break>();
 	}
-	public UserExecution(User user, boolean start) {
+	public UserExecution(UserAssignment userAssignment, boolean start) {
 		this();
-		this.user = user;
+		this.userAssignment = userAssignment;
 		if(start){
 			startedAt = Calendar.getInstance();
 		}
@@ -54,7 +52,7 @@ public class UserExecution {
 	public List<TaskExecution> getTasksExecutions(){
 		List<TaskExecution> taskExecutions = new ArrayList<TaskExecution>();
 		for (Task task : this.getTaskNode().getTasks()) {
-			TaskExecution te = task.getTaskExecutionByUser(this.user);
+			TaskExecution te = task.getTaskExecutionByUserAssignment(this.userAssignment);
 			if(te!=null){
 				taskExecutions.add(te);
 			}
@@ -62,7 +60,7 @@ public class UserExecution {
 		return taskExecutions;
 	}
 	public TaskExecution getTaskExecution(Task task){
-		TaskExecution te = task.getTaskExecutionByUser(this.user);
+		TaskExecution te = task.getTaskExecutionByUserAssignment(this.userAssignment);
 		return te;
 	}
 	public void finish(){
@@ -79,14 +77,6 @@ public class UserExecution {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 	
 	public Long getWastedTime(){
@@ -197,5 +187,11 @@ public class UserExecution {
 	}
 	public void setBreakes(List<Break> breakes) {
 		this.breakes = breakes;
+	}
+	public UserAssignment getUserAssignment() {
+		return userAssignment;
+	}
+	public void setUserAssignment(UserAssignment userAssignment) {
+		this.userAssignment = userAssignment;
 	}
 }

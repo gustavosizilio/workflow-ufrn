@@ -14,9 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
-import org.domain.model.User;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.TaskNode;
+import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.Workflow;
 
 @Entity
@@ -88,16 +88,16 @@ public class Questionnaire {
 	public void setWorkflow(Workflow workflow) {
 		this.workflow = workflow;
 	}
-	public boolean isFinished(User user, TaskNode task) {
+	public boolean isFinished(UserAssignment userAssignment, TaskNode task) {
 		for (Question q : this.getQuestions()) {
-			if(!q.isFinished(user, task))
+			if(!q.isFinished(userAssignment, task))
 				return false;
 		}
 		return true;
 	}
-	public boolean isFinished(User user) {
+	public boolean isFinished(UserAssignment userAssignment) {
 		for (Question q : this.getQuestions()) {
-			if(!q.isFinished(user))
+			if(!q.isFinished(userAssignment))
 				return false;
 		}
 		return true;

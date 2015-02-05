@@ -16,15 +16,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.domain.model.User;
-
 @Entity
 public class TaskExecution {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@OneToOne(cascade=CascadeType.REFRESH)
-	private User user;
+	private UserAssignment userAssignment;
 	@ManyToOne
 	private Task task;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -37,9 +35,9 @@ public class TaskExecution {
 	public TaskExecution() {
 		this.breakes = new ArrayList<Break>();
 	}
-	public TaskExecution(User user, boolean start) {
+	public TaskExecution(UserAssignment userAssignment, boolean start) {
 		this();
-		this.setUser(user);
+		this.setUserAssignment(userAssignment);
 		if(start){
 			startedAt = Calendar.getInstance();
 		}
@@ -149,10 +147,10 @@ public class TaskExecution {
 	public void setTask(Task task) {
 		this.task = task;
 	}
-	public User getUser() {
-		return user;
+	public UserAssignment getUserAssignment() {
+		return userAssignment;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserAssignment(UserAssignment userAssignment) {
+		this.userAssignment = userAssignment;
 	}
 }

@@ -12,7 +12,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.domain.model.User;
 import org.domain.model.processDefinition.dataType.ArtefactType;
 
 @Entity
@@ -35,24 +34,24 @@ public class Task {
 		this.artefacts = new ArrayList<Artefact>();
 	}
 	
-	public boolean startedByUser(User user){
-		if(getTaskExecutionByUser(user) != null){
+	public boolean startedByUserAssignment(UserAssignment userAssignment){
+		if(getTaskExecutionByUserAssignment(userAssignment) != null){
 			return true;
 		} else {
 			return false;
 		}
 	}
-	public boolean finishedByUser(User user){
-		TaskExecution taskExecution = getTaskExecutionByUser(user);
+	public boolean finishedByUserAssignment(UserAssignment userAssignment){
+		TaskExecution taskExecution = getTaskExecutionByUserAssignment(userAssignment);
 		if(taskExecution != null && taskExecution.getFinishedAt() != null){
 			return true;
 		} else {
 			return false;
 		}
 	}
-	public TaskExecution getTaskExecutionByUser(User user){
+	public TaskExecution getTaskExecutionByUserAssignment(UserAssignment userAssignment){
 		for (TaskExecution taskExecution : taskExecutions) {
-			if(taskExecution.getUser().equals(user)){
+			if(taskExecution.getUserAssignment().equals(userAssignment)){
 				return taskExecution;
 			}
 		}

@@ -31,7 +31,7 @@
 			<ui:repeat var="q" value="#{entity.processDefinition.workflow.preQuestionnaires}">
 					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
 					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
-					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(user)}" />
+					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(entity)}" />
 				    </a4j:commandButton>
 			</ui:repeat>
 			<br />
@@ -42,7 +42,7 @@
     		<ui:repeat var="q" value="#{entity.processDefinition.workflow.postQuestionnaires}">
 					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
 					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
-					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(user)}" />
+					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(entity)}" />
 				    </a4j:commandButton>
 			</ui:repeat>
 		</h:panelGroup>

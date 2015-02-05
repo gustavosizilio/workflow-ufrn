@@ -299,12 +299,12 @@ public class WorkflowConfiguration {
 		ArtefactFile artefactfile = new ArtefactFile();
 		seamDao.persist(artefactfile);
 		
-		String path = ReadPropertiesFile.getProperty("components", "artefactPath");
-		path = path + this.currentArtefact.getId() + "/" + artefactfile.getId() + "/";
+		String path = PathBuilder.getArtefactsPath(this.getEntity(), this.currentArtefact, event.getUploadItem().getFileName());
+		//path = path + this.currentArtefact.getId() + "/" + artefactfile.getId() + "/";
 		File upload = new File(path);
 		upload.mkdirs();
 		
-		path = path + event.getUploadItem().getFileName();
+		//path = path + event.getUploadItem().getFileName();
 	    if(event.getUploadItem().getFile().renameTo(new File(path))){
 	    	artefactfile.setFile(path);		
 	    	artefactfile.setArtefact(this.currentArtefact);

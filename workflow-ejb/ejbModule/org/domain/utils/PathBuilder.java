@@ -2,17 +2,23 @@ package org.domain.utils;
 
 import org.domain.dsl.EXPDSLUtil;
 import org.domain.dsl.JPDLDSLUtil;
+import org.domain.model.processDefinition.Artefact;
+import org.domain.model.processDefinition.ArtefactFile;
 import org.domain.model.processDefinition.Workflow;
 
 public class PathBuilder {
 	public static synchronized String getExperimentsPath(){
-		String expHome = System.getenv("EXPERIMENTS_HOME");
+		String expHome = ReadPropertiesFile.getProperty("components", "expHome");
 		if(expHome==null || expHome.isEmpty()){
 			System.err.println("expHome: " + expHome);
 			return validate("/tmp/experiments/");
 		} else {
 			return validate(expHome);			
 		}
+	}
+	
+	public static synchronized String getArtefactsPath(Workflow w, Artefact currentArtefact, String fileName){
+		return validate(getExperimentPath(w) + "/" + currentArtefact.getId() + "_" + currentArtefact.getName() + "/" + fileName);
 	}
 	
 	public static synchronized String getExperimentPath(Workflow w){

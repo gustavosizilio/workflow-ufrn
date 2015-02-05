@@ -555,5 +555,22 @@
 	<classpathentry kind="lib" path="/Users/buda/workspace/workspace_dsl/eclipse_dsl/plugins/org.eclipse.xsd.mapping_2.6.0.v20140519-0339.jar"/>
 	<classpathentry kind="lib" path="/Users/buda/workspace/workspace_dsl/eclipse_dsl/plugins/org.eclipse.xsd.mapping.editor_2.7.0.v20140519-0339.jar"/>
 	<classpathentry kind="lib" path="/Users/buda/workspace/workspace_dsl/eclipse_dsl/plugins/org.eclipse.xsd.source_2.10.0.v20140519-0339.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.common_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.common.ui_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.compatibility_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.compatibility.ui_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.doc_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.engine_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.ide.ui_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.model_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.model.edit_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.parser_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.profiler_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.profiler.edit_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.profiler.editor_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.traceability_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.traceability.model_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/org.eclipse.acceleo.ui.interpreter_3.5.0.201406101309.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/AcceleoDSL.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

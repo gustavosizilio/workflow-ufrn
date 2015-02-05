@@ -9,8 +9,6 @@ import java.util.List;
 
 import org.domain.dao.SeamDAO;
 import org.domain.dao.UserAssignmentDAO;
-import org.domain.dataManager.WorkflowManager;
-import org.domain.dsl.JPDLDSLUtil;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Artefact;
 import org.domain.model.processDefinition.ArtefactFile;
@@ -25,13 +23,10 @@ import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.Transition;
 import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.UserExecution;
-import org.domain.model.processDefinition.Workflow;
 import org.domain.model.processDefinition.metric.Question;
 import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.model.processDefinition.metric.UserAnswer;
-import org.domain.utils.PathBuilder;
 import org.domain.utils.ReadPropertiesFile;
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.FlushModeType;
@@ -69,28 +64,12 @@ public class WorkflowExecuter {
 	private Task currentTask;
 	private Questionnaire currentQuestionnaire;
 	
-	
-	public void deployWorkflows(Workflow workflow) throws Exception {
-		try {
-			String experimentJpdlPath = PathBuilder.getExperimentJpdlPath(workflow);
-			JPDLDSLUtil.getInstance().convertXMIToJPDL(PathBuilder.getExperimentXMIPath(workflow), experimentJpdlPath);
-			
-			//deploy jpdl
-			WorkflowManager manager = new WorkflowManager(experimentJpdlPath, workflow,seamDao);
-			manager.executeTransformations();
-			seamDao.merge(workflow);
-			seamDao.flush();
-		} catch (Exception e) {
-			e.printStackTrace();
-			((FacesMessages) Component.getInstance(FacesMessages.class)).add(e.getMessage());
-		}
-	}
-	
 	public String init(ProcessDefinition process, UserAssignment ua){
 		if(process.canExecute(ua)){
 			this.setCurrentProcess(process);
 			this.setStartState(process.getStartState());
 			this.setCurrentTaskNode(null);
+			
 			setCurrentJoin(null);
 			setEndState(null);
 			setCurrentUserExecution(null);

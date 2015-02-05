@@ -45,7 +45,11 @@
 		<h:commandButton value="#{messages['layout.text.workflow.deploy']}"
 					rendered="#{crudWorkflow.entity.processDefinitions.size() eq 0}"
 					disabled="#{!crudWorkflow.entity.successCompiled}"
-					action="#{executer.deployWorkflows(crudWorkflow.entity)}" />
+					action="#{configuration.deployWorkflows()}" />
+					
+		<h:commandButton value="#{messages['layout.text.undeploy']}"
+				action="#{configuration.undeployWorkflow()}"
+				rendered="#{crudWorkflow.entity.processDefinitions.size() > 0}" />
 	</ui:define>
 	<ui:define name="detailExtended">
 		<br />
@@ -53,23 +57,18 @@
 			header="#{messages['layout.text.workflow.experimentConfiguration']}">
 			<rich:simpleTogglePanel switchType="client"
 				label="#{messages['layout.text.workflow.experimentDesign']}"
-				opened="true"
+				opened="false"
 				rendered="#{crudWorkflow.entity.processDefinitions.size() gt 0}">
 				<h:panelGroup id="designConfigurationLinks">
 					<h:panelGroup rendered="#{crudWorkflow.entity.emptyDesign }">
-						<a4j:commandLink action="#" id="panelDesignConfigurationLink"
-							reRender="designDefinition,designConfigurationLinks"
-							value="[#{messages['layout.text.workflow.uploadFileConfiguration']}]">
-							<rich:componentControl for="panelDesignConfiguration"
-								attachTo="panelDesignConfigurationLink" operation="show"
-								event="onclick" />
-						</a4j:commandLink>
+						<a4j:commandLink action="#{configuration.deployDefaultDesignConfiguration()}"
+							reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.loadFromDefinition']}]</a4j:commandLink>
 						<h:outputText value="&nbsp; | &nbsp;" />
-						<a4j:commandLink action="#{crudWorkflow.updateDesignTypeToManual}"
+						<a4j:commandLink action="#{configuration.updateDesignTypeToManual()}"
 							reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.manual']}]</a4j:commandLink>
 					</h:panelGroup>
 					<h:panelGroup rendered="#{not crudWorkflow.entity.emptyDesign }">
-						<a4j:commandLink action="#{crudWorkflow.clearDesign}"
+						<a4j:commandLink action="#{configuration.clearDesign()}"
 							onclick="confirm('#{messages['layout.messages.areYouSure?']}')"
 							reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.clearDesign']}]</a4j:commandLink>
 					</h:panelGroup>
@@ -88,7 +87,7 @@
 
 			<rich:simpleTogglePanel switchType="client"
 				label="#{messages['layout.text.workflow.artifactsConfiguration']}"
-				opened="true"
+				opened="false"
 				rendered="#{crudWorkflow.entity.inArtefacts.size() gt 0}">
 
 				<rich:dataTable value="#{crudWorkflow.entity.inArtefacts}"
@@ -118,7 +117,7 @@
 
 						<h:panelGroup rendered="#{artefact.artefactFiles.size() eq 0}">
 							<a4j:commandLink value="#{messages['layout.text.send']}"
-								action="#{crudWorkflow.setCurrentArtefact(artefact)}"
+								action="#{configuration.setCurrentArtefact(artefact)}"
 								id="enviarModal" reRender="uploadArtefact">
 								<rich:componentControl for="panelArtefact"
 									attachTo="enviarModal" operation="show" event="onclick" />
@@ -126,7 +125,7 @@
 						</h:panelGroup>
 						<h:panelGroup rendered="#{artefact.artefactFiles.size() gt 0}">
 							<a4j:commandLink value="#{messages['layout.text.remove']}"
-								action="#{crudWorkflow.removeArtefact(artefact)}"
+								action="#{configuration.removeArtefact(artefact)}"
 								reRender="artefacts">
 							</a4j:commandLink>
 							<h:outputText value=" | " />
@@ -145,47 +144,11 @@
 		<a4j:jsFunction name="refreshPanel"
 			reRender="workflowConfiguratioin,processDefinition,actions" />
 		<h:panelGroup id="actions">
-			<h:commandButton value="#{messages['layout.text.undeploy']}"
-				action="#{crudWorkflow.undeployWorkflow()}"
-				rendered="#{crudWorkflow.entity.processDefinitions.size() > 0}" />
+			
 		</h:panelGroup>
 	</ui:define>
 
 	<ui:define name="modal">
-		<rich:modalPanel id="panelDesignConfiguration" autosized="true">
-			<f:facet name="header">
-				<h:panelGroup>
-					<h:outputText
-						value="#{messages['layout.text.workflow.uploadDesignConfiguration']}"></h:outputText>
-				</h:panelGroup>
-			</f:facet>
-			<f:facet name="controls">
-				<h:panelGroup>
-					<h:graphicImage value="/img/close.png" styleClass="hidelink"
-						id="hidelinkpanelDesignConfiguration" />
-					<rich:componentControl for="panelDesignConfiguration"
-						attachTo="hidelinkpanelDesignConfiguration" operation="hide"
-						event="onclick" />
-				</h:panelGroup>
-			</f:facet>
-			<h:panelGroup id="uploadDesignConfiguration">
-				<h:form enctype="multipart/form-data">
-					<a4j:jsFunction name="refreshModalDesignConfiguration"
-						reRender="panelDesignConfiguration,designConfigurationLinks,designDefinition, 2" />
-					<rich:fileUpload
-						uploadControlLabel="#{messages['layout.text.send']}"
-						immediateUpload="false" listHeight="70px;" noDuplicate="true"
-						listWidth="350px;" locale="pt-BR" autoclear="false"
-						maxFilesQuantity="1"
-						cancelEntryControlLabel="#{messages['layout.text.workflow.clean']}"
-						transferErrorLabel="#{messages['layout.messages.workflow.invalidFileConfiguration']}"
-						fileUploadListener="#{crudWorkflow.uploadDesignConfiguration}"
-						onfileuploadcomplete="refreshModalDesignConfiguration()">
-					</rich:fileUpload>
-				</h:form>
-			</h:panelGroup>
-		</rich:modalPanel>
-
 		<rich:modalPanel id="panelArtefact" autosized="true">
 			<f:facet name="header">
 				<h:panelGroup>
@@ -211,7 +174,7 @@
 						maxFilesQuantity="1"
 						cancelEntryControlLabel="#{messages['layout.text.workflow.clean']}"
 						transferErrorLabel="#{messages['layout.messages.workflow.invalidFileConfiguration']}"
-						fileUploadListener="#{crudWorkflow.uploadArtefact}"
+						fileUploadListener="#{configuration.uploadArtefact}"
 						onfileuploadcomplete="refreshModal()">
 					</rich:fileUpload>
 				</h:form>

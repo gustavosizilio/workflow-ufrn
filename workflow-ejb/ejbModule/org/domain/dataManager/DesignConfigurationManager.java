@@ -35,63 +35,61 @@ public class DesignConfigurationManager extends XMLManager{
 		workflow.setDesignType(DesignType.LS);
 		List<Node> nodes = getElements(docEle.getChildNodes());
 		int internalReplication;
+		String treatment = null;
+		String col = null;
+		String row = null;
+		
 		try {
 			internalReplication = Integer.parseInt(getAttribute(docEle, Elements.INTERNAL_REPLICATION));
 		} catch (Exception e) {
 			internalReplication = 1;
 		}
 		
-		Map<String,List<String>> notDesiredVariationFactors = new Hashtable<String,List<String>>();
-		Map<String,List<String>> desiredVariationFactors = new Hashtable<String,List<String>>();
+		List<String> colFactors = new ArrayList<String>();
+		List<String> rowFactors = new ArrayList<String>();
+		List<String> treatmentFactors = new ArrayList<String>();
 		Map<String, String> links = new Hashtable<String,String>();
+		
 		for (Node node : nodes) {
-			if(getTagName(node).equals(Elements.FACTOR)){
+			if (getTagName(node).equals(Elements.LS)) {
+				treatment = getAttribute(node, Elements.TREATMENT);
+				col = getAttribute(node, Elements.COL);
+				row = getAttribute(node, Elements.ROW);
+			} else if(getTagName(node).equals(Elements.FACTOR)){
 				String nameFactor = getAttribute(node, Elements.NAME);
 				String nameLevel = getAttribute(node, Elements.LEVEL);
-				String isDesiredVariation = getAttribute(node, Elements.IS_DESIRED_VARIATION);
-				if(isDesiredVariation.equals("False")){
-					if(!notDesiredVariationFactors.containsKey(nameFactor)){
-						notDesiredVariationFactors.put(nameFactor, new ArrayList<String>());
-					}
-					notDesiredVariationFactors.get(nameFactor).add(nameFactor+"."+nameLevel);
-				}else if(isDesiredVariation.equals("True")){
-					if(!desiredVariationFactors.containsKey(nameFactor)){
-						desiredVariationFactors.put(nameFactor, new ArrayList<String>());
-					}
-					desiredVariationFactors.get(nameFactor).add(nameFactor+"."+nameLevel);
+				if(nameFactor.equals(treatment)){
+					treatmentFactors.add(nameFactor +"."+ nameLevel);
+				} else if(nameFactor.equals(col)){
+					colFactors.add(nameFactor +"."+ nameLevel);
+				} else if(nameFactor.equals(row)){
+					rowFactors.add(nameFactor +"."+ nameLevel);
 				}
 			}else if(getTagName(node).equals(Elements.LINK)){
+				//TODO VERIFY
 				String nameLink = getAttribute(node, Elements.NAME);
-				String treatment = getAttribute(node, Elements.TREATMENT);
-				links.put(nameLink, treatment);
+				String treatment2 = getAttribute(node, Elements.TREATMENT);
+				links.put(nameLink, treatment2);
 			}
 		}
 		
 		
-		List<List<String>> listOfNotDesiredVariationFactors = new ArrayList<List<String>>(); //esperamos 2 fatores apenas...
-		for (String s : notDesiredVariationFactors.keySet()) {
-			listOfNotDesiredVariationFactors.add(notDesiredVariationFactors.get(s));
-		}
-		List<List<String>> listOfDesiredVariationFactors = new ArrayList<List<String>>(); //esperamos 1 fator apenas
-		for (String s : desiredVariationFactors.keySet()) {
-			listOfDesiredVariationFactors.add(desiredVariationFactors.get(s));
-		}
-		
 		for (int i = 0; i < internalReplication; i++) {
-			generateAssignmentsLS(workflow, links, listOfNotDesiredVariationFactors,
-					listOfDesiredVariationFactors, i);
+			generateAssignmentsLS(workflow, links, treatmentFactors,
+					colFactors, rowFactors,  i);
 		}
 	}
 
 	private void generateAssignmentsLS(Workflow workflow, Map<String, String> links,
-			List<List<String>> listOfNotDesiredVariationFactors,
-			List<List<String>> listOfDesiredVariationFactors, int internalReplication) throws Exception {
+			List<String> treatmentFactors, List<String> colFactors, List<String> rowFactors,
+			int internalReplication) throws Exception {
 		LatinSquare ls = new LatinSquare(
-					listOfNotDesiredVariationFactors.get(0),
-					listOfNotDesiredVariationFactors.get(1),
-					listOfDesiredVariationFactors.get(0)
-											);
-		workflow.setTurnQuantity(listOfDesiredVariationFactors.get(0).size());
+							rowFactors,
+							colFactors,
+							treatmentFactors
+						);
+		
+		workflow.setTurnQuantity(treatmentFactors.size());
 		createUserAssignmentsLs(workflow, ls, links, internalReplication);
 	}
 
@@ -109,8 +107,8 @@ public class DesignConfigurationManager extends XMLManager{
 				UserAssignment u = new UserAssignment(j,
 						process, 
 						ls.getLines().get(i),
-						"LS "+internalReplication);
-				//usersAssignments.add(u);
+						"LS "+internalReplication,
+						ls.getLines().get(i) + "/" + ls.getColumns().get(j) + "/" + ls.getTuples().get(i).get(j));
 				process.getUserAssignments().add(u);
 			}
 		}
@@ -153,7 +151,8 @@ public class DesignConfigurationManager extends XMLManager{
 			if(getTagName(node).equals(Elements.PROCESS)){
 				String subjectDescription = getAttribute(node, Elements.SUBJECT);
 				ProcessDefinition process = findProcess(workflow, getAttribute(node, Elements.NAME));
-				UserAssignment ua = new UserAssignment(subjectDescription, process);
+				//TODO NULL
+				UserAssignment ua = new UserAssignment(subjectDescription, process, null);
 				ua.setGroupValue("Subjects");
 				process.getUserAssignments().add(ua);
 			}
@@ -167,7 +166,8 @@ public class DesignConfigurationManager extends XMLManager{
 			if(getTagName(node).equals(Elements.PROCESS)){
 				String subjectDescription = getAttribute(node, Elements.SUBJECT);
 				ProcessDefinition process = findProcess(workflow, getAttribute(node, Elements.NAME));
-				UserAssignment ua = new UserAssignment(subjectDescription, process);
+				//TODO NULL
+				UserAssignment ua = new UserAssignment(subjectDescription, process, null);
 				ua.setGroupValue(getAttribute(node, Elements.BLOCK));
 				process.getUserAssignments().add(ua);
 			}

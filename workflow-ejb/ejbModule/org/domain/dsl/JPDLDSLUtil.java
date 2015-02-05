@@ -1,10 +1,12 @@
 package org.domain.dsl;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 
 import org.domain.model.processDefinition.Workflow;
+import org.domain.utils.PathBuilder;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.jboss.seam.contexts.ServletLifecycle;
 
@@ -12,7 +14,7 @@ public class JPDLDSLUtil {
 	private static JPDLDSLUtil instance;
 	private EFactoryImpl factory;
 	private String qvtoFilePath;
-	private String transformationJar;
+	private String transformationJar, javaAcceleo;
 	private static final String packageClass = "jpdl31Plus.Jpdl31PlusPackage";
 	
 	public synchronized static JPDLDSLUtil getInstance() throws Exception {
@@ -25,6 +27,8 @@ public class JPDLDSLUtil {
 	private JPDLDSLUtil() throws Exception {
 		qvtoFilePath = ServletLifecycle.getCurrentServletContext().getRealPath("/") + "../" + "QVTOTransformation.qvto";
 		transformationJar = ServletLifecycle.getCurrentServletContext().getRealPath("/") + "../lib/ExpDSLTransformationsTool.jar";
+		javaAcceleo = ServletLifecycle.getCurrentServletContext().getRealPath("/") + "../lib/javaAcceleo.jar";
+		
 		String factoryClass = packageClass.substring(0, packageClass.lastIndexOf("Package"))+"Factory";
 		Class<?> packageFactory;
 		Class<?> clazzFactory;
@@ -51,13 +55,12 @@ public class JPDLDSLUtil {
 		String cmd = "java -jar " + transformationJar + " \"qvto\"" + " \""+qvtoFilePath+"\"" + " \""+xmiPath+"\"" + " \""+experimentJpdlPath+"\"";
 		Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", cmd});
 	    p.waitFor();
-	 	BufferedReader reader = 
-	         new BufferedReader(new InputStreamReader(p.getInputStream()));
-	    String line = "";	
-	    StringBuilder sb = new StringBuilder();
-	    while ((line = reader.readLine())!= null) {
-	    	sb.append(line + "\n");
-	    }
+	}
+
+	public void convertXMIToConf(String experimentXMIPath, String experimentConfPath) throws Exception {
+		String cmd = "java -jar " + javaAcceleo + " \""+experimentXMIPath+"\"" + " \""+experimentConfPath+"\"";
+		Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", cmd});
+	    p.waitFor();
 	}
 
 }

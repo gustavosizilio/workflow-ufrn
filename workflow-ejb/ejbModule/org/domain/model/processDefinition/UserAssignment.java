@@ -21,31 +21,37 @@ public class UserAssignment implements Comparable<UserAssignment>{
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private ProcessDefinition processDefinition;
 	private String groupValue;
-	private String subjectDescription;
+	private String subjectDiscriminator;
+	private String keyFactors;
 	
 	
 	public UserAssignment(Integer executionOrder,
 						  ProcessDefinition processDefinition,
-						  String subjectDescription,
-						  String groupValue) {
+						  String subjectDiscriminator,
+						  String groupValue,
+						  String keyFactors) {
 		super();
 		this.executionOrder = executionOrder;
 		this.processDefinition = processDefinition;
 		this.groupValue = groupValue;
-		this.subjectDescription = subjectDescription;
+		this.subjectDiscriminator = subjectDiscriminator;
+		this.setKeyFactors(keyFactors);
 	}
-	public UserAssignment() {
+	public UserAssignment(String subjectDiscriminator, ProcessDefinition process,  String keyFactors) {
+		this();
+		this.subjectDiscriminator = subjectDiscriminator;
+		this.processDefinition = process;
+		this.setKeyFactors(keyFactors);
+	}
+	
+	private UserAssignment() {
 		this.executionOrder = 0;
 	}
-	public UserAssignment(String subjectDescription, ProcessDefinition process) {
-		this();
-		this.subjectDescription = subjectDescription;
-		this.processDefinition = process;
-	}
-	public UserAssignment(User user, ProcessDefinition process) {
+	public UserAssignment(User user, ProcessDefinition process, String keyFactors) {
 		this();
 		this.setUser(user);
 		this.processDefinition = process;
+		this.setKeyFactors(keyFactors);
 		this.executionOrder = 0;
 	}
 	public Long getId() {
@@ -78,17 +84,23 @@ public class UserAssignment implements Comparable<UserAssignment>{
 	public void setGroupValue(String groupValue) {
 		this.groupValue = groupValue;
 	}
-	public String getSubjectDescription() {
-		return subjectDescription;
+	public String getSubjectDiscriminator() {
+		return subjectDiscriminator;
 	}
-	public void setSubjectDescription(String subjectDescription) {
-		this.subjectDescription = subjectDescription;
+	public void setSubjectDiscriminator(String subjectDescription) {
+		this.subjectDiscriminator = subjectDescription;
 	}
 	public String toString(){
-		return this.executionOrder +"-"+ 
-				this.processDefinition.getName() + "-" + 
-				this.groupValue + "-" +
-				this.subjectDescription;
+		StringBuilder sb = new StringBuilder();
+		sb.append((this.user != null) ? this.user.toString() : "<empty subject>");
+		sb.append((this.executionOrder != null) ? " ["+this.executionOrder +"]": " [<no order associated>]");
+		sb.append((this.processDefinition != null) ? " | process -> " + this.processDefinition.getName() : " | process -> <no process associated>");
+		sb.append((this.keyFactors != null) ? " ("+this.keyFactors+")" : "");
+		
+		return sb.toString();
+	}
+	public String getString() {
+		return this.toString();
 	}
 	public int compareTo(UserAssignment o) {
 		if(this.executionOrder > o.getExecutionOrder()){
@@ -98,5 +110,11 @@ public class UserAssignment implements Comparable<UserAssignment>{
 			return -1;
 		}
 		return 0;
+	}
+	public String getKeyFactors() {
+		return keyFactors;
+	}
+	public void setKeyFactors(String keyFactors) {
+		this.keyFactors = keyFactors;
 	}
 }

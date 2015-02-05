@@ -35,6 +35,14 @@ public class PathBuilder {
 		}
 	}
 	
+	public static String getExperimentConfPath(Workflow w) {
+		try {
+			return validate(getExperimentsPath()+"/"+w.getId()+"/"+EXPDSLUtil.getInstance().getConfName(w));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	public static synchronized String getExperimentXMIPath(Workflow w){
 		try {
 			return validate(getExperimentsPath()+"/"+w.getId()+"/"+EXPDSLUtil.getInstance().getXMIName(w));

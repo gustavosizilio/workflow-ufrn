@@ -7,50 +7,50 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:a4j="http://richfaces.org/a4j">
-<h:panelGroup rendered="#{crudWorkflow.entity.LSDesign}">
-	<h:panelGrid columns="2" rendered="#{ not crudWorkflow.entity.designComplete}" >
+<h:panelGroup rendered="#{configuration.entity.LSDesign}">
+	<h:panelGrid columns="2" rendered="#{ not configuration.entity.designComplete}" >
 		<h:outputLabel value="#{messages['layout.text.user']}:" />
-		<h:selectOneMenu value="#{crudWorkflow.userProperty}">
-			<s:selectItems value="#{crudWorkflow.users}" var="user"
+		<h:selectOneMenu value="#{configuration.userProperty}">
+			<s:selectItems value="#{configuration.users}" var="user"
 				label="#{user.name} - #{user.email}" noSelectionLabel="" />
 			<s:convertEntity />
 		</h:selectOneMenu>
 		<h:outputLabel value="#{messages['layout.text.latinSquare']}:" />
-		<h:selectOneMenu value="#{crudWorkflow.groupProperty}">
-			<s:selectItems value="#{crudWorkflow.entity.groups}" 
+		<h:selectOneMenu value="#{configuration.groupProperty}">
+			<s:selectItems value="#{configuration.entity.groups}" 
 				var="b"
 				label="#{b}" noSelectionLabel="" />
 		</h:selectOneMenu>
 		<rich:spacer />
 		<a4j:commandButton value="#{messages['layout.text.addToSort']}"
-			actionListener="#{crudWorkflow.addUserToShuffle}"
+			actionListener="#{configuration.addUserToShuffle}"
 			reRender="designDefinition" />
 	</h:panelGrid>
 
 	<br />
-	<rich:dataTable value="#{crudWorkflow.groupValues}" var="key" rendered="#{not crudWorkflow.entity.designComplete}">
+	<rich:dataTable value="#{configuration.groupValues}" var="key" rendered="#{not configuration.entity.designComplete}">
 		<rich:column>
 			<f:facet name="header">#{messages['layout.text.latinSquare']}</f:facet>
 			<h:outputText value="#{key}" />
 		</rich:column>
 		<rich:column>
 			<f:facet name="header">#{messages['layout.text.subjects']}</f:facet>
-			<rich:dataList value="#{crudWorkflow.usersSelectedToShuffle.get(key)}" var="u">
+			<rich:dataList value="#{configuration.usersSelectedToShuffle.get(key)}" var="u">
 				<h:outputText value="#{u.name} (#{u.email})" />
 				<a4j:commandLink
-					action="#{crudWorkflow.removeUserToSuffle(u, key)}"
+					action="#{configuration.removeUserToSuffle(u, key)}"
 					reRender="designDefinition" value="[#{messages['layout.text.remove']}]" />
 			</rich:dataList>
 		</rich:column>	
 	</rich:dataTable>
-	<h:commandButton action="#{crudWorkflow.shuffleUsersLS}" value="#{messages['layout.text.sort']}" rendered="#{not crudWorkflow.entity.designComplete}" />
+	<h:commandButton action="#{configuration.shuffleUsersLS}" value="#{messages['layout.text.sort']}" rendered="#{not configuration.entity.designComplete}" />
 	
-	<h:panelGroup  rendered="#{crudWorkflow.entity.designComplete}">
-		<ui:repeat var="key" value="#{crudWorkflow.groupValues}">
+	<h:panelGroup  rendered="#{configuration.entity.designComplete}">
+		<ui:repeat var="key" value="#{configuration.groupValues}">
 			<rich:panel header="#{key}">
-				<rich:dataTable value="#{crudWorkflow.entity.getUserAssignments(key)}" var="ua" >
+				<rich:dataTable value="#{configuration.entity.getUserAssignments(key)}" var="ua" >
 					<rich:column>
-						<h:outputText value="#{ua.user.name} -> (#{ua.executionOrder}) #{ua.processDefinition.name}" />
+						<h:outputText value="#{ua.string}" />
 					</rich:column>	
 				</rich:dataTable>
 			</rich:panel>

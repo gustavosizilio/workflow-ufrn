@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.domain.model.processDefinition.Workflow;
+import org.domain.utils.PathBuilder;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -293,6 +295,27 @@ public class EXPDSLUtil {
 	
 	public String getXMIName(Workflow w) {
 		return w.getId()+".xmi";
+	}
+
+	public String getConfName(Workflow w) {
+		try {
+			String xmiPath = PathBuilder.getExperimentXMIPath(w);
+			EObject rootModel = this.convertXMIToEcore(xmiPath);
+			String expName = EcoreUtil.getID(rootModel.eContents().get(0));
+			if(expName == null) {
+				List<EObject> attrs = getAttrs(rootModel.eContents().get(0));
+				for (EObject eObject : attrs) {
+					if(eObject instanceof EAttribute && ((EAttribute)eObject).getName() == "name") {
+						expName = getValue(rootModel.eContents().get(0), ((EAttribute)eObject)).toString().replaceAll(" ", "").toLowerCase() + ".conf";
+					} 
+				}
+			}
+			
+			return expName;
+			 
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 }

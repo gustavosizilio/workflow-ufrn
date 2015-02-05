@@ -7,30 +7,30 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:a4j="http://richfaces.org/a4j">
-<h:panelGroup rendered="#{crudWorkflow.entity.manualDesign}">
+<h:panelGroup rendered="#{configuration.entity.manualDesign}">
 	<h:panelGrid columns="2" >
 		<h:outputLabel value="#{messages['layout.text.user']}:" />
-		<h:selectOneMenu value="#{crudWorkflow.userProperty}">
-			<s:selectItems value="#{crudWorkflow.users}" var="u"
+		<h:selectOneMenu value="#{configuration.userProperty}">
+			<s:selectItems value="#{configuration.users}" var="u"
 				label="#{u.name} - #{u.email}" noSelectionLabel="" />
 			<s:convertEntity />
 		</h:selectOneMenu>
 		<h:outputLabel value="#{messages['layout.text.treatment']}:" />
-		<h:selectOneMenu value="#{crudWorkflow.processDefinitionProperty}">
-			<s:selectItems value="#{crudWorkflow.entity.processDefinitions}" 
+		<h:selectOneMenu value="#{configuration.processDefinitionProperty}">
+			<s:selectItems value="#{configuration.entity.processDefinitions}" 
 				var="p"
 				label="#{p.name}" noSelectionLabel="" />
 			<s:convertEntity />
 		</h:selectOneMenu>
 		<rich:spacer />
 		<a4j:commandButton value="#{messages['layout.text.add']}"
-			actionListener="#{crudWorkflow.addUserManual}"
+			actionListener="#{configuration.addUserManual}"
 			reRender="designDefinition" />
 	</h:panelGrid>
 
 	<br />
 
-	<rich:dataTable value="#{crudWorkflow.entity.processDefinitions}"
+	<rich:dataTable value="#{configuration.entity.processDefinitions}"
 		id="userConfigurations" var="processDefinition">
 		<rich:column>
 			<f:facet name="header">#{messages['layout.text.treatment']}</f:facet>
@@ -43,7 +43,7 @@
 				<h:outputText
 					value="#{userAssignment.user.name} (#{userAssignment.user.email}) " />
 				<a4j:commandLink
-					action="#{crudWorkflow.removeUserManual(userAssignment)}"
+					action="#{configuration.removeUserManual(userAssignment)}"
 					reRender="designDefinition" value="[#{messages['layout.text.remove']}]" />
 			</rich:dataList>
 		</rich:column>

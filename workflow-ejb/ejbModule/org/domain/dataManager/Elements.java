@@ -58,5 +58,8 @@ public class Elements {
 	public static final String PARAGRAPHTEXT = "paragraphText";
 	public static final String PRE = "Pre";
 	public static final String POST = "Post";
+	public static final Object LS = "ls";
+	public static final String COL = "col";
+	public static final String ROW = "row";
 	
 }

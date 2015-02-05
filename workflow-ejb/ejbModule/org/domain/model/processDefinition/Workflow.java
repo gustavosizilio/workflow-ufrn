@@ -154,9 +154,9 @@ public class Workflow extends GenericEntity {
 		int quantityOfSubjectsNeeds = 0;
 		List<String> foundSubjects = new ArrayList<String>();
 		for (UserAssignment userAssignment : getAllUserAssignments()) {
-			if(userAssignment.getGroupValue().equals(group) && !foundSubjects.contains(userAssignment.getSubjectDescription())){
+			if(userAssignment.getGroupValue().equals(group) && !foundSubjects.contains(userAssignment.getSubjectDiscriminator())){
 				quantityOfSubjectsNeeds++;
-				foundSubjects.add(userAssignment.getSubjectDescription());
+				foundSubjects.add(userAssignment.getSubjectDiscriminator());
 			}
 		}
 		return quantityOfSubjectsNeeds;
@@ -167,7 +167,7 @@ public class Workflow extends GenericEntity {
 			if(ua.getUser()==null){
 				ua.setUser(u);
 				for (UserAssignment ua2 : getUserAssignments(group)) {
-					if(ua2.getUser() == null && ua2.getSubjectDescription().equals(ua.getSubjectDescription())){
+					if(ua2.getUser() == null && ua2.getSubjectDiscriminator().equals(ua.getSubjectDiscriminator())){
 						ua2.setUser(u);
 					}
 				}

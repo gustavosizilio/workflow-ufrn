@@ -134,9 +134,10 @@
 	
 					<h:panelGroup class="attrNodeTitleField">
 	
+						<rich:jQuery selector="#id" query="setMask({mask:'*', type:'repeat', 'maxLength': 254})" timing="onload"/>
 						<h:panelGroup
 							rendered="#{action.getFieldType(attr[0]) eq 'string'}">
-							<h:inputTextarea value="#{attr[1]}" />
+							<h:inputTextarea id="id" value="#{attr[1]}" />
 						</h:panelGroup>
 	
 						<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'int'}">

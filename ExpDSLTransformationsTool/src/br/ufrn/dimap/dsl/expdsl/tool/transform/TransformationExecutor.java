@@ -10,6 +10,13 @@ public class TransformationExecutor {
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
+		} else if(args[0].equals("acceleo")){
+			AcceleoTransformationExecuter executor = new AcceleoTransformationExecuter();
+			try {
+				executor.execute(args[1], args[2]);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

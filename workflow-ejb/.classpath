@@ -430,5 +430,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/ExpDSLTransformationsTool.jar"/>
 	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/jboss-marshalling-1.3.0.CR9.jar"/>
+	<classpathentry kind="lib" path="/workflow-ear/EarContent/lib/javaAcceleo.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

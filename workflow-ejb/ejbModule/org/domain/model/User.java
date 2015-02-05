@@ -30,7 +30,13 @@ public class User {
 		this.setEncryptedPassword(encryptedPassword);
 		this.setName(name);
 	}
-
+	public String toString() {
+		if(this.name != null && !this.name.isEmpty()) {
+			return this.name;
+		} else {
+			return this.email;
+		}
+	}
 	public Long getId() {
 		return id;
 	}

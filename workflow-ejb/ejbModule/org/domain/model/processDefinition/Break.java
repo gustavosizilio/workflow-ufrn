@@ -3,6 +3,7 @@ package org.domain.model.processDefinition;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,9 +17,9 @@ public class Break {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.REFRESH)
 	private UserExecution userExecution;
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.REFRESH)
 	private TaskExecution taskExecution;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar startedAt;

@@ -26,7 +26,7 @@ import org.domain.model.processDefinition.UserExecution;
 import org.domain.model.processDefinition.metric.Question;
 import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.model.processDefinition.metric.UserAnswer;
-import org.domain.utils.ReadPropertiesFile;
+import org.domain.utils.PathBuilder;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.FlushModeType;
@@ -344,6 +344,7 @@ public class WorkflowExecuter {
 			if(artefactFile.getUserExecution().equals(currentUserExecution)){
 				seamDao.remove(artefactFile);
 				artefact.getArtefactFiles().remove(artefactFile);
+				new File(artefactFile.getFile()).delete();
 			}
 		}
 		seamDao.merge(artefact);
@@ -354,8 +355,9 @@ public class WorkflowExecuter {
 		ArtefactFile artefactfile = new ArtefactFile();
 		seamDao.persist(artefactfile);
 		
-		String path = ReadPropertiesFile.getProperty("components", "artefactPath");
-		path = path + this.currentArtefact.getId() + "/" + artefactfile.getId() + "/";
+		//String path = ReadPropertiesFile.getProperty("components", "artefactPath");
+		//path = path + this.currentArtefact.getId() + "/" + artefactfile.getId() + "/";
+		String path = PathBuilder.getArtefactsPath(this.currentTaskNode.getProcessDefinition().getWorkflow(), this.currentArtefact);
 		File upload = new File(path);
 		upload.mkdirs();
 		

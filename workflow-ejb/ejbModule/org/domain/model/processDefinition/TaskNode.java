@@ -36,7 +36,7 @@ public class TaskNode {
 	private List<UserExecution> userExecutions;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Task> tasks;
-	@OneToMany(cascade=CascadeType.MERGE, mappedBy="taskNode")
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Questionnaire> questionnaires;
 		
 	public TaskNode() {

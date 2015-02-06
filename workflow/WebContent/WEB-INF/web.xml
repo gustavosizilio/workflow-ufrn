@@ -60,4 +60,10 @@
   <session-config>
     <session-timeout>1200000</session-timeout>
   </session-config>
+  
+	<context-param>
+		<param-name>org.richfaces.queue.global.enabled</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
 </web-app>

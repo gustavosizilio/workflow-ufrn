@@ -27,7 +27,7 @@ public class Artefact {
 	private TaskNode taskNode;
 	@ManyToOne
 	private Task task;
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="artefact")
+	@OneToMany(cascade={CascadeType.ALL}, mappedBy="artefact")
 	private List<ArtefactFile> artefactFiles;
 	
 	public Artefact() {

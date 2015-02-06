@@ -22,7 +22,7 @@ public class Task {
 	private String name;
 	@Lob
 	private String description;
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="task")
+	@OneToMany(cascade={CascadeType.ALL}, mappedBy="task")
 	private List<Artefact> artefacts;
 	@ManyToOne
 	private TaskNode taskNode;

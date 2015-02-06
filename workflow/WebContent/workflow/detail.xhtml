@@ -68,7 +68,7 @@
 							reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.manual']}]</a4j:commandLink>
 					</h:panelGroup>
 					<h:panelGroup rendered="#{not crudWorkflow.entity.emptyDesign }">
-						<a4j:commandLink action="#{configuration.clearDesign()}"
+						<a4j:commandLink action="#{configuration.clearDesign(true)}"
 							onclick="confirm('#{messages['layout.messages.areYouSure?']}')"
 							reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.clearDesign']}]</a4j:commandLink>
 					</h:panelGroup>

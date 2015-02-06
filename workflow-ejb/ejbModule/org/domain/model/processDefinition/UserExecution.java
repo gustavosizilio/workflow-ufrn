@@ -23,16 +23,16 @@ public class UserExecution {
 	private Long id;
 	@OneToOne(cascade=CascadeType.REFRESH)
 	private UserAssignment userAssignment;
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.REFRESH)
 	private TaskNode taskNode;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar startedAt;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar finishedAt;
-	@OneToOne
+	@OneToOne(cascade=CascadeType.REFRESH)
 	private UserExecution nextUserExecution;
 	private String comment;
-	@OneToMany(mappedBy="userExecution")
+	@OneToMany(mappedBy="userExecution", cascade=CascadeType.ALL)
 	private List<ArtefactFile> artefactFiles;
 	@OneToMany(mappedBy="userExecution", cascade=CascadeType.ALL)
 	private List<Break> breakes;
@@ -41,6 +41,7 @@ public class UserExecution {
 		this.artefactFiles = new ArrayList<ArtefactFile>();
 		this.breakes = new ArrayList<Break>();
 	}
+	
 	public UserExecution(UserAssignment userAssignment, boolean start) {
 		this();
 		this.userAssignment = userAssignment;

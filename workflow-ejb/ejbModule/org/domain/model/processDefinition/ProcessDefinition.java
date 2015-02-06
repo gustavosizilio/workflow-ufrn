@@ -28,7 +28,7 @@ public class ProcessDefinition extends GenericEntity{
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private Workflow workflow;
 	
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="process")
+	@OneToMany(cascade=CascadeType.REFRESH, mappedBy="process")
 	private List<Questionnaire> questionnaires;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")

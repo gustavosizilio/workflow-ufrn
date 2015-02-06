@@ -1,21 +1,25 @@
 package org.domain.model.processDefinition;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.domain.model.User;
+import org.domain.model.processDefinition.metric.UserAnswer;
 
 @Entity
 public class UserAssignment implements Comparable<UserAssignment>{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@OneToOne
+	@OneToOne(cascade=CascadeType.REFRESH)
 	private User user;
 	private Integer executionOrder;
 	@ManyToOne(cascade=CascadeType.REFRESH)
@@ -23,6 +27,13 @@ public class UserAssignment implements Comparable<UserAssignment>{
 	private String groupValue;
 	private String subjectDiscriminator;
 	private String keyFactors;
+	
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="userAssignment")
+	private List<UserAnswer> userAnswers;
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="userAssignment")
+	private List<UserExecution> userExecutions;
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="userAssignment")
+	private List<TaskExecution> taskExecutions;
 	
 	
 	public UserAssignment(Integer executionOrder,
@@ -126,5 +137,23 @@ public class UserAssignment implements Comparable<UserAssignment>{
 	}
 	public void setKeyFactors(String keyFactors) {
 		this.keyFactors = keyFactors;
+	}
+	public List<UserAnswer> getUserAnswers() {
+		return userAnswers;
+	}
+	public void setUserAnswers(List<UserAnswer> userAnswers) {
+		this.userAnswers = userAnswers;
+	}
+	public List<UserExecution> getUserExecutions() {
+		return userExecutions;
+	}
+	public void setUserExecutions(List<UserExecution> userExecutions) {
+		this.userExecutions = userExecutions;
+	}
+	public List<TaskExecution> getTaskExecutions() {
+		return taskExecutions;
+	}
+	public void setTaskExecutions(List<TaskExecution> taskExecutions) {
+		this.taskExecutions = taskExecutions;
 	}
 }

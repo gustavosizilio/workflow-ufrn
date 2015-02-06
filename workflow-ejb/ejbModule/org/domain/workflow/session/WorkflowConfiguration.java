@@ -22,8 +22,8 @@ import org.domain.model.processDefinition.DesignType;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.Workflow;
+import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.utils.PathBuilder;
-import org.domain.utils.ReadPropertiesFile;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.FlushModeType;
@@ -118,7 +118,7 @@ public class WorkflowConfiguration {
 		}
 	}
 	
-	public void clearDesign(){
+	public void clearDesign(Boolean flush){
 		this.usersSelectedToShuffle.clear();
 		try {
 			seamDao.refresh(getEntity());
@@ -130,9 +130,10 @@ public class WorkflowConfiguration {
 					seamDao.remove(ua);
 				}
 				p.getUserAssignments().clear();
+				seamDao.merge(p);
 			}
-			seamDao.merge(getEntity());
-			seamDao.flush();
+			if(flush)
+				seamDao.flush();
 		} catch (ValidationException e) {
 			facesMessages.add(Severity.ERROR,"Validation error.");
 		}
@@ -140,14 +141,20 @@ public class WorkflowConfiguration {
 	
 
 	public void undeployWorkflow() {
-		clearDesign();
+		clearDesign(false);
+		//seamDao.refresh(getEntity());
 		for (ProcessDefinition process : getEntity().getProcessDefinitions()) {
 			seamDao.remove(process);
 		}
+		for (Questionnaire quest : getEntity().getQuestionnaires()) {
+			seamDao.remove(quest);
+		}
+		getEntity().getQuestionnaires().clear();
 		getEntity().getProcessDefinitions().clear();
 		seamDao.flush();
 		seamDao.refresh(getEntity());
 		facesMessages.add("Undeploy efetuado com sucesso");
+		new File(PathBuilder.getExperimentDataPath(getEntity()));
 	}
 	
 	public void addUserToShuffle(ActionEvent evt) throws ValidationException{
@@ -299,12 +306,11 @@ public class WorkflowConfiguration {
 		ArtefactFile artefactfile = new ArtefactFile();
 		seamDao.persist(artefactfile);
 		
-		String path = PathBuilder.getArtefactsPath(this.getEntity(), this.currentArtefact, event.getUploadItem().getFileName());
-		//path = path + this.currentArtefact.getId() + "/" + artefactfile.getId() + "/";
+		String path = PathBuilder.getArtefactsPath(this.getEntity(), this.currentArtefact);
 		File upload = new File(path);
 		upload.mkdirs();
 		
-		//path = path + event.getUploadItem().getFileName();
+		path = path + event.getUploadItem().getFileName();
 	    if(event.getUploadItem().getFile().renameTo(new File(path))){
 	    	artefactfile.setFile(path);		
 	    	artefactfile.setArtefact(this.currentArtefact);
@@ -319,6 +325,7 @@ public class WorkflowConfiguration {
 		List<ArtefactFile> artefactsFiles = artefact.getArtefactFiles();
 		for (ArtefactFile artefactFile : artefactsFiles) {
 			seamDao.remove(artefactFile);
+			new File(artefactFile.getFile()).delete();
 		}
 		artefact.getArtefactFiles().clear();
 		seamDao.merge(artefact);

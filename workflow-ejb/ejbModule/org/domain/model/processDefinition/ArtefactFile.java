@@ -1,5 +1,6 @@
 package org.domain.model.processDefinition;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,9 +12,9 @@ public class ArtefactFile {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne
+	@ManyToOne(cascade={CascadeType.REFRESH})
 	private Artefact artefact;
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.REFRESH)
 	private UserExecution userExecution;
 	private String file;
 	
@@ -21,6 +22,7 @@ public class ArtefactFile {
 	public Long getId() {
 		return id;
 	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}

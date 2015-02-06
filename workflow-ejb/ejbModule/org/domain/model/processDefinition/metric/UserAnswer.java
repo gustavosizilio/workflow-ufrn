@@ -32,9 +32,9 @@ public class UserAnswer {
 	@Transient
 	private List<String> answerAsList;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.REFRESH)
 	private Question question;
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.REFRESH)
 	private TaskNode taskNode;
 	
 	public UserAnswer() {

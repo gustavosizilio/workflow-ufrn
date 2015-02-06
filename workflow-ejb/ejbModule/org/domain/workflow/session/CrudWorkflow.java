@@ -259,6 +259,14 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		return getFieldType(node.getData());
 	}
 	
+	public boolean isId(TreeNode<EObject> node) {
+		if(node instanceof EAttribute) {
+			return ((EAttribute) node.getData()).isID();
+		}
+		
+		return false;
+	}
+	
 	public String getFieldType(EObject node) {
 		if(node instanceof EReference) {
 			if(((EReference)node).isMany()) {

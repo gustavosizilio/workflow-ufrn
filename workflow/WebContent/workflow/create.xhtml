@@ -6,10 +6,47 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/create.xhtml">
 	<ui:param name="action" value="#{crudWorkflow}" />
 
 	<ui:define name="create">
 		<ui:include src="form.xhtml" />
+	</ui:define>
+	
+	<ui:define name="modal">
+		<rich:modalPanel id="panelArtefact" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages['layout.text.upload']}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/img/close.png" styleClass="hidelink"
+						id="hidelink" />
+					<rich:componentControl for="panelArtefact" attachTo="hidelink"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:panelGroup id="uploadArtefact">
+				<h:form enctype="multipart/form-data">
+						<a4j:jsFunction name="refreshPanel" reRender="panelForm,panelArtefact" />
+						<rich:fileUpload
+							uploadControlLabel="#{messages['layout.text.send']}"
+							immediateUpload="false"
+							listHeight="70px;"
+				            noDuplicate="true" listWidth="350px;" 
+				            locale="pt-BR" 
+				            autoclear="false"
+				            maxFilesQuantity="1" 
+				            cancelEntryControlLabel="#{messages['layout.text.workflow.clean']}"
+				            transferErrorLabel="#{messages['layout.messages.fileUploadError']}"           
+				            fileUploadListener="#{action.uploadExpFile}"
+				            onfileuploadcomplete="refreshPanel()">		            
+				        </rich:fileUpload>
+				</h:form>
+			</h:panelGroup>
+		</rich:modalPanel>
 	</ui:define>
 </ui:composition>

@@ -54,7 +54,6 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	private EObject newNode;
 	private List<Object[]> attrProperties;
 	private EReferenceImpl selectedRef;
-	private boolean loadFromFile;
 	private String myexpPath;
 	
 	
@@ -259,9 +258,9 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		return getFieldType(node.getData());
 	}
 	
-	public boolean isId(TreeNode<EObject> node) {
+	public boolean isId(EObject node) {
 		if(node instanceof EAttribute) {
-			return ((EAttribute) node.getData()).isID();
+			return ((EAttribute) node).isID();
 		}
 		
 		return false;
@@ -448,12 +447,6 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		}
 	}
 	
-	public void useUploadFile() {
-		this.loadFromFile = true;
-	} 
-	public void useEditor() {
-		this.loadFromFile = false;
-	} 
 	public void start(Workflow w) throws ValidationException{
 		seamDao.refresh(w);
 		w.setStartedAt(Calendar.getInstance().getTime());
@@ -469,6 +462,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	}
 	public void uploadExpFile(UploadEvent event) {
 		setMyexpPath(event.getUploadItem().getFile().getAbsolutePath());
+		deployExpFile();
 	}
 	public void deployExpFile() {
 		try {
@@ -482,7 +476,6 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 				updateTreeNode(null);
 				this.selectedNode = this.rootNode.getChild(this.getRootModel());
 				this.myexpPath = null;
-				this.loadFromFile = false;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -547,14 +540,6 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 
 	public void setSelectedRef(EReferenceImpl selectedRef) {
 		this.selectedRef = selectedRef;
-	}
-
-	public boolean isLoadFromFile() {
-		return loadFromFile;
-	}
-
-	public void setLoadFromFile(boolean loadFromFile) {
-		this.loadFromFile = loadFromFile;
 	}
 
 	public String getMyexpPath() {

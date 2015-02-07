@@ -23,13 +23,14 @@
 	    
       <ui:include src="menu.xhtml" />
       <div class="body">
-	  <a4j:status>
-	       <f:facet name="start">
-	       		<rich:modalPanel>
-		       		<h:outputText value="#{messages['layout.messages.wait']}" />
-	       		</rich:modalPanel>
-	       </f:facet>
-	  </a4j:status>
+      
+		  <a4j:status>
+		  	<f:facet name="start">
+		  		<h:panelGroup id="ajaxStatus">
+			  		<h:outputText value="#{messages['layout.messages.wait']}" />
+		  		</h:panelGroup>
+		  	</f:facet>
+		  </a4j:status>
     
          <h:messages id="messages" globalOnly="true" styleClass="message"
             errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"

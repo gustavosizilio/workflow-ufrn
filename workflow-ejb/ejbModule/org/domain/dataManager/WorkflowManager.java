@@ -42,11 +42,21 @@ public class WorkflowManager extends XMLManager{
 		this.file = file;
 	}
 	private Map<String, Questionnaire> questionnaires; 
+	private List<String> taskQuestionnaires; 
+	private List<String> processDefinitionQuestionnaires; 
+	private List<String> workflowQuestionnaires; 
+	
 	private List<ProcessDefinition> processDefinitions;
+	
 	public void executeTransformations() throws ParserConfigurationException, SAXException, IOException, ValidationException{
-		extractQuestionnaires();
-		//extractMetrics();
+		this.setTaskQuestionnaires(new ArrayList<String>());
+		this.setProcessDefinitionQuestionnaires(new ArrayList<String>());
+		this.setWorkflowQuestionnaires(new ArrayList<String>());
+		
 		extractProcessDefinitions();
+		extractQuestionnaires();
+		//MUST BE IN THE END!
+		linkQuestionnaires();
 	}
 
 	/*private void extractMetrics() throws ParserConfigurationException, SAXException, IOException, ValidationException {
@@ -94,26 +104,18 @@ public class WorkflowManager extends XMLManager{
 			if(getTagName(nodes.item(e)).equals(Elements.QUESTIONNAIRES)){
 				Node node = nodes.item(e);
 				Questionnaire questionnaire = new Questionnaire(getAttribute(node, Elements.NAME));
-				questionnaire.setQuestionnaireType(QuestionnaireType.METRIC_LINKED);
 				
-				String process = getAttribute(node, Elements.PROCESS);
+				String xpath = getAttribute(node, Elements.PROCESSES);
 				String type = getAttribute(node, Elements.TYPE);
-				if(process != null){
-					questionnaire.setQuestionnaireType(QuestionnaireType.PRE_PROCESS);
-					questionnaire.setProcessName(process);
-					if(type != null) {
-						if(type.equals(Elements.POST))
-							questionnaire.setQuestionnaireType(QuestionnaireType.POST_PROCESS);
-						else
-							questionnaire.setQuestionnaireType(QuestionnaireType.PRE_PROCESS);
-					}
-				} else {
-					if(type != null) {
-						if(type.equals(Elements.POST))
-							questionnaire.setQuestionnaireType(QuestionnaireType.POST_EXPERIMENT);
-						else
-							questionnaire.setQuestionnaireType(QuestionnaireType.PRE_EXPERIMENT);
-					}
+
+				if(type == null || type.equals(Elements.PRE))
+					questionnaire.setQuestionnaireType(QuestionnaireType.PRE);
+				else
+					questionnaire.setQuestionnaireType(QuestionnaireType.POST);
+				
+				if(xpath != null){
+					Integer processIndex = Integer.parseInt(xpath.substring(xpath.lastIndexOf(".")+1, xpath.length()));
+					questionnaire.setProcessName(getProcessDefinitions().get(processIndex).getName());
 				}
 				
 				List<Node> nl = getElements(node.getChildNodes());
@@ -131,8 +133,8 @@ public class WorkflowManager extends XMLManager{
 		for (Questionnaire questionnaire : questionnaires.values()) {
 			this.seamDao.persist(questionnaire);
 		}
-		this.workflow.getQuestionnaires().addAll(questionnaires.values());
-	    seamDao.merge(this.workflow);
+		//this.workflow.getQuestionnaires().addAll(questionnaires.values());
+	    //seamDao.merge(this.workflow);
 	    seamDao.flush();
 	}
 
@@ -206,34 +208,41 @@ public class WorkflowManager extends XMLManager{
 		for (ProcessDefinition process : processDefinitions) {
 			process.setWorkflow(this.workflow);
 			this.seamDao.persist(process);
-			setQuestionnairesToProcess(process);
 		}
 		this.workflow.getProcessDefinitions().addAll(processDefinitions);
-		setQuestionnairesToWorkflow(this.workflow);
 	    seamDao.merge(this.workflow);
 	    seamDao.flush();
 	}
 
-	private void setQuestionnairesToWorkflow(Workflow workflow2) throws ValidationException {
+	private void linkQuestionnaires() throws ValidationException {
 		for (Questionnaire q : questionnaires.values()) {
-			if((q.getQuestionnaireType().equals(QuestionnaireType.POST_EXPERIMENT) || q.getQuestionnaireType().equals(QuestionnaireType.PRE_EXPERIMENT))){
-				q.setWorkflow(workflow2);
-				seamDao.merge(q);
-				workflow2.getQuestionnaires().add(q);
+			for (ProcessDefinition processDefinition : processDefinitions) {
+				for (TaskNode taskNode : processDefinition.getTaskNodes()) {
+					if(taskNode.getQuestionnaireNames().contains(q.getName())){
+						taskNode.getQuestionnaires().add(q);
+						this.seamDao.merge(taskNode);
+						this.taskQuestionnaires.add(q.getName());
+					}
+				}
+			}
+			
+			if(!taskQuestionnaires.contains(q.getName())){
+				List<ProcessDefinition> processDefinitions = getProcessDefinitions();
+				for (ProcessDefinition processDefinition : processDefinitions) {
+					if(q.getProcessName() != null && q.getProcessName().equals(processDefinition.getName())){
+						processDefinition.getQuestionnaires().add(q);
+						processDefinitionQuestionnaires.add(q.getName());
+						seamDao.merge(processDefinition);
+					}
+				}
+				if(!processDefinitionQuestionnaires.contains(q.getName())){
+					this.workflow.getQuestionnaires().add(q);
+					workflowQuestionnaires.add(q.getName());
+					seamDao.merge(this.workflow);
+				}
 			}
 		}
-		seamDao.merge(workflow2);
-	}
-
-	private void setQuestionnairesToProcess(ProcessDefinition process) throws ValidationException {
-		for (Questionnaire q : questionnaires.values()) {
-			if((q.getQuestionnaireType().equals(QuestionnaireType.POST_PROCESS) || q.getQuestionnaireType().equals(QuestionnaireType.PRE_PROCESS)) && q.getProcessName() != null && q.getProcessName().equals(process.getName())){
-				q.setProcess(process);
-				seamDao.merge(q);
-				process.getQuestionnaires().add(q);
-			}
-		}
-		seamDao.merge(process);
+		seamDao.flush();
 	}
 
 	private void extractElement(Node item, ProcessDefinition processDefinition) {
@@ -312,13 +321,27 @@ public class WorkflowManager extends XMLManager{
 				artefact.setTaskNode(taskNode);
 				taskNode.getArtefacts().add(artefact);
 			}
-			/*if(extraxtName(node.getNodeName()).equals(Elements.METRICS)){
+			if(extraxtName(node.getNodeName()).equals(Elements.QUESTIONNAIRES)){
+				String questName = getAttribute(node, Elements.NAME);
+				if(questName != null && !questName.isEmpty()) {
+					if(!taskNode.getQuestionnaireNames().contains(questName)){
+						taskNode.getQuestionnaireNames().add(questName);
+					}
+//					if(questionnaires.containsKey(questName)) {
+//						taskNode.getQuestionnaires().add(questionnaires.get(questName));
+//						if(!taskQuestionnaires.contains(questName)) {
+//							taskQuestionnaires.add(questName);
+//						}
+//					}
+				}
+			}
+			/*
+			if(extraxtName(node.getNodeName()).equals(Elements.METRICS)){
 				Metric metric = metrics.get(getAttribute(node, Elements.NAME));
 				metric.getTaskNodes().add(taskNode);
 				taskNode.getMetrics().add(metric);
 			}*/
 		}
-		
 		return taskNode;
 	}
 
@@ -377,6 +400,31 @@ public class WorkflowManager extends XMLManager{
 
 	public void setProcessDefinitions(List<ProcessDefinition> processDefinitions) {
 		this.processDefinitions = processDefinitions;
+	}
+
+	public List<String> getTaskQuestionnaires() {
+		return taskQuestionnaires;
+	}
+
+	public void setTaskQuestionnaires(List<String> taskQuestionnaires) {
+		this.taskQuestionnaires = taskQuestionnaires;
+	}
+
+	public List<String> getProcessDefinitionQuestionnaires() {
+		return processDefinitionQuestionnaires;
+	}
+
+	public void setProcessDefinitionQuestionnaires(
+			List<String> processDefinitionQuestionnaires) {
+		this.processDefinitionQuestionnaires = processDefinitionQuestionnaires;
+	}
+
+	public List<String> getWorkflowQuestionnaires() {
+		return workflowQuestionnaires;
+	}
+
+	public void setWorkflowQuestionnaires(List<String> workflowQuestionnaires) {
+		this.workflowQuestionnaires = workflowQuestionnaires;
 	}
 
 }

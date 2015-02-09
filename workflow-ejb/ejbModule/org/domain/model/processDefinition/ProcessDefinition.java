@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -28,7 +29,7 @@ public class ProcessDefinition extends GenericEntity{
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private Workflow workflow;
 	
-	@OneToMany(cascade=CascadeType.REFRESH, mappedBy="process")
+	@ManyToMany(cascade=CascadeType.REFRESH)
 	private List<Questionnaire> questionnaires;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")
@@ -65,7 +66,7 @@ public class ProcessDefinition extends GenericEntity{
 	public List<Questionnaire> getPreQuestionnaires(){
 		List<Questionnaire> preQuestionnaires = new ArrayList<Questionnaire>();
 		for (Questionnaire q : questionnaires) {
-			if(q.getQuestionnaireType().equals(QuestionnaireType.PRE_PROCESS))
+			if(q.getQuestionnaireType().equals(QuestionnaireType.PRE))
 				preQuestionnaires.add(q);
 		}
 		return preQuestionnaires;
@@ -74,7 +75,7 @@ public class ProcessDefinition extends GenericEntity{
 	public List<Questionnaire> getPostQuestionnaires(){
 		List<Questionnaire> postQuestionnaires = new ArrayList<Questionnaire>();
 		for (Questionnaire q : questionnaires) {
-			if(q.getQuestionnaireType().equals(QuestionnaireType.POST_PROCESS))
+			if(q.getQuestionnaireType().equals(QuestionnaireType.POST))
 				postQuestionnaires.add(q);
 		}
 		return postQuestionnaires;

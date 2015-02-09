@@ -9,12 +9,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import org.domain.model.processDefinition.dataType.ArtefactType;
 import org.domain.model.processDefinition.metric.Questionnaire;
+import org.domain.model.processDefinition.metric.QuestionnaireType;
 
 @Entity
 public class TaskNode {
@@ -36,15 +39,18 @@ public class TaskNode {
 	private List<UserExecution> userExecutions;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Task> tasks;
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
+	@ManyToMany(cascade=CascadeType.REFRESH)
 	private List<Questionnaire> questionnaires;
-		
+	@Transient
+	private List<String> questionnaireNames;
+	
 	public TaskNode() {
 		this.userExecutions = new ArrayList<UserExecution>();
 		this.artefacts = new ArrayList<Artefact>();
 		this.tasks = new ArrayList<Task>();
 		this.transitions = new ArrayList<Transition>();
 		this.setQuestionnaires(new ArrayList<Questionnaire>());
+		this.questionnaireNames = new ArrayList<String>();
 	}
 	
 	public Long getId() {
@@ -159,6 +165,32 @@ public class TaskNode {
 
 	public void setQuestionnaires(List<Questionnaire> questionnaires) {
 		this.questionnaires = questionnaires;
+	}
+	
+	public List<Questionnaire> getPreQuestionnaires(){
+		List<Questionnaire> preQuestionnaires = new ArrayList<Questionnaire>();
+		for (Questionnaire q : questionnaires) {
+			if(q.getQuestionnaireType().equals(QuestionnaireType.PRE))
+				preQuestionnaires.add(q);
+		}
+		return preQuestionnaires;
+	}
+	
+	public List<Questionnaire> getPostQuestionnaires(){
+		List<Questionnaire> postQuestionnaires = new ArrayList<Questionnaire>();
+		for (Questionnaire q : questionnaires) {
+			if(q.getQuestionnaireType().equals(QuestionnaireType.POST))
+				postQuestionnaires.add(q);
+		}
+		return postQuestionnaires;
+	}
+
+	public List<String> getQuestionnaireNames() {
+		return questionnaireNames;
+	}
+
+	public void setQuestionnaireNames(List<String> questionnaireNames) {
+		this.questionnaireNames = questionnaireNames;
 	}
 
 }

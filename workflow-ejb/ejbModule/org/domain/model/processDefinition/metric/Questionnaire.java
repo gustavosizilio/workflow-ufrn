@@ -10,7 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -25,16 +25,17 @@ public class Questionnaire {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	@ManyToOne(cascade=CascadeType.REFRESH)
-	private Workflow workflow;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="questionnaire")
 	private List<Question> questions;
 	@Enumerated(EnumType.STRING)
 	private QuestionnaireType questionnaireType;
-	@ManyToOne(cascade=CascadeType.REFRESH)
-	private ProcessDefinition process;
-	@ManyToOne(cascade=CascadeType.REFRESH)
-	private TaskNode taskNode;
+	
+	@ManyToMany(cascade=CascadeType.REFRESH, mappedBy="questionnaires")
+	private List<Workflow> workflows;
+	@ManyToMany(cascade=CascadeType.REFRESH, mappedBy="questionnaires")
+	private List<ProcessDefinition> processDefinitions;
+	@ManyToMany(cascade=CascadeType.REFRESH, mappedBy="questionnaires")
+	private List<TaskNode> taskNodes;
 	@Transient
 	private String processName;
 	
@@ -70,24 +71,14 @@ public class Questionnaire {
 	public void setQuestionnaireType(QuestionnaireType questionnaireType) {
 		this.questionnaireType = questionnaireType;
 	}
-	public ProcessDefinition getProcess() {
-		return process;
-	}
-	public void setProcess(ProcessDefinition process) {
-		this.process = process;
-	}
+	
 	public String getProcessName() {
 		return processName;
 	}
 	public void setProcessName(String processName) {
 		this.processName = processName;
 	}
-	public Workflow getWorkflow() {
-		return workflow;
-	}
-	public void setWorkflow(Workflow workflow) {
-		this.workflow = workflow;
-	}
+	
 	public boolean isFinished(UserAssignment userAssignment, TaskNode task) {
 		for (Question q : this.getQuestions()) {
 			if(!q.isFinished(userAssignment, task))
@@ -102,10 +93,22 @@ public class Questionnaire {
 		}
 		return true;
 	}
-	public TaskNode getTaskNode() {
-		return taskNode;
+	public List<Workflow> getWorkflows() {
+		return workflows;
 	}
-	public void setTaskNode(TaskNode taskNode) {
-		this.taskNode = taskNode;
+	public void setWorkflows(List<Workflow> workflows) {
+		this.workflows = workflows;
+	}
+	public List<TaskNode> getTaskNodes() {
+		return taskNodes;
+	}
+	public void setTaskNodes(List<TaskNode> taskNodes) {
+		this.taskNodes = taskNodes;
+	}
+	public List<ProcessDefinition> getProcessDefinitions() {
+		return processDefinitions;
+	}
+	public void setProcessDefinitions(List<ProcessDefinition> processDefinitions) {
+		this.processDefinitions = processDefinitions;
 	}
 }

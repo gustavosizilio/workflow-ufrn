@@ -142,7 +142,7 @@ public class WorkflowConfiguration {
 
 	public void undeployWorkflow() {
 		clearDesign(false);
-		//seamDao.refresh(getEntity());
+		this.getEntity().setStartedAt(null);
 		for (ProcessDefinition process : getEntity().getProcessDefinitions()) {
 			seamDao.remove(process);
 		}

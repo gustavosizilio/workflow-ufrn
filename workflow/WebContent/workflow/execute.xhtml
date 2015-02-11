@@ -9,12 +9,18 @@
     xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/template.xhtml">
 	<ui:define name="body">
-		<rich:simpleTogglePanel switchType="client" label="#{executer.currentProcess.workflow.title}" opened="false" >
+		<rich:simpleTogglePanel switchType="client" rendered="#{executer.currentTaskNode == null}" label="#{executer.currentProcess.workflow.title}" opened="false" >
 			<h:outputText value="#{executer.currentProcess.workflow.description}" />
 		</rich:simpleTogglePanel>
+		
 		<br />
-								 
-		<rich:panel header="#{executer.currentTaskNode.name}" id="panelTask" rendered="#{executer.currentTaskNode != null}">
+		
+		<h:panelGroup rendered="#{executer.currentTaskNode != null}" >
+			<h1>Activity: <h:outputText value=" #{executer.currentTaskNode.name}" /> </h1>
+		</h:panelGroup>
+							 
+		<rich:panel header="#{executer.currentTaskNode.name}" id="panelTask"
+			rendered="#{executer.currentTaskNode != null and executer.currentUserExecution.startedAt != null}">
 			<h:outputText value="#{executer.currentTaskNode.description}" style="font-size: 13px;"  />
 			<rich:dataList value="#{executer.currentTaskNode.inArtefacts}" var="artefact" rendered="#{executer.currentTaskNode.inArtefacts.size() gt 0}">
 				<h:outputText value="#{artefact.name} " />
@@ -130,42 +136,34 @@
 			<h:outputText value="#{executer.endState.description}" />
 		</rich:panel>
 		
-		<h:panelGroup rendered="#{executer.isStartingState()}">
-			<ui:repeat var="q" value="#{executer.currentProcess.preQuestionnaires}">
-					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
-					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
-					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(executer.userAssignment)}" />
-				    </a4j:commandButton>
-			</ui:repeat>
-		</h:panelGroup>
-		
-		<h:panelGroup rendered="#{executer.isEndingState()}">
-			<ui:repeat var="q" value="#{executer.currentProcess.postQuestionnaires}">
-					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
-					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
-					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(executer.userAssignment)}" />
-				    </a4j:commandButton>
-			</ui:repeat>
-		</h:panelGroup>
 			
 		<h:panelGroup>
-		
-			<ui:repeat var="transition" value="#{executer.transitions}">
-				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? transition.title : messages['layout.text.skipFinishedTask'])}"
-								 onclick="#{((executer.currentUserExecution.finishedAt == null and executer.currentTaskNode != null) ? 'javascript:return confirm(\'Are you sure?\')' : '')}"
-								 styleClass="executeButton"/>
-			</ui:repeat>
 
 			<h:commandButton action="#{executer.startBreak}" value="#{messages['layout.text.workflow.pause']}" 
-								 rendered="#{executer.currentUserExecution.finishedAt == null and executer.currentTaskNode != null}"
+								 rendered="#{executer.currentTaskNode != null and executer.currentUserExecution.startedAt != null and executer.currentUserExecution.finishedAt == null}"
 								 onclick="javascript:return confirm('#{messages['layout.messages.areYouSure?']}')"
 								 styleClass="executeButton">
 			</h:commandButton>
-
-			<h:commandButton action="#{executer.next(null)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? messages['layout.text.workflow.finish'] : messages['layout.text.skipFinishedTask'])}"
+			
+			<h:commandButton action="#{executer.start()}" value="#{messages['layout.text.workflow.start']}"
 							 styleClass="executeButton"
-							 rendered="#{executer.currentTaskNode != null and executer.transitions.size eq 0}"	 
-							 />
+							 rendered="#{executer.currentTaskNode != null and executer.currentUserExecution.startedAt == null}" />
+			
+			<h:commandButton action="#{executer.finish()}" value="#{messages['layout.text.workflow.finish']}"
+							 styleClass="executeButton"
+							 rendered="#{executer.currentTaskNode != null and executer.currentUserExecution.startedAt != null and executer.currentUserExecution.finishedAt == null}" />
+		
+			<ui:repeat var="transition" value="#{executer.transitions}">
+				<h:commandButton action="#{executer.next(transition)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? transition.title : messages['layout.text.workflow.next'])}"
+								 onclick="#{((executer.currentUserExecution.finishedAt == null and executer.currentTaskNode != null) ? 'javascript:return confirm(\'Are you sure?\')' : '')}"
+								 rendered="#{executer.currentTaskNode == null || (executer.currentUserExecution.startedAt != null and executer.currentUserExecution.finishedAt != null) }"
+								 styleClass="executeButton"/>
+			</ui:repeat>
+			
+			<h:commandButton action="#{executer.next(null)}" value="#{((executer.currentUserExecution.finishedAt == null or executer.currentTaskNode == null) ? messages['layout.text.workflow.next'] : messages['layout.text.skipFinishedTask'])}"
+							 styleClass="executeButton"
+							 rendered="#{executer.currentTaskNode != null and executer.currentUserExecution.startedAt != null and executer.transitions.size eq 0}" />
+							 
 		</h:panelGroup>
 	</ui:define>
 	
@@ -241,7 +239,7 @@
 	        </h:panelGroup>
 	    </rich:modalPanel>
 	    
-		 <rich:modalPanel id="panelArtefact" autosized="true">
+		 <rich:modalPanel id="panelArtefact"  autosized="true">
 	        <f:facet name="header">
 	            <h:panelGroup>
 	                <h:outputText value="#{messages['layout.text.upload']}"></h:outputText>

@@ -121,22 +121,23 @@ public class WorkflowExecuter {
 		return false;
 	}
 	
-	public void next(Transition transition){
-		if(isStartingState()){
-			if(!validatePreProcessQuestionnaires())
-				return;
-		}
+	public void start(){
+		startUserExecution(true);
+		loadTaskExecution();
+	}
+	
+	public void finish(){
 		if(validateCurrentTaskNode()){
 			this.startState = null;
 			finishUserExecution();
-			
-			currentTaskNode = currentProcess.getTaskNode(transition);
-			currentJoin = currentProcess.getJoin(transition);
-			endState = currentProcess.getEndState(transition);
-			
-			startUserExecution();
-			loadTaskExecution();
 		}
+	}
+
+	public void next(Transition transition){
+		currentTaskNode = currentProcess.getTaskNode(transition);
+		currentJoin = currentProcess.getJoin(transition);
+		endState = currentProcess.getEndState(transition);
+		startUserExecution(false);
 	}
 	
 	private void loadTaskExecution() {
@@ -374,10 +375,10 @@ public class WorkflowExecuter {
 	}
 	
 	
-	private void startUserExecution() {
+	private void startUserExecution(boolean start) {
 		if(currentTaskNode != null){
 			if(!currentTaskNode.startedByUserAssignment(userAssignment)){
-					UserExecution userExecution = new UserExecution(userAssignment, true);
+					UserExecution userExecution = new UserExecution(userAssignment, start);
 					userExecution.setTaskNode(currentTaskNode);
 					seamDao.persist(userExecution);
 					currentTaskNode.getUserExecutions().add(userExecution);
@@ -389,7 +390,14 @@ public class WorkflowExecuter {
 					seamDao.flush();
 					currentUserExecution = userExecution;
 			} else {
-				setCurrentUserExecution(currentTaskNode.getUserExecutionByUserAssignment(userAssignment));
+				UserExecution userExecution = currentTaskNode.getUserExecutionByUserAssignment(userAssignment);
+				if(userExecution.getStartedAt() == null && start){
+					userExecution.setStartedAt(Calendar.getInstance());
+				}
+				this.currentUserExecution = userExecution;
+				seamDao.merge(currentUserExecution);
+				seamDao.flush();
+				setCurrentUserExecution(userExecution);
 			}
 		}
 	}

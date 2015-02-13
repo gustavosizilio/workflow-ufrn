@@ -12,27 +12,27 @@
 <rich:panel>
 	<h:outputText value="#{question.description}" />
 	<h:panelGroup rendered="#{question.isComboBox()}">
-		<ui:param name="ua" value="#{question.getUserAnswer(user, taskNode)}" />
+		<ui:param name="ua" value="#{question.getUserAssignmentAnswer(userAssignment, taskNode)}" />
 		<h:selectOneMenu style="width:100%;" value="#{ua.answer}" disabled="#{disabledFields}" >
 			<s:selectItems var="op" label="#{op.description}" itemValue="#{op.id}"  value="#{question.options}" />
 		</h:selectOneMenu>
 	</h:panelGroup>
 	
 	<h:panelGroup rendered="#{question.isCheckBox()}">
-		<ui:param name="ua" value="#{question.getUserAnswer(user, taskNode)}" />
+		<ui:param name="ua" value="#{question.getUserAssignmentAnswer(userAssignment, taskNode)}" />
 		<h:selectManyCheckbox style="width:100%;" value="#{ua.answerAsList}" disabled="#{disabledFields}" >
 			<s:selectItems var="op" label="#{op.description}" itemValue="#{op.id}"  value="#{question.options}" />
 		</h:selectManyCheckbox>
 	</h:panelGroup>
 	
 	<h:panelGroup rendered="#{question.isText()}">
-		<ui:param name="ua" value="#{question.getUserAnswer(user, taskNode)}" />
+		<ui:param name="ua" value="#{question.getUserAssignmentAnswer(userAssignment, taskNode)}" />
 		<h:inputText style="width:100%;" value="#{ua.answer}" disabled="#{disabledFields}" >
 		</h:inputText>
 	</h:panelGroup>
 	
 	<h:panelGroup rendered="#{question.isParagraphText()}">
-		<ui:param name="ua" value="#{question.getUserAnswer(user, taskNode)}" />
+		<ui:param name="ua" value="#{question.getUserAssignmentAnswer(userAssignment, taskNode)}" />
 		<h:inputTextarea style="width:100%;" value="#{ua.answer}" disabled="#{disabledFields}" >
 		</h:inputTextarea>
 	</h:panelGroup>

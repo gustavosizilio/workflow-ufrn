@@ -15,8 +15,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.UserAssignment;
+import org.domain.model.processDefinition.Workflow;
 
 @Entity
 public class UserAnswer {
@@ -36,6 +38,10 @@ public class UserAnswer {
 	private Question question;
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private TaskNode taskNode;
+	@ManyToOne(cascade=CascadeType.REFRESH)
+	private ProcessDefinition processDefinition;
+	@ManyToOne(cascade=CascadeType.REFRESH)
+	private Workflow workflow;
 	
 	public UserAnswer() {
 		// TODO Auto-generated constructor stub
@@ -118,5 +124,21 @@ public class UserAnswer {
 
 	public void setUserAssignment(UserAssignment userAssignment) {
 		this.userAssignment = userAssignment;
+	}
+
+	public ProcessDefinition getProcessDefinition() {
+		return processDefinition;
+	}
+
+	public void setProcessDefinition(ProcessDefinition processDefinition) {
+		this.processDefinition = processDefinition;
+	}
+
+	public Workflow getWorkflow() {
+		return workflow;
+	}
+
+	public void setWorkflow(Workflow workflow) {
+		this.workflow = workflow;
 	}
 }

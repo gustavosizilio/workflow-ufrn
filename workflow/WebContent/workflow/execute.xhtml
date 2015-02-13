@@ -116,16 +116,7 @@
 						</rich:panel>
 					</ui:repeat>
 				</h:panelGroup>
-			</h:panelGroup>
-			
-			<h:panelGroup rendered="#{executer.currentTaskNode.questionnaires.size() > 0}">
-				<rich:separator />
-					<ui:repeat var="q" value="#{executer.currentTaskNode.questionnaires}">
-							<a4j:commandButton reRender="metricForm" action="#{executer.setCurrentQuestionnaire(q)}"
-							 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelMetric')}.show()">
-						    </a4j:commandButton>
-					</ui:repeat>
-			</h:panelGroup>
+			</h:panelGroup>		
 		</rich:panel>
 		
 		<rich:panel header="#{executer.currentJoin.name}" rendered="#{executer.currentJoin != null}">
@@ -136,9 +127,19 @@
 			<h:outputText value="#{executer.endState.description}" />
 		</rich:panel>
 		
-			
+		<h:panelGroup rendered="#{executer.currentQuestionnaires.size > 0}">
+			<br />
+			<rich:separator></rich:separator>
+			<ui:repeat var="q" value="#{executer.currentQuestionnaires}">
+					<a4j:commandButton reRender="questionnaireForm" action="#{executer.setCurrentQuestionnaire(q)}"
+					 value="Questionnaire: #{q.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
+					 	<ui:param name="disabledFieldsParam" value="#{q.isFinished(executer.userAssignment, executer.currentTaskNode)}" />
+				    </a4j:commandButton>
+			</ui:repeat>
+			<rich:separator></rich:separator>
+		</h:panelGroup>
+		
 		<h:panelGroup>
-
 			<h:commandButton action="#{executer.startBreak}" value="#{messages['layout.text.workflow.pause']}" 
 								 rendered="#{executer.currentTaskNode != null and executer.currentUserExecution.startedAt != null and executer.currentUserExecution.finishedAt == null}"
 								 onclick="javascript:return confirm('#{messages['layout.messages.areYouSure?']}')"
@@ -185,34 +186,7 @@
 			    </h:form>
 	        </h:panelGroup>
 	     </rich:modalPanel>
-		
-		
-		<rich:modalPanel id="panelMetric" autosized="true" >
-	        <f:facet name="header">
-	            <h:panelGroup>
-	                <h:outputText value="#{messages['layout.text.questionnaire']}"></h:outputText>
-	            </h:panelGroup>
-	        </f:facet>
-	        <f:facet name="controls">
-	            <h:panelGroup>
-	                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkpanelMetric"/>
-	                <rich:componentControl for="panelMetric" attachTo="hidelinkpanelMetric" operation="hide" event="onclick"/>
-	            </h:panelGroup>
-	        </f:facet>
-	        <h:panelGroup id="metricForm" style="height:400px; width: 600px; overflow:auto; display: block;">
-		        <h:form enctype="multipart/form-data">
-		        		<h3><h:outputText value="Questionnaire: #{executer.currentQuestionnaire.name}" /></h3>
-		        		<ui:include src="questionnaireFields.xhtml" >
-		        			<ui:param name="questions" value="#{executer.currentQuestionnaire.questions}" />
-		        			<ui:param name="disabledFields" value="#{executer.currentQuestionnaire.isFinished(executer.userAssignment, executer.currentTaskNode)}" />
-		        			<ui:param name="taskNode" value="#{executer.currentTaskNode}" />
-		        		</ui:include>
-		        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaireMetric" onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )" />
-		        		<rich:componentControl for="panelMetric" attachTo="saveQuestionnaireMetric" operation="hide" event="onclick"/>
-			    </h:form>
-	        </h:panelGroup>
-	    </rich:modalPanel>
-	    
+	     
 	    <rich:modalPanel id="panelQuestionnaire" autosized="true" >
 	        <f:facet name="header">
 	            <h:panelGroup>
@@ -231,7 +205,10 @@
 		        		<ui:include src="questionnaireFields.xhtml" >
 		        			<ui:param name="questions" value="#{executer.currentQuestionnaire.questions}" />
 		        			<ui:param name="disabledFields" value="#{disabledFieldsParam}" />
-		        			<ui:param name="taskNode" value="#{null}" />
+		        			
+		        			<ui:param name="userAssignment" value="#{executer.userAssignment}" />
+		        			<ui:param name="taskNode" value="#{executer.currentTaskNode}" />
+		        			
 		        		</ui:include>
 		        		<a4j:commandButton value="Save" action="#{executer.saveQuestionnaire}" id="saveQuestionnaire" onclick="confirm( '#{messages['layout.messages.areYouSureCannotUndone?']}' )" />
 		        		<rich:componentControl for="panelQuestionnaire" attachTo="saveQuestionnaire" operation="hide" event="onclick"/>

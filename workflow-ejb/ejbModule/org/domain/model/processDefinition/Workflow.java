@@ -197,6 +197,14 @@ public class Workflow extends GenericEntity {
 		return true;
 	}
 	
+	public boolean equals(Object workflow){
+		if(workflow instanceof Workflow){
+			if(((Workflow)workflow).getId().equals(this.getId())){
+				return true;
+			}
+		}
+		return false;
+	}
 	public Date getStartedAt() {
 		return startedAt;
 	}

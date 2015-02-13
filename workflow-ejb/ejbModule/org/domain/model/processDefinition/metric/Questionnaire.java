@@ -86,13 +86,13 @@ public class Questionnaire {
 		}
 		return true;
 	}
-	public boolean isFinished(UserAssignment userAssignment) {
+	/*public boolean isFinished(UserAssignment userAssignment) {
 		for (Question q : this.getQuestions()) {
 			if(!q.isFinished(userAssignment))
 				return false;
 		}
 		return true;
-	}
+	}*/
 	public List<Workflow> getWorkflows() {
 		return workflows;
 	}

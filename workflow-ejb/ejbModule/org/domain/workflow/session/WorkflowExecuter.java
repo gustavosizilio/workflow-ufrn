@@ -65,10 +65,13 @@ public class WorkflowExecuter {
 	private Artefact currentArtefact;
 	private Task currentTask;
 	private Questionnaire currentQuestionnaire;
+	private List<Questionnaire> currentQuestionnaires;
+	
 	
 	public String init(ProcessDefinition process, UserAssignment ua){
 		this.userAssignment = ua;
 		if(process.canExecute(ua)){
+			this.currentQuestionnaires = new ArrayList<Questionnaire>();
 			this.setCurrentProcess(process);
 			this.setStartState(process.getStartState());
 			this.setCurrentTaskNode(null);
@@ -76,6 +79,8 @@ public class WorkflowExecuter {
 			setCurrentJoin(null);
 			setEndState(null);
 			setCurrentUserExecution(null);
+			
+			loadQuestionnaires();
 			
 			return WORKFLOW_EXECUTE_XHTML;
 		}else{
@@ -122,22 +127,57 @@ public class WorkflowExecuter {
 	}
 	
 	public void start(){
+		if(!validateQuestionnaires()) {
+			return;
+		}
 		startUserExecution(true);
 		loadTaskExecution();
+		loadQuestionnaires();
 	}
 	
 	public void finish(){
+		if(!validateQuestionnaires()) {
+			return;
+		}
 		if(validateCurrentTaskNode()){
 			this.startState = null;
 			finishUserExecution();
+			loadQuestionnaires();
 		}
 	}
 
 	public void next(Transition transition){
+		if(!validateQuestionnaires()) {
+			return;
+		}
 		currentTaskNode = currentProcess.getTaskNode(transition);
+		if(this.currentTaskNode != null){
+			this.startState = null;
+		}
 		currentJoin = currentProcess.getJoin(transition);
 		endState = currentProcess.getEndState(transition);
 		startUserExecution(false);
+		loadQuestionnaires();
+	}
+	
+	private void loadQuestionnaires() {
+		this.currentQuestionnaires.clear();
+		if(this.startState != null) {
+			this.currentQuestionnaires.addAll(this.currentProcess.getWorkflow().getPreQuestionnaires());
+			this.currentQuestionnaires.addAll(this.currentProcess.getPreQuestionnaires());
+		}
+		
+		if(this.endState != null) {
+			this.currentQuestionnaires.addAll(this.currentProcess.getPostQuestionnaires());
+			this.currentQuestionnaires.addAll(this.currentProcess.getWorkflow().getPostQuestionnaires());
+		}	
+		
+		if(this.currentTaskNode != null) {
+			this.currentQuestionnaires.addAll(this.currentTaskNode.getPreQuestionnaires());
+			if(this.currentUserExecution.getFinishedAt() != null) {
+				this.currentQuestionnaires.addAll(this.currentTaskNode.getPostQuestionnaires());
+			}
+		}
 	}
 	
 	private void loadTaskExecution() {
@@ -283,13 +323,11 @@ public class WorkflowExecuter {
 		}
 	}
 
-	private boolean validatePreProcessQuestionnaires() {
-		if(isStartingState()){
-			for (Questionnaire q : this.currentProcess.getPreQuestionnaires()) {
-				if(!q.isFinished(userAssignment)){
-					facesMessages.add(Severity.ERROR, "You should complete all questionnaires!");
-					return false;
-				}
+	private boolean validateQuestionnaires() {
+		for (Questionnaire q : this.currentQuestionnaires) {
+			if(!q.isFinished(userAssignment, this.currentTaskNode)){
+				facesMessages.add(Severity.ERROR, "You should complete all questionnaires!");
+				return false;
 			}
 		}
 		return true;
@@ -303,12 +341,6 @@ public class WorkflowExecuter {
 					return false;
 				}
 			}	
-			for (Questionnaire q : currentTaskNode.getQuestionnaires()) {
-				if(!q.isFinished(userAssignment, this.currentTaskNode)){
-					facesMessages.add(Severity.ERROR, "You should complete all questionnaires!");
-					return false;
-				}
-			}
 		}
 		return true;
 	}
@@ -505,5 +537,13 @@ public class WorkflowExecuter {
 
 	public void setUserAssignment(UserAssignment userAssignment) {
 		this.userAssignment = userAssignment;
+	}
+
+	public List<Questionnaire> getCurrentQuestionnaires() {
+		return currentQuestionnaires;
+	}
+
+	public void setCurrentQuestionnaires(List<Questionnaire> currentQuestionnaires) {
+		this.currentQuestionnaires = currentQuestionnaires;
 	}
 }

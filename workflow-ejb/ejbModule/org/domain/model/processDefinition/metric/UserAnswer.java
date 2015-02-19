@@ -1,3 +1,4 @@
+
 package org.domain.model.processDefinition.metric;
 
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.domain.model.processDefinition.Field;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.UserAssignment;
@@ -42,6 +44,8 @@ public class UserAnswer {
 	private ProcessDefinition processDefinition;
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	private Workflow workflow;
+	@ManyToOne(cascade=CascadeType.REFRESH)
+	private Field field;
 	
 	public UserAnswer() {
 		// TODO Auto-generated constructor stub
@@ -140,5 +144,13 @@ public class UserAnswer {
 
 	public void setWorkflow(Workflow workflow) {
 		this.workflow = workflow;
+	}
+
+	public Field getField() {
+		return field;
+	}
+
+	public void setField(Field field) {
+		this.field = field;
 	}
 }

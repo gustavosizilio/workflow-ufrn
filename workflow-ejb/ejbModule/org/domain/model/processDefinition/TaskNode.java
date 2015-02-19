@@ -39,6 +39,8 @@ public class TaskNode {
 	private List<UserExecution> userExecutions;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="taskNode")
 	private List<Task> tasks;
+	@OneToMany(mappedBy="taskNode",cascade=CascadeType.ALL)
+	private List<Field> fields;
 	@ManyToMany(cascade=CascadeType.REFRESH)
 	private List<Questionnaire> questionnaires;
 	@Transient
@@ -51,6 +53,7 @@ public class TaskNode {
 		this.transitions = new ArrayList<Transition>();
 		this.setQuestionnaires(new ArrayList<Questionnaire>());
 		this.questionnaireNames = new ArrayList<String>();
+		this.fields = new ArrayList<Field>();
 	}
 	
 	public Long getId() {
@@ -191,6 +194,14 @@ public class TaskNode {
 
 	public void setQuestionnaireNames(List<String> questionnaireNames) {
 		this.questionnaireNames = questionnaireNames;
+	}
+
+	public List<Field> getFields() {
+		return fields;
+	}
+
+	public void setFields(List<Field> fields) {
+		this.fields = fields;
 	}
 
 }

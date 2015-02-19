@@ -14,6 +14,7 @@ import org.domain.model.processDefinition.Artefact;
 import org.domain.model.processDefinition.ArtefactFile;
 import org.domain.model.processDefinition.Break;
 import org.domain.model.processDefinition.EndState;
+import org.domain.model.processDefinition.Field;
 import org.domain.model.processDefinition.Join;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.StartState;
@@ -137,6 +138,9 @@ public class WorkflowExecuter {
 	
 	public void finish(){
 		if(!validateQuestionnaires()) {
+			return;
+		}
+		if(!validateFields()) {
 			return;
 		}
 		if(validateCurrentTaskNode()){
@@ -327,6 +331,15 @@ public class WorkflowExecuter {
 		for (Questionnaire q : this.currentQuestionnaires) {
 			if(!q.isFinished(userAssignment, this.currentTaskNode)){
 				facesMessages.add(Severity.ERROR, "You should complete all questionnaires!");
+				return false;
+			}
+		}
+		return true;
+	}
+	private boolean validateFields() {
+		for (Field f : this.currentTaskNode.getFields()) {
+			if(!f.isFinished(userAssignment)){
+				facesMessages.add(Severity.ERROR, "You should complete all fields!");
 				return false;
 			}
 		}

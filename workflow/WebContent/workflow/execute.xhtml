@@ -116,6 +116,22 @@
 						</rich:panel>
 					</ui:repeat>
 				</h:panelGroup>
+				
+				<h:panelGroup id="fields">
+					<br />
+					<rich:dataGrid var="f" value="#{executer.currentTaskNode.fields}" >
+						<h:column>
+							<h:outputText value="#{f.name}" />
+						</h:column>
+						
+						<h:column>
+							<ui:param name="ua" value="#{f.getUserAssignmentAnswer(executer.userAssignment)}" />
+							<h:inputTextarea style="width:100%;" value="#{ua.answer}" disabled="#{executer.currentUserExecution.finishedAt != null}" >
+							</h:inputTextarea>
+						</h:column>
+					</rich:dataGrid>
+				</h:panelGroup>
+				
 			</h:panelGroup>		
 		</rich:panel>
 		

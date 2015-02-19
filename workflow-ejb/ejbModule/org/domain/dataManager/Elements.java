@@ -62,5 +62,6 @@ public class Elements {
 	public static final String COL = "col";
 	public static final String ROW = "row";
 	public static final String PROCESSES = "processes";
+	public static final Object FIELDS = "fields";
 	
 }

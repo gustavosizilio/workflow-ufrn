@@ -26,6 +26,7 @@ import org.domain.model.processDefinition.metric.QuestionOption;
 import org.domain.model.processDefinition.metric.QuestionType;
 import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.model.processDefinition.metric.QuestionnaireType;
+import org.domain.model.processDefinition.Field;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -321,6 +322,11 @@ public class WorkflowManager extends XMLManager{
 				artefact.setTaskNode(taskNode);
 				taskNode.getArtefacts().add(artefact);
 			}
+			if(extraxtName(node.getNodeName()).equals(Elements.FIELDS)){
+				Field f = extractField(node);
+				f.setTaskNode(taskNode);
+				taskNode.getFields().add(f);
+			}
 			if(extraxtName(node.getNodeName()).equals(Elements.QUESTIONNAIRES)){
 				String questName = getAttribute(node, Elements.NAME);
 				if(questName != null && !questName.isEmpty()) {
@@ -343,6 +349,12 @@ public class WorkflowManager extends XMLManager{
 			}*/
 		}
 		return taskNode;
+	}
+
+	private Field extractField(Node node) {
+		Field f = new Field();
+		f.setName(getAttribute(node, Elements.NAME));
+		return f;	
 	}
 
 	private StartState extractStartState(Node item, ProcessDefinition processDefinition) {

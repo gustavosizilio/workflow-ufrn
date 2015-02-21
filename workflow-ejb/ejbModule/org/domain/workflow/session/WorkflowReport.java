@@ -7,6 +7,7 @@ import org.domain.exception.ValidationException;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Observation;
 import org.domain.model.processDefinition.Workflow;
+import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.ranalysis.ANOVA;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
@@ -25,6 +26,7 @@ public class WorkflowReport {
 	@In("seamDao") protected SeamDAO seamDao;
 	@In("user") protected User user;
 	private Workflow workflow;
+	private Questionnaire currentQuestionnaire;
 	
 	private Observation observation;
 	
@@ -46,8 +48,10 @@ public class WorkflowReport {
 		this.setObservation(new Observation(this.workflow));
 	}
 	
-	public void wire(){
-		seamDao.refresh(workflow);
+	public void refreshData() {
+		System.out.println(workflow.getId());
+		this.workflow = seamDao.find(Workflow.class, workflow.getId());
+		System.out.println(workflow.getId());
 	}
 
 	public Workflow getWorkflow() {
@@ -94,5 +98,13 @@ public class WorkflowReport {
 
 	public void setAnova(ANOVA anova) {
 		this.anova = anova;
+	}
+
+	public Questionnaire getCurrentQuestionnaire() {
+		return currentQuestionnaire;
+	}
+
+	public void setCurrentQuestionnaire(Questionnaire currentQuestionnaire) {
+		this.currentQuestionnaire = currentQuestionnaire;
 	}
 }

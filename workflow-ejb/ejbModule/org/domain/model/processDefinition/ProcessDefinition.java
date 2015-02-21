@@ -26,10 +26,10 @@ public class ProcessDefinition extends GenericEntity{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	@ManyToOne(cascade=CascadeType.REFRESH)
+	@ManyToOne
 	private Workflow workflow;
 	
-	@ManyToMany(cascade=CascadeType.REFRESH)
+	@ManyToMany
 	private List<Questionnaire> questionnaires;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="processDefinition")

@@ -10,22 +10,97 @@
     template="/layout/template.xhtml">
 	<ui:define name="body">
 	<h:panelGroup>
-		<a4j:commandButton action="#" value="#{messages['layout.text.workflow.comments']}" id="observationModal" >
-			<rich:componentControl for="panelObservation" attachTo="observationModal" operation="show" event="onclick"/>
-		</a4j:commandButton>
-		<h:outputText value="   " />
-    	<h:commandButton action="#{report.analysis}" title="graph" value="#{messages['layout.text.workflow.analysis']}"/>
+		<h:form>
+			<h:commandButton action="#{report.refreshData}" value="#{messages['layout.text.workflow.refreshData']}" id="refreshData" />
+			<h:outputText value="   " />
+			<a4j:commandButton action="#" value="#{messages['layout.text.workflow.comments']}" id="observationModal" >
+				<rich:componentControl for="panelObservation" attachTo="observationModal" operation="show" event="onclick"/>
+			</a4j:commandButton>
+			<h:outputText value="   " />
+	    	<h:commandButton action="#{report.analysis}" title="graph" value="#{messages['layout.text.workflow.analysis']}"/>
+		</h:form>
 	</h:panelGroup>
 	<br />
+	<br />
+	<h1>Questionnaires Monitoring</h1>
+	<ui:repeat var="q" value="#{report.workflow.questionnaires}">
+		<rich:simpleTogglePanel switchType="client" label="#{q.questionnaireType} #{report.workflow.title} - #{q.name}" opened="false">	
+			<ui:repeat value="#{q.userAssignments}" var="userAssignment" >
+				<a4j:commandButton reRender="questionnaireForm" action="#{report.setCurrentQuestionnaire(q)}"
+					 value="#{userAssignment.user.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
+					 	<ui:param name="disabledFieldsParam" value="#{true}" />
+					 	<ui:param name="userAssignment" value="#{userAssignment}" />
+				</a4j:commandButton>	
+			</ui:repeat>
+		</rich:simpleTogglePanel>
+		
+		<ui:repeat var="p" value="#{report.workflow.processDefinitions}">
+			<ui:repeat var="q" value="#{p.questionnaires}">
+				<rich:simpleTogglePanel switchType="client" label="#{q.questionnaireType} #{p.name} - #{q.name}" opened="false">	
+					<ui:repeat value="#{q.userAssignments}" var="userAssignment" >
+						<a4j:commandButton reRender="questionnaireForm" action="#{report.setCurrentQuestionnaire(q)}"
+							 value="#{userAssignment.user.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
+							 	<ui:param name="disabledFieldsParam" value="#{true}" />
+							 	<ui:param name="userAssignment" value="#{userAssignment}" />
+						</a4j:commandButton>	
+					</ui:repeat>
+				</rich:simpleTogglePanel>
+			</ui:repeat>
+			
+			<ui:repeat var="t" value="#{p.taskNodes}">
+			<ui:repeat var="q" value="#{t.questionnaires}">
+				<rich:simpleTogglePanel switchType="client" label="#{q.questionnaireType} #{t.name} - #{q.name}" opened="false">	
+					<ui:repeat value="#{q.userAssignments}" var="userAssignment" >
+						<a4j:commandButton reRender="questionnaireForm" action="#{report.setCurrentQuestionnaire(q)}"
+							 value="#{userAssignment.user.name}" onclick="#{rich:component('panelQuestionnaire')}.show()">
+							 	<ui:param name="disabledFieldsParam" value="#{true}" />
+							 	<ui:param name="userAssignment" value="#{userAssignment}" />
+							 	<ui:param name="taskNode" value="#{t}" />
+						</a4j:commandButton>	
+					</ui:repeat>
+				</rich:simpleTogglePanel>
+			</ui:repeat>
+			</ui:repeat>
+		</ui:repeat>
+		
+		
+	</ui:repeat>
 	
+	<rich:modalPanel id="panelQuestionnaire" autosized="true" >
+        <f:facet name="header">
+            <h:panelGroup>
+                <h:outputText value="#{messages['layout.text.questionnaire']}"></h:outputText>
+            </h:panelGroup>
+        </f:facet>
+        <f:facet name="controls">
+            <h:panelGroup>
+                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelinkpanelQuestionnaire"/>
+                <rich:componentControl for="panelQuestionnaire" attachTo="hidelinkpanelQuestionnaire" operation="hide" event="onclick"/>
+            </h:panelGroup>
+        </f:facet>
+        <h:panelGroup id="questionnaireForm" style="height:400px; width: 600px; overflow:auto; display: block;">
+	        <h:form enctype="multipart/form-data">
+	        		<h3><h:outputText value="Questionnaire: #{report.currentQuestionnaire.name}" /></h3>
+	        		<ui:include src="questionnaireFields.xhtml" >
+	        			<ui:param name="questions" value="#{report.currentQuestionnaire.questions}" />
+	        			<ui:param name="disabledFields" value="#{disabledFieldsParam}" />
+	        			<ui:param name="userAssignment" value="#{userAssignment}" />
+	        			<ui:param name="taskNode" value="#{currentTaskNode}" />
+	        		</ui:include>
+		    </h:form>
+        </h:panelGroup>
+    </rich:modalPanel>
+	
+	<br />
+	<h1>Tasks Monitoring</h1>
 		<ui:repeat var="process" value="#{report.workflow.processDefinitions}">
 			<rich:simpleTogglePanel switchType="client" label="#{process.name}" opened="false">	
 				<h:outputText value="#{messages['layout.text.workflow.notStarted']}..." rendered="#{!process.workflow.started}"/>
 				
-				<ui:repeat var="taskNode" value="#{process.taskNodes}">
+				<ui:repeat var="t" value="#{process.taskNodes}">
 					<rich:simpleTogglePanel switchType="client" label="#{taskNode.name}" opened="true"
-											rendered="#{taskNode.startState eq null}" >	
-						<ui:repeat value="#{taskNode.userExecutions}" var="userExecution" >
+											rendered="#{t.startState eq null}" >	
+						<ui:repeat value="#{t.userExecutions}" var="userExecution" >
 							<rich:panel header="#{userExecution.userAssignment.user.name}" style="width: 300px; height: 180px; float: left;" >
 								<h:panelGrid columns="2">
 									<h:outputLabel value="#{messages['layout.text.workflow.wastedTime']}" />
@@ -60,27 +135,39 @@
 									        <rich:componentControl for="artefactsModal" attachTo="artefacts" operation="show" event="onclick"/>
 									 </h:outputLink>
 									
-									<h:outputLabel value="#{messages['layout.text.workflow.comment']}" />
-									<h:outputLink value="#" id="comment" rendered="#{userExecution.comment.length() > 0}">
+									<h:outputLabel value="#{messages['layout.text.workflow.fields']}" />
+									<h:outputLink value="#" id="fields" rendered="#{taskNode.fields.size() > 0}">
 									        #{messages['layout.text.show']}
-									        <rich:componentControl for="commentModal" attachTo="comment" operation="show" event="onclick"/>
-									 </h:outputLink>
+									        <rich:componentControl for="fieldsModal" attachTo="fields" operation="show" event="onclick"/>
+									</h:outputLink>
+									
 								</h:panelGrid>
 							</rich:panel>
-							
-							<rich:modalPanel id="commentModal" width="500">
+						    
+							<rich:modalPanel id="fieldsModal" width="500">
 						        <f:facet name="header">
 						            <h:panelGroup>
-						                <h:outputText value="#{messages['layout.text.workflow.comment']}"></h:outputText>
+						                <h:outputText value="#{messages['layout.text.workflow.fields']}"></h:outputText>
 						            </h:panelGroup>
 						        </f:facet>
 						        <f:facet name="controls">
 						            <h:panelGroup>
 						                <h:graphicImage value="/img/close.png" styleClass="hidelink" id="hidelink"/>
-						                <rich:componentControl for="commentModal" attachTo="hidelink" operation="hide" event="onclick"/>
+						                <rich:componentControl for="fieldsModal" attachTo="hidelink" operation="hide" event="onclick"/>
 						            </h:panelGroup>
 						        </f:facet>
-						        <h:outputText value="#{userExecution.comment}" />
+						        <h:panelGroup id="fieldsTable">
+									<rich:dataGrid var="f" value="#{taskNode.fields}" >
+										<h:column>
+											<h:outputText value="#{f.name}: " />
+										</h:column>
+										
+										<h:column>
+											<ui:param name="ua" value="#{f.getUserAssignmentAnswer(userExecution.userAssignment)}" />
+											<h:outputText value="#{ua.answer}" />
+										</h:column>
+									</rich:dataGrid>
+								</h:panelGroup>
 						    </rich:modalPanel>
 						    
 							<rich:modalPanel id="artefactsModal" width="710" >

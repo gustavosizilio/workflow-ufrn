@@ -4,19 +4,26 @@ import org.domain.dsl.EXPDSLUtil;
 import org.domain.dsl.JPDLDSLUtil;
 import org.domain.model.processDefinition.Artefact;
 import org.domain.model.processDefinition.Workflow;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
 
+@Name("pathBuilder")
 public class PathBuilder {
-	public static synchronized String getExperimentsPath(){
-		String expHome = ReadPropertiesFile.getProperty("components", "expHome");
-		if(expHome==null || expHome.isEmpty()){
-			System.err.println("expHome: " + expHome);
+	
+	private String expHome;
+	private String webPath;
+	@In(value = "expdslUtil", create = true) private EXPDSLUtil dslUtil;
+	
+	public String getExperimentsPath(){
+		if(getExpHome()==null || getExpHome().isEmpty()){
+			System.err.println("expHome: " + getExpHome());
 			return validate("/tmp/experiments/");
-		} else {
-			return validate(expHome);			
+		} else { 
+			return validate(getExpHome());			
 		}
 	}
 	
-	public static synchronized String getArtefactsPath(Workflow w, Artefact currentArtefact){
+	public String getArtefactsPath(Workflow w, Artefact currentArtefact){
 		StringBuilder sb = new StringBuilder();
 		sb.append(getExperimentDataPath(w));
 		sb.append("/"+currentArtefact.getTaskNode().getProcessDefinition().getName()+"/");
@@ -31,23 +38,23 @@ public class PathBuilder {
 		return validate(sb.toString());
 	}
 	
-	public static synchronized String getExperimentDataPath(Workflow w) {
+	public String getExperimentDataPath(Workflow w) {
 		return validate(getExperimentPath(w) + "/data/");
 	}
 
-	public static synchronized String getExperimentPath(Workflow w){
+	public String getExperimentPath(Workflow w){
 		return validate(getExperimentsPath()+"/"+w.getId()+"/");
 	}
 	
-	public static synchronized String getExperimentMyexpPath(Workflow w){
+	public String getExperimentMyexpPath(Workflow w){
 		try {
-			return validate(getExperimentsPath()+"/"+w.getId()+"/"+EXPDSLUtil.getInstance().getMyexpName(w));
+			return validate(getExperimentsPath()+"/"+w.getId()+"/"+dslUtil.getMyexpName(w));
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
-	public static String getExperimentJpdlPath(Workflow w) {
+	public String getExperimentJpdlPath(Workflow w) {
 		try {
 			return validate(getExperimentsPath()+"/"+w.getId()+"/"+JPDLDSLUtil.getInstance().getJpdlName(w));
 		} catch (Exception e) {
@@ -55,24 +62,40 @@ public class PathBuilder {
 		}
 	}
 	
-	public static String getExperimentConfPath(Workflow w) {
+	public String getExperimentConfPath(Workflow w) {
 		try {
-			return validate(getExperimentsPath()+"/"+w.getId()+"/"+EXPDSLUtil.getInstance().getConfName(w));
+			return validate(getExperimentsPath()+"/"+w.getId()+"/"+dslUtil.getConfName(w));
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
-	public static synchronized String getExperimentXMIPath(Workflow w){
+	public String getExperimentXMIPath(Workflow w){
 		try {
-			return validate(getExperimentsPath()+"/"+w.getId()+"/"+EXPDSLUtil.getInstance().getXMIName(w));
+			return validate(getExperimentsPath()+"/"+w.getId()+"/"+dslUtil.getXMIName(w));
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
-	private static String validate(String path){
+	private String validate(String path){
 		return path.replaceAll("//", "/");
+	}
+
+	public String getExpHome() {
+		return expHome;
+	}
+
+	public void setExpHome(String expHome) {
+		this.expHome = expHome;
+	}
+
+	public String getWebPath() {
+		return webPath;
+	}
+
+	public void setWebPath(String webPath) {
+		this.webPath = webPath;
 	}
 	
 }

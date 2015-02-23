@@ -1,5 +1,6 @@
 package org.domain.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,8 +20,11 @@ public class User {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(unique=true, nullable=false)
 	private String email;
+	@Column(nullable=false)
 	private String encryptedPassword;
+	@Column(nullable=false)
 	private String name;
 
 	public User() {
@@ -31,11 +35,7 @@ public class User {
 		this.setName(name);
 	}
 	public String toString() {
-		if(this.name != null && !this.name.isEmpty()) {
-			return this.name;
-		} else {
-			return this.email;
-		}
+		return this.name + " - " + this.email;
 	}
 	public Long getId() {
 		return id;

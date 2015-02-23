@@ -185,5 +185,45 @@
 				</h:form>
 			</h:panelGroup>
 		</rich:modalPanel>
+		
+		
+		<rich:modalPanel id="addUserModal" autosized="true" showWhenRendered="#{configuration.showModalAddUser}">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages['layout.text.invite']}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:form>
+						<h:graphicImage value="/img/close.png" styleClass="hidelink"
+							id="hidelinkUserModal">
+							<a4j:support reRender="designDefinition,addUserModal" event="onclick"
+								action="#{configuration.setShowModalAddUser(false)}"/>
+						</h:graphicImage>
+					</h:form>
+				</h:panelGroup>
+			</f:facet>
+			<h:panelGroup id="addUserModalPanel">
+				<h:form>
+					<h:messages id="messagesUser" globalOnly="true" styleClass="message"
+		            errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" />
+	            	<br />
+					<h:outputText value="#{messages['layout.text.userNotFound']}" />
+					<br />
+				
+					<h:panelGrid columns="2">
+						<h:outputLabel value="#{messages['layout.text.name']}:" />
+						<h:inputText value="#{configuration.newUser.name}" />
+						
+						<h:outputLabel value="#{messages['layout.text.email']}:" />
+						<h:inputText value="#{configuration.newUser.email}" />
+					</h:panelGrid>
+					
+					<a4j:commandButton reRender="designDefinition,addUserModal" value="#{messages['layout.text.invite']}"
+						action="#{configuration.inviteNewUser}" />
+				</h:form>	
+			</h:panelGroup>
+		</rich:modalPanel>
 	</ui:define>
 </ui:composition>

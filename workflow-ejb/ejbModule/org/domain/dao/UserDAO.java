@@ -26,6 +26,30 @@ public class UserDAO extends SeamDAO {
 		q.setParameter("userName", name);
 		return (List<User>) q.getResultList();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<User> findAllByNameOrEmail(String search){	
+		StringBuilder sb = new StringBuilder();
+		String[] names = search.trim().split(" ");
+		
+		sb.append("SELECT u FROM User u where (true=true ");
+		for (int i = 0; i < names.length; i++) {
+			sb.append("AND UPPER(u.name) LIKE '%' || UPPER(LTRIM(RTRIM(?))) || '%'");
+		}
+		sb.append(") OR UPPER(u.email) LIKE '%' || UPPER(LTRIM(RTRIM(?))) || '%'");
+		
+		String query = sb.toString();
+		Query q = createQuery(query);
+		for (int i = 0; i < names.length; i++) {
+			String string = names[i];
+			q.setParameter(i+1, string);
+		}
+		q.setParameter(names.length+1, search);
+		
+		
+		return (List<User>) q.getResultList();
+	}
+	
 	public User findAuthenticate(String email, String encryptedPassword){
 		List<User> users = findByExample(new User(email,encryptedPassword,null));
 		if(users.size() == 1){

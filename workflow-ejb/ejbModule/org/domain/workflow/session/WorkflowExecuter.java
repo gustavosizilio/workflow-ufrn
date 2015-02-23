@@ -46,6 +46,7 @@ public class WorkflowExecuter {
 	@In("userAssignmentDao") protected UserAssignmentDAO userAssignmentDao;
 	@In("seamDao") protected SeamDAO seamDao;
 	@In("user") protected User user;
+	@In(value = "pathBuilder", create = true)  protected PathBuilder pathBuilder;
 	
 	@In
 	private FacesMessages facesMessages;
@@ -403,7 +404,7 @@ public class WorkflowExecuter {
 		
 		//String path = ReadPropertiesFile.getProperty("components", "artefactPath");
 		//path = path + this.currentArtefact.getId() + "/" + artefactfile.getId() + "/";
-		String path = PathBuilder.getArtefactsPath(this.currentTaskNode.getProcessDefinition().getWorkflow(), this.currentArtefact);
+		String path = pathBuilder.getArtefactsPath(this.currentTaskNode.getProcessDefinition().getWorkflow(), this.currentArtefact);
 		File upload = new File(path);
 		upload.mkdirs();
 		

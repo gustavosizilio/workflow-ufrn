@@ -10,11 +10,24 @@
 <h:panelGroup rendered="#{configuration.entity.manualDesign}">
 	<h:panelGrid columns="2" >
 		<h:outputLabel value="#{messages['layout.text.user']}:" />
-		<h:selectOneMenu value="#{configuration.userProperty}">
-			<s:selectItems value="#{configuration.users}" var="u"
-				label="#{u.name} - #{u.email}" noSelectionLabel="" />
-			<s:convertEntity />
-		</h:selectOneMenu>
+		<h:panelGroup>
+			<h:inputText id="userManual" value="#{configuration.userPropertyString}" />
+			<rich:suggestionbox for="userManual" var="result"
+	                suggestionAction="#{configuration.autocomplete}" width="500"
+	                nothingLabel="No user found">
+	            <f:facet name="header">
+	                <h:outputText value="Select the user" />
+	            </f:facet>
+	       		<h:column>
+	            	<h:outputText value="#{result}" />
+	           	</h:column>
+	           	
+	           	<a4j:support event="onselect" action="#{configuration.updateUserProperty(result)}" /> 
+	           	<a4j:support event="onobjectchange" action="#{configuration.updateUserProperty(null)}" /> 
+	        </rich:suggestionbox>
+		</h:panelGroup>
+
+
 		<h:outputLabel value="#{messages['layout.text.treatment']}:" />
 		<h:selectOneMenu value="#{configuration.processDefinitionProperty}">
 			<s:selectItems value="#{configuration.entity.processDefinitions}" 
@@ -25,7 +38,8 @@
 		<rich:spacer />
 		<a4j:commandButton value="#{messages['layout.text.add']}"
 			actionListener="#{configuration.addUserManual}"
-			reRender="designDefinition" />
+			reRender="designDefinition,addUserModal"
+		/>
 	</h:panelGrid>
 
 	<br />

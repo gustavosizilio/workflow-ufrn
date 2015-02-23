@@ -64,5 +64,10 @@
       <bpm:pageflow-definitions></bpm:pageflow-definitions>
    </bpm:jbpm>
    -->
-
+	
+	<component name="pathBuilder">
+		<property name="expHome">@expHome@</property>
+		<property name="webPath">@webPath@</property>
+	</component>
+	
 </components>

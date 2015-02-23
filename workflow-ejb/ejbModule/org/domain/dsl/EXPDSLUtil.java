@@ -11,7 +11,6 @@ import java.util.List;
 import org.domain.model.processDefinition.Workflow;
 import org.domain.utils.PathBuilder;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -28,27 +27,22 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
 
 import br.ufrn.dimap.ase.dsl.Expdslv3RuntimeModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-
+@Name("expdslUtil")
 public class EXPDSLUtil {
-	private static EXPDSLUtil instance;
 	private EFactoryImpl factory;
 	private Injector injector;
 	private static final String packageClass = "br.ufrn.dimap.ase.dsl.expdslv3.Expdslv3Package";
+	@In(value = "pathBuilder", create = true) private PathBuilder pathBuilder;
 	
-	public synchronized static EXPDSLUtil getInstance() throws Exception {
-		if(instance == null) {
-			instance = new EXPDSLUtil();
-		}
-		return instance;
-	}
-	
-	private EXPDSLUtil() throws Exception {
+	public EXPDSLUtil() throws Exception {
 		String factoryClass = packageClass.substring(0, packageClass.lastIndexOf("Package"))+"Factory";
 		Class<?> packageFactory;
 		Class<?> clazzFactory;
@@ -200,17 +194,6 @@ public class EXPDSLUtil {
 		}
 		return derivedClasses;
 	}
-
-	public static void main(String[] args) {
-		try {
-			EXPDSLUtil util = EXPDSLUtil.getInstance();
-			util.convertExpTextToEcore("/Users/buda/workspace/workspace_experimento/workflow-ufrn/ArtefatosMyExp/comprehensionLPSTest.expdslv3");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
 	
 	public EObject convertExpTextToEcore(String path) throws IOException {
 		String newPath = path.substring(0, path.lastIndexOf(".")+1)+factory.getEPackage().getNsPrefix();
@@ -299,7 +282,7 @@ public class EXPDSLUtil {
 
 	public String getConfName(Workflow w) {
 		try {
-			String xmiPath = PathBuilder.getExperimentXMIPath(w);
+			String xmiPath = pathBuilder.getExperimentXMIPath(w);
 			EObject rootModel = this.convertXMIToEcore(xmiPath);
 			String expName = EcoreUtil.getID(rootModel.eContents().get(0));
 			if(expName == null) {
@@ -314,6 +297,7 @@ public class EXPDSLUtil {
 			return expName;
 			 
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

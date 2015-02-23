@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.event.ActionEvent;
 
@@ -23,6 +26,7 @@ import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.Workflow;
 import org.domain.model.processDefinition.metric.Questionnaire;
+import org.domain.utils.MailGun;
 import org.domain.utils.PathBuilder;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
@@ -42,13 +46,18 @@ public class WorkflowConfiguration {
 	@In("seamDao") protected SeamDAO seamDao;
 	@In private FacesMessages facesMessages;
 	@In("userDao") UserDAO userDAO;
+	@In("user") protected User user;
+	@In(value = "pathBuilder", create = true) PathBuilder pathBuilder;
 	
 	private Workflow entity;
 	private Map<String,List<User>> usersSelectedToShuffle;
 	private User userProperty;
+	private User newUser;
+	private String userPropertyString;
 	private String groupProperty;
 	private ProcessDefinition processDefinitionProperty;
 	private Artefact currentArtefact;
+	private boolean showModalAddUser;
 	
 	@Begin(join=true, flushMode=FlushModeType.MANUAL)	
 	public void prepare(Workflow workflow) {
@@ -56,10 +65,20 @@ public class WorkflowConfiguration {
 		this.setUsersSelectedToShuffle(new Hashtable<String,List<User>>());
 	}
 	
+	public List<User> autocomplete(Object suggest) {
+        String pref = (String) suggest;
+        List<User> users = userDAO.findAllByNameOrEmail(pref);
+        return users;
+    }
+	
+	public void updateUserProperty(User u) {
+		System.out.println(u);
+		this.userProperty = u;
+	}
 	public void deployWorkflows() throws Exception {
 		try {
-			String experimentJpdlPath = PathBuilder.getExperimentJpdlPath(this.getEntity());
-			JPDLDSLUtil.getInstance().convertXMIToJPDL(PathBuilder.getExperimentXMIPath(this.getEntity()), experimentJpdlPath);
+			String experimentJpdlPath = pathBuilder.getExperimentJpdlPath(this.getEntity());
+			JPDLDSLUtil.getInstance().convertXMIToJPDL(pathBuilder.getExperimentXMIPath(this.getEntity()), experimentJpdlPath);
 			
 			//deploy jpdl
 			WorkflowManager manager = new WorkflowManager(experimentJpdlPath, this.getEntity(),seamDao);
@@ -67,18 +86,18 @@ public class WorkflowConfiguration {
 			seamDao.merge(this.getEntity());
 			seamDao.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
 			facesMessages.add(Severity.ERROR, e.getMessage());
+			e.printStackTrace();
 		}
 		
 		try {
-			String experimentPath = PathBuilder.getExperimentPath(this.getEntity());
-			String experimentConfPath = PathBuilder.getExperimentConfPath(this.getEntity());
+			String experimentPath = pathBuilder.getExperimentPath(this.getEntity());
+			String experimentConfPath = pathBuilder.getExperimentConfPath(this.getEntity());
 			
 			File f = new File(experimentConfPath); //delete the file to fix bug in the acceleo convertion that concat the content instead of recreate the file
 			if (f.exists()) f.delete();
 			
-			JPDLDSLUtil.getInstance().convertXMIToConf(PathBuilder.getExperimentXMIPath(this.getEntity()), experimentPath);
+			JPDLDSLUtil.getInstance().convertXMIToConf(pathBuilder.getExperimentXMIPath(this.getEntity()), experimentPath);
 			deployDesignConfiguration(experimentConfPath);
 			
 		} catch (Exception e) {
@@ -88,7 +107,7 @@ public class WorkflowConfiguration {
 	}
 	
 	public void deployDefaultDesignConfiguration() {
-		String experimentConfPath = PathBuilder.getExperimentConfPath(this.getEntity());
+		String experimentConfPath = pathBuilder.getExperimentConfPath(this.getEntity());
 		deployDesignConfiguration(experimentConfPath);
 	}
 	
@@ -104,6 +123,7 @@ public class WorkflowConfiguration {
 			seamDao.merge(this.getEntity());
 		} catch(Exception e){
 			facesMessages.add(Severity.ERROR, "Failed to import design");
+			e.printStackTrace();
 		}
 	}
 	
@@ -115,6 +135,7 @@ public class WorkflowConfiguration {
 			seamDao.flush();
 		} catch (ValidationException e) {
 			facesMessages.add(Severity.ERROR,"Validation error.");
+			e.printStackTrace();
 		}
 	}
 	
@@ -136,6 +157,7 @@ public class WorkflowConfiguration {
 				seamDao.flush();
 		} catch (ValidationException e) {
 			facesMessages.add(Severity.ERROR,"Validation error.");
+			e.printStackTrace();
 		}
 	}
 	
@@ -154,18 +176,107 @@ public class WorkflowConfiguration {
 		seamDao.flush();
 		seamDao.refresh(getEntity());
 		facesMessages.add("Undeploy efetuado com sucesso");
-		new File(PathBuilder.getExperimentDataPath(getEntity()));
+		new File(pathBuilder.getExperimentDataPath(getEntity()));
 	}
 	
-	public void addUserToShuffle(ActionEvent evt) throws ValidationException{
-		if(this.getEntity().isRCBDDesign()){
-			addUserToShuffleRCBD();
-		}else if(this.getEntity().isLSDesign()){
-			addUserToShuffleLS();
-		}else if (this.getEntity().isCRDesign()){
-			addUserToShuffleCRD();
+	public void addUserManual(ActionEvent evt) throws ValidationException{
+		seamDao.refresh(getEntity());
+		
+		tryGerUserProperty();
+		
+		if(this.userProperty != null) {
+			if(getProcessDefinitionProperty() != null && !getProcessDefinitionProperty().getUsers().contains(userProperty)
+					&& getEntity().isManualDesign() ){
+				UserAssignment userAssignment = new UserAssignment(userProperty, getProcessDefinitionProperty(), null);
+				seamDao.persist(userAssignment);
+				seamDao.refresh(getProcessDefinitionProperty());
+	
+				getProcessDefinitionProperty().getUserAssignments().add(userAssignment);
+				seamDao.merge(getProcessDefinitionProperty());
+				
+				seamDao.flush();
+				userProperty = null;
+				this.userPropertyString = null;
+				processDefinitionProperty = null;
+			}			
 		}
-		this.userProperty = null;
+	}
+
+	private void tryGerUserProperty() {
+		if(this.userProperty == null && this.userPropertyString != null && !this.userPropertyString.isEmpty()) {
+			List<User> us = userDAO.findAllByNameOrEmail(this.userPropertyString);
+			if(us.size() == 1) {
+				this.userProperty = us.get(0);
+			} else {
+				this.newUser = new User();
+				if(this.userPropertyString.contains("@")) {
+					this.newUser.setEmail(this.userPropertyString);
+				} else {
+					this.newUser.setName(this.userPropertyString);					
+				}
+				this.setShowModalAddUser(true);
+			}
+		}
+	}
+	
+	public void inviteNewUser() {
+		List<User> u = userDAO.findAllByEmail(this.newUser.getEmail());
+		if(u.size() > 0) {
+			facesMessages.add(Severity.ERROR,"This user is already registered");
+			return;
+		}
+		if(this.newUser.getName().trim().isEmpty()) {
+			facesMessages.add(Severity.ERROR,"You should inform the name of the user");
+			return;
+		}
+		
+		String EMAIL_PATTERN = 
+				"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+		Matcher matcher = pattern.matcher(this.newUser.getEmail());
+		
+		if(!matcher.matches()) {
+			facesMessages.add(Severity.ERROR,"You should inform a valid e-mail");
+			return;
+		}
+		
+		String passwordString = UUID.randomUUID().toString();
+		passwordString = passwordString.split("-")[0];
+		
+		this.newUser.setPassword(passwordString);
+		
+		try {
+			userDAO.persist(this.newUser);
+			this.userProperty = this.newUser;
+			this.userPropertyString = this.newUser.toString();
+			this.showModalAddUser = false;
+			
+			String mailMsg = "Hello "+this.newUser.getName()+", the user "+user.getName()+" invited you to be a participant in an experiment. \n\n "
+					+ "Access "+ pathBuilder.getWebPath() + "' Experiment Executer</a> using  the password "+passwordString;
+			MailGun.sendMail(this.newUser.getEmail(), this.newUser.getName(), "You are invited for Experiment Executer", mailMsg);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	public void addUserToShuffle(ActionEvent evt) throws ValidationException{
+		
+		tryGerUserProperty();
+		
+		if(this.userProperty != null) {
+			if(this.getEntity().isRCBDDesign()){
+				addUserToShuffleRCBD();
+			}else if(this.getEntity().isLSDesign()){
+				addUserToShuffleLS();
+			}else if (this.getEntity().isCRDesign()){
+				addUserToShuffleCRD();
+			}
+			this.userPropertyString = null;
+			this.userProperty = null;
+		}		
 	}
 	
 	private void addUserToShuffleCRD() {
@@ -270,23 +381,6 @@ public class WorkflowConfiguration {
 		suffleUsersBlock();
 	}
 	
-	public void addUserManual(ActionEvent evt) throws ValidationException{
-		seamDao.refresh(getEntity());
-		if(userProperty != null && getProcessDefinitionProperty() != null && !getProcessDefinitionProperty().getUsers().contains(userProperty)
-				&& getEntity().isManualDesign() ){
-			UserAssignment userAssignment = new UserAssignment(userProperty, getProcessDefinitionProperty(), null);
-			seamDao.persist(userAssignment);
-			seamDao.refresh(getProcessDefinitionProperty());
-
-			getProcessDefinitionProperty().getUserAssignments().add(userAssignment);
-			seamDao.merge(getProcessDefinitionProperty());
-			
-			seamDao.flush();
-			userProperty = null;
-			processDefinitionProperty = null;
-		}
-	}
-	
 	public void removeUserManual(UserAssignment userAssignment) throws ValidationException{
 		if(getEntity().isManualDesign()  ){
 			seamDao.refresh(userAssignment);
@@ -306,7 +400,7 @@ public class WorkflowConfiguration {
 		ArtefactFile artefactfile = new ArtefactFile();
 		seamDao.persist(artefactfile);
 		
-		String path = PathBuilder.getArtefactsPath(this.getEntity(), this.currentArtefact);
+		String path = pathBuilder.getArtefactsPath(this.getEntity(), this.currentArtefact);
 		File upload = new File(path);
 		upload.mkdirs();
 		
@@ -378,6 +472,30 @@ public class WorkflowConfiguration {
 
 	public void setEntity(Workflow entity) {
 		this.entity = entity;
+	}
+
+	public String getUserPropertyString() {
+		return userPropertyString;
+	}
+
+	public void setUserPropertyString(String userPropertyString) {
+		this.userPropertyString = userPropertyString;
+	}
+
+	public boolean isShowModalAddUser() {
+		return showModalAddUser;
+	}
+
+	public void setShowModalAddUser(boolean showModalAddUser) {
+		this.showModalAddUser = showModalAddUser;
+	}
+
+	public User getNewUser() {
+		return newUser;
+	}
+
+	public void setNewUser(User newUser) {
+		this.newUser = newUser;
 	}
 	
 }

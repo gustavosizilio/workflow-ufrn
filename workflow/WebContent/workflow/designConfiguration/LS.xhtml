@@ -10,11 +10,23 @@
 <h:panelGroup rendered="#{configuration.entity.LSDesign}">
 	<h:panelGrid columns="2" rendered="#{ not configuration.entity.designComplete}" >
 		<h:outputLabel value="#{messages['layout.text.user']}:" />
-		<h:selectOneMenu value="#{configuration.userProperty}">
-			<s:selectItems value="#{configuration.users}" var="user"
-				label="#{user.name} - #{user.email}" noSelectionLabel="" />
-			<s:convertEntity />
-		</h:selectOneMenu>
+		<h:panelGroup>
+			<h:inputText id="userLS" value="#{configuration.userPropertyString}" />
+			<rich:suggestionbox for="userLS" var="result"
+	                suggestionAction="#{configuration.autocomplete}" width="500"
+	                nothingLabel="No user found">
+	            <f:facet name="header">
+	                <h:outputText value="Select the user" />
+	            </f:facet>
+	       		<h:column>
+	            	<h:outputText value="#{result}" />
+	           	</h:column>
+	           	
+	           	<a4j:support event="onselect" action="#{configuration.updateUserProperty(result)}" /> 
+	           	<a4j:support event="onobjectchange" action="#{configuration.updateUserProperty(null)}" /> 
+	        </rich:suggestionbox>
+		</h:panelGroup>
+		
 		<h:outputLabel value="#{messages['layout.text.latinSquare']}:" />
 		<h:selectOneMenu value="#{configuration.groupProperty}">
 			<s:selectItems value="#{configuration.entity.groups}" 
@@ -24,7 +36,7 @@
 		<rich:spacer />
 		<a4j:commandButton value="#{messages['layout.text.addToSort']}"
 			actionListener="#{configuration.addUserToShuffle}"
-			reRender="designDefinition" />
+			reRender="designDefinition,addUserModal" />
 	</h:panelGrid>
 
 	<br />

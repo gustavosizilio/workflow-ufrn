@@ -46,8 +46,8 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	
 	@In("workflowDAO") WorkflowDAO workflowDAO;
 	@In(create = true, required = false, value="configuration") WorkflowConfiguration workflowConfiguration;
-	
-	private EXPDSLUtil dslUtil;
+	@In(value = "pathBuilder", create = true)  PathBuilder pathBuilder;
+	@In(value = "expdslUtil", create = true) private EXPDSLUtil dslUtil;
 	private EObject rootModel;
 	private TreeNode<EObject> rootNode;
 	private TreeNode<EObject> selectedNode;
@@ -59,7 +59,6 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	
 	public CrudWorkflow() throws Exception {
 		super(Workflow.class);
-		dslUtil = EXPDSLUtil.getInstance();
 	}
 	
 	@Override
@@ -84,7 +83,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		try {
 			clearEditProperties();
 			
-			String xmiPath = PathBuilder.getExperimentXMIPath(this.entity);
+			String xmiPath = pathBuilder.getExperimentXMIPath(this.entity);
 			this.rootModel = dslUtil.convertXMIToEcore(xmiPath);
 			
 			this.rootNode = new TreeNodeImpl<EObject>();
@@ -102,7 +101,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		try {
 			clearEditProperties();
 			
-			String xmiPath = PathBuilder.getExperimentXMIPath(this.entity);
+			String xmiPath = pathBuilder.getExperimentXMIPath(this.entity);
 			this.rootModel = dslUtil.convertXMIToEcore(xmiPath);
 			
 			this.rootNode = new TreeNodeImpl<EObject>();
@@ -120,7 +119,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		boolean ret = super.saveImpl();
 		
 		try {
-			String xmiPath = PathBuilder.getExperimentXMIPath(this.entity);
+			String xmiPath = pathBuilder.getExperimentXMIPath(this.entity);
 			dslUtil.convertEcoreToXMI(this.rootModel, xmiPath);
 		} catch (Exception e) {
 			System.err.println("failed to transform model....");
@@ -129,7 +128,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		}
 		
 		try {
-			String experimentPath = PathBuilder.getExperimentMyexpPath(this.entity);
+			String experimentPath = pathBuilder.getExperimentMyexpPath(this.entity);
 			dslUtil.convertEcoreToExpText(this.rootModel, experimentPath);
 			this.entity.setSuccessCompiled(true);
 		} catch (Exception e) {
@@ -375,6 +374,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 				className = className.substring(className.lastIndexOf(".")+1);
 			}
 			String hintKey = "layout.formalization.hint." + getName(className).replaceAll(" ", "");
+			@SuppressWarnings("unused")
 			Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 			ResourceBundle resourceBundle = SeamResourceBundle.getBundle();
 			String bundleMessage = resourceBundle.getString(hintKey);

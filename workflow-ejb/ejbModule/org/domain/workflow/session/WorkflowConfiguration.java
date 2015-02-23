@@ -121,6 +121,7 @@ public class WorkflowConfiguration {
 				seamDao.persist(ua);
 			}
 			seamDao.merge(this.getEntity());
+			seamDao.flush();
 		} catch(Exception e){
 			facesMessages.add(Severity.ERROR, "Failed to import design");
 			e.printStackTrace();

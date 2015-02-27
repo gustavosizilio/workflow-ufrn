@@ -10,36 +10,7 @@
 	<ui:param name="action" value="#{crudWorkflow}" />
 
 	<ui:define name="detail">
-		<h:panelGrid id="tree" columns="1" width="100%">
-			<rich:tree switchType="client" limitToList="true"
-				value="#{action.rootNode}" var="item" treeNodeVar="node"
-				nodeFace="#{action.getItemType(item)}" reRender="tree">
-				<rich:treeNode type="attr" icon="/img/attr.png"
-					iconLeaf="/img/attr.png">
-
-					<h:panelGrid columns="3">
-						<h:panelGroup class="attrNodeTitleContent">
-							<h:outputText value="#{action.getName(item, true)}: "
-								styleClass="attrNodeTitle" />
-						</h:panelGroup>
-
-						<h:panelGroup class="attrNodeTitleField">
-							<h:panelGroup>
-								<h:outputText
-									value="#{action.getValueFromParent(node.getParent().data, item, true)}"
-									styleClass="attrNodeContent">
-								</h:outputText>
-							</h:panelGroup>
-						</h:panelGroup>
-					</h:panelGrid>
-				</rich:treeNode>
-				<rich:treeNode type="ref" icon="/img/model.jpeg"
-					iconLeaf="/img/model.jpeg" expanded="#{action.newNode eq item}">
-					<h:outputText value="#{action.getName(item, true)}"
-						styleClass="refNodeTitle" />
-				</rich:treeNode>
-			</rich:tree>
-		</h:panelGrid>
+		<h:inputTextarea value="#{crudWorkflow.treeString}" style="width: 100%; height: 200px;" />
 	</ui:define>
 	<ui:define name="buttonsExtended">
 		<h:commandButton value="#{messages['layout.text.workflow.deploy']}"

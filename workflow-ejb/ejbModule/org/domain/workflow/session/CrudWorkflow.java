@@ -55,10 +55,12 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	private List<Object[]> attrProperties;
 	private EReferenceImpl selectedRef;
 	private String myexpPath;
+	private StringBuilder treeString;
 	
 	
 	public CrudWorkflow() throws Exception {
 		super(Workflow.class);
+		treeString = new StringBuilder();
 	}
 	
 	@Override
@@ -133,17 +135,27 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			this.entity.setSuccessCompiled(true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 			addError(e.getMessage());
 			this.entity.setSuccessCompiled(false);
+			e.printStackTrace();
 		}
+		
 		
 		try {
 			this.seamDao.merge(this.entity);
 		} catch (ValidationException e) {
+			addError(e.getMessage());
+			e.printStackTrace();
 		}
 		this.seamDao.flush();
 		
+		try {
+			dslUtil.convertEcoreToImage(this.rootModel, pathBuilder.getExperimentPath(this.entity), pathBuilder.getExperimentImagePath(this.entity));
+		} catch (Exception e) {
+			e.printStackTrace();
+			addError(e.getMessage());
+		}
+
 		return ret;
 	}
 	
@@ -155,7 +167,12 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		}
 	}
 	
+	public String getTreeString(){
+		return treeString.toString();
+	}
+	
 	private void updateTreeNode(EObject newNode) {
+		treeString.setLength(0);
 		TreeNodeImpl<EObject> node = new TreeNodeImpl<EObject>();
 		node.setData(this.getRootModel());
 		rootNode.addChild(this.getRootModel(), node);
@@ -169,6 +186,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	private void updateTreeNode(EObject eObject, TreeNode<EObject> rootNode, EObject newNode) {
 		TreeNodeImpl<EObject> node = new TreeNodeImpl<EObject>();
 		node.setData(eObject);
+		treeString.append(getName(eObject, true) + "\n");
 		
 		if(newNode == eObject) {
 			this.selectedNode = node;
@@ -180,6 +198,8 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			TreeNodeImpl<EObject> attrNode = new TreeNodeImpl<EObject>();
 			attrNode.setData(attr);
 			node.addChild(attr, attrNode);
+			
+			treeString.append("\t" + getName(attr, true) + ": " + getValueFromParent(eObject, attr, true) + "\n");
 		}
 		
 		for (EObject o : eObject.eContents()) {

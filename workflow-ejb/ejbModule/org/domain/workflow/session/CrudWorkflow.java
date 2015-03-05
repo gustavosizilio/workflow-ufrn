@@ -148,13 +148,6 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			e.printStackTrace();
 		}
 		this.seamDao.flush();
-		
-		try {
-			dslUtil.convertEcoreToImage(this.rootModel, pathBuilder.getExperimentPath(this.entity), pathBuilder.getExperimentImagePath(this.entity));
-		} catch (Exception e) {
-			e.printStackTrace();
-			addError(e.getMessage());
-		}
 
 		return ret;
 	}

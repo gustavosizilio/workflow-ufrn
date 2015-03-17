@@ -33,6 +33,9 @@
     
     <ui:define name="actions"> 
     	<h:panelGroup rendered="#{entity.canStart()}">
+    		
+    		<h:commandButton value="#{messages['layout.text.workflow.downloadMetricsSheet']}" rendered="#{crudWorkflow.entity.canStart()}" action="#{configuration.downloadMetricsSheet()}" />
+		
 	    	<h:commandButton action="#{crudWorkflow.start(entity)}" title="play" rendered="#{!entity.started}"  value="#{messages['layout.text.workflow.start']}" />
 	    	<h:commandButton action="#{crudWorkflow.nextTurn(entity)}" title="play" rendered="#{entity.started and !entity.lastTurn}"  value="#{messages['layout.text.workflow.nextTurn']}" />
 	    	<h:commandButton value="#{messages['layout.text.workflow.trackResults']}" action="#{report.init(entity)}" />

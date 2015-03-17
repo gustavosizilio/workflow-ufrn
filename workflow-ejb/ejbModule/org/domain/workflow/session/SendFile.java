@@ -19,16 +19,20 @@ import org.jboss.seam.annotations.security.Restrict;
 @Scope(ScopeType.EVENT)
 public class SendFile {
 	public void sendFile(ArtefactFile artefactFile){
+		sendFile(artefactFile.getFile());
+	}
+	
+	public void sendFile(String filePath){
 		FacesContext faces = FacesContext.getCurrentInstance();
 		HttpServletResponse response = (HttpServletResponse) faces.getExternalContext().getResponse();
 
 		try {
-			File file = new File(artefactFile.getFile());
+			File file = new File(filePath);
 			byte[] data = Files.readAllBytes(file.toPath());  
 
 			//response.setContentType("application/pdf");
 			response.setContentLength(data.length);
-			String name = artefactFile.getFile().split("/")[artefactFile.getFile().split("/").length-1];
+			String name = filePath.split("/")[filePath.split("/").length-1];
 			response.setHeader( "Content-disposition", "inline; filename="+name+"");
 
 			ServletOutputStream out;

@@ -78,6 +78,14 @@ public class PathBuilder {
 		}
 	}
 	
+	public String getExperimentMetricsSheetPath(Workflow w) {
+		try {
+			return validate(getExperimentsPath()+"/"+w.getId()+"/"+ "metrics.xls");
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	private String validate(String path){
 		return path.replaceAll("//", "/");
 	}

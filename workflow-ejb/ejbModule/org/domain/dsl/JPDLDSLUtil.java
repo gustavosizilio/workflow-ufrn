@@ -59,6 +59,7 @@ public class JPDLDSLUtil {
 
 	public void convertXMIToConf(String experimentXMIPath, String experimentConfPath) throws Exception {
 		String cmd = "java -jar " + javaAcceleo + " \""+experimentXMIPath+"\"" + " \""+experimentConfPath+"\"";
+		System.out.println(cmd);
 		Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", cmd});
 	    p.waitFor();
 	}

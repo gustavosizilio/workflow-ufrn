@@ -63,5 +63,8 @@ public class Elements {
 	public static final String ROW = "row";
 	public static final String PROCESSES = "processes";
 	public static final Object FIELDS = "fields";
+	public static final Object PLAN = "plan";
+	public static final Object DEPVARIABLES = "depvariables";
+	public static final Object RANGE = "range";
 	
 }

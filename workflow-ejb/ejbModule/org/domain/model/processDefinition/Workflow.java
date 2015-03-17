@@ -33,6 +33,9 @@ public class Workflow extends GenericEntity {
 	@ManyToOne
 	private User user;
 	
+	@ManyToOne
+	private Plan plan;
+	
 	@Enumerated(EnumType.STRING)
 	private DesignType designType;
 	
@@ -303,5 +306,11 @@ public class Workflow extends GenericEntity {
 	}
 	public void setSuccessCompiled(boolean successCompiled) {
 		this.successCompiled = successCompiled;
+	}
+	public Plan getPlan() {
+		return plan;
+	}
+	public void setPlan(Plan plan) {
+		this.plan = plan;
 	}
 }

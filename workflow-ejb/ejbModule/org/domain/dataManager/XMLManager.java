@@ -31,7 +31,15 @@ public class XMLManager {
 	}
 	
 	protected String getAttribute(Node item, String attribute) {
-		return (item.getAttributes().getNamedItem(attribute) != null ? item.getAttributes().getNamedItem(attribute).getNodeValue() : null);
+		int size = item.getAttributes().getLength();
+		for (int i = 0; i < size; i++) {
+			Node n = item.getAttributes().item(i);
+			if(n.getNodeName().toLowerCase().equals(attribute.toLowerCase())){
+					return n.getNodeValue();
+			}
+		}
+		return null;
+		//return (item.getAttributes().getNamedItem(attribute) != null ? item.getAttributes().getNamedItem(attribute).getNodeValue() : null);
 	}
 	
 	protected String getTagName(Node item) {

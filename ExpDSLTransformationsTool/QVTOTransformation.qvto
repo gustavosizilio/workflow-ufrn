@@ -82,36 +82,6 @@ var design: JPDL::Design;
 	}endif;
 	//result := design;
 }
-query getDesign(in doe: DSL::DOE):JPDL::Design {
-	var res: JPDL::Design;
-	
-	if(doe.oclIsTypeOf(DSL::LS))then {
-		log('LS');
-		res.oclAsType(JPDL::LS).treatment := getFactor(doe.oclAsType(DSL::LS).treatment.name);
-		res.oclAsType(JPDL::LS).row := getFactor(doe.oclAsType(DSL::LS).row.name);
-		res.oclAsType(JPDL::LS).col := getFactor(doe.oclAsType(DSL::LS).col.name);
-	}
-	else {
-		if(doe.oclIsTypeOf(DSL::RCBD))then {
-			log('RCBD');
-			res.oclAsType(JPDL::RCBD).treatment := getFactor(doe.oclAsType(DSL::RCBD).treatment.name);
-			res.oclAsType(JPDL::RCBD).blockVariable:= getFactor(doe.oclAsType(DSL::RCBD).blockVariable.name);
-			
-		} else {
-		if(doe.oclIsTypeOf(DSL::CRB))then {//<===ALTERAR NA DSL====
-			log('CRD');
-			res.oclAsType(JPDL::CRD).treatment := getFactor(doe.oclAsType(DSL::CRB).treatment.name);
-		}
-		else {
-		if(doe.oclIsTypeOf(DSL::OTHER))then {
-			log('OTHER');
-			res.oclAsType(JPDL::Other).name := doe.oclAsType(OTHER).name;
-		}endif;
-	}endif;
-} endif;
-	}endif;
-	return res;
-}
 //Map ExpDSLv3 StructuredGoal or SimpleGoal to JPDL::Goal
 mapping DSL::Goal::goalsToGoal():JPDL::Goal {
     
@@ -154,7 +124,7 @@ mapping DSL::ResearchHypothesis::RHtoRH():JPDL::ResearchHyphotesis {
 		    fromGoal := go;
 		}endif;
   };
-	//fromGoal := getGoal(self.goal);
+	
 }
 mapping DSL::DepVariable::depVarToDepVar(): JPDL::DependentVariable {
 		    name := self.name;
@@ -203,28 +173,6 @@ mapping DSL::ResearchHypothesis::relatesToRHtoRH(): JPDL::ResearchHyphotesis {
 	 result := getRH(self);
 }
 
-query getRQ(in rq: DSL::ResearchQuestion): JPDL::ResearchQuestion {
-	
- var allRQs := outModel.objectsOfType(JPDL::ResearchQuestion);
-  allRQs->forEach(res) {
-		if(res.oclAsType(JPDL::ResearchQuestion).name.equalsIgnoreCase(rq.name))then {
-			return res;
-		}endif;
-	};
- return null;
-}
-
-
-query getRH(in rh: DSL::ResearchHypothesis): JPDL::ResearchHyphotesis {
-	
- var allRHs := outModel.objectsOfType(JPDL::ResearchHyphotesis);
-  allRHs->forEach(res) {
-		if(res.oclAsType(JPDL::ResearchHyphotesis).id.equalsIgnoreCase(rh.name))then {
-			return res;
-		}endif;
-	};
- return null;
-}
 
 mapping DSL::Questionnaire::questToQuestionnaire(in res: JPDL::DocumentRoot): JPDL::Questionnaire {
 	name := self.name;
@@ -347,6 +295,7 @@ mapping DSL::Artefact::artefact2artefact():JPDL::Artefact{
 	
 mapping DSL::Field::fieldToField():JPDL::Field{
 	name := self.variable;
+	//TODO: self.textField
 }
 //Create links to ENDNODE
 mapping DSL::Task::ligarAoNoFinal(inout process: JPDL::ProcessDefinitionType){
@@ -392,6 +341,29 @@ mapping DSL::Task::ligarAoNoFinal(inout process: JPDL::ProcessDefinitionType){
 /************
  *  QUERYS  *
  ************/
+
+query getRQ(in rq: DSL::ResearchQuestion): JPDL::ResearchQuestion {
+	
+ var allRQs := outModel.objectsOfType(JPDL::ResearchQuestion);
+  allRQs->forEach(res) {
+		if(res.oclAsType(JPDL::ResearchQuestion).name.equalsIgnoreCase(rq.name))then {
+			return res;
+		}endif;
+	};
+ return null;
+}
+
+
+query getRH(in rh: DSL::ResearchHypothesis): JPDL::ResearchHyphotesis {
+	
+ var allRHs := outModel.objectsOfType(JPDL::ResearchHyphotesis);
+  allRHs->forEach(res) {
+		if(res.oclAsType(JPDL::ResearchHyphotesis).id.equalsIgnoreCase(rh.name))then {
+			return res;
+		}endif;
+	};
+ return null;
+}
  
  
 query getFactor(in name:String): JPDL::Factor {
@@ -531,7 +503,7 @@ query getQuestionType(in type : DSL::AnswerType) : JPDL::AnswerType {
 	var res: JPDL::AnswerType;
    
     if(type.=(DSL::AnswerType::SingleChoice)) then {
-		res := JPDL::AnswerType::checkBox;    }
+		res := JPDL::AnswerType::comboBox;    }
 	else {
 	if(type.= (DSL::AnswerType::ParagraphText)) then {
 		res := JPDL::AnswerType::paragraphText;
@@ -594,3 +566,33 @@ query getBooleanValue(in type: String): JPDL::BooleanType {
 }
 
 
+query getDesign(in doe: DSL::DOE):JPDL::Design {
+	var res: JPDL::Design;
+	
+	if(doe.oclIsTypeOf(DSL::LS))then {
+		log('LS');
+		res.oclAsType(JPDL::LS).treatment := getFactor(doe.oclAsType(DSL::LS).treatment.name);
+		res.oclAsType(JPDL::LS).row := getFactor(doe.oclAsType(DSL::LS).row.name);
+		res.oclAsType(JPDL::LS).col := getFactor(doe.oclAsType(DSL::LS).col.name);
+	}
+	else {
+		if(doe.oclIsTypeOf(DSL::RCBD))then {
+			log('RCBD');
+			res.oclAsType(JPDL::RCBD).treatment := getFactor(doe.oclAsType(DSL::RCBD).treatment.name);
+			res.oclAsType(JPDL::RCBD).blockVariable:= getFactor(doe.oclAsType(DSL::RCBD).blockVariable.name);
+			
+		} else {
+		if(doe.oclIsTypeOf(DSL::CRB))then {//<===ALTERAR NA DSL====
+			log('CRD');
+			res.oclAsType(JPDL::CRD).treatment := getFactor(doe.oclAsType(DSL::CRB).treatment.name);
+		}
+		else {
+		if(doe.oclIsTypeOf(DSL::OTHER))then {
+			log('OTHER');
+			res.oclAsType(JPDL::Other).name := doe.oclAsType(OTHER).name;
+		}endif;
+	}endif;
+} endif;
+	}endif;
+	return res;
+}

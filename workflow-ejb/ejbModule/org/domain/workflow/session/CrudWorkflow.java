@@ -192,8 +192,9 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			attrNode.setData(attr);
 			node.addChild(attr, attrNode);
 			
-			treeString.append("\t" + getName(attr, true) + ": " + getValueFromParent(eObject, attr, true) + "\n");
+			treeString.append("\t" + getName(attr, true) + ": " + getValueFromParent(eObject, attr, true));
 		}
+		treeString.append("\n");
 		
 		for (EObject o : eObject.eContents()) {
 			updateTreeNode(o, node, newNode);

@@ -11,9 +11,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.domain.dao.SeamDAO;
 import org.domain.exception.ValidationException;
 import org.domain.model.processDefinition.Artefact;
+import org.domain.model.processDefinition.DepVariable;
 import org.domain.model.processDefinition.EndState;
 import org.domain.model.processDefinition.Fork;
 import org.domain.model.processDefinition.Join;
+import org.domain.model.processDefinition.Plan;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.StartState;
 import org.domain.model.processDefinition.Task;
@@ -56,6 +58,7 @@ public class WorkflowManager extends XMLManager{
 		
 		extractProcessDefinitions();
 		extractQuestionnaires();
+		extractPlan();
 		//MUST BE IN THE END!
 		linkQuestionnaires();
 	}
@@ -139,6 +142,36 @@ public class WorkflowManager extends XMLManager{
 	    seamDao.flush();
 	}
 
+	private void extractElement(Node item, Plan plan) {
+		if (extraxtName(item.getNodeName()).equals(Elements.DEPVARIABLES)){
+			plan.getDepVariables().add(extractDepVariable(item, plan));
+		}
+	}
+	
+	private void extractElement(Node item, DepVariable depVariable) {
+		if (extraxtName(item.getNodeName()).equals(Elements.RANGE)){
+			depVariable.setRange(depVariable.getRange() + getAttribute(item, Elements.NAME)+";");
+		}
+	}
+	
+	private DepVariable extractDepVariable(Node item, Plan plan) {
+		DepVariable depVariable = new DepVariable();
+		depVariable.setName(getAttribute(item, Elements.NAME));
+		depVariable.setDescription(getAttribute(item, Elements.DESCRIPTION));
+		
+		List<Node> nl = getElements(item.getChildNodes());
+		if(nl != null && nl.size() > 0) {
+			for(int i = 0 ; i < nl.size();i++) {
+				if(nl.get(i).getNodeType() == 1){ //Somente do tipo ELEMENT
+					extractElement(nl.get(i), depVariable);
+				}
+			}
+		}
+		depVariable.setPlan(plan);
+		this.seamDao.persist(depVariable);
+		seamDao.flush();
+		return depVariable;
+	}
 	private void extractElement(Node item, Questionnaire questionnaire) {
 		if (extraxtName(item.getNodeName()).equals(Elements.QUESTION)){
 			questionnaire.getQuestions().add(extractQuestion(item, questionnaire));
@@ -181,6 +214,38 @@ public class WorkflowManager extends XMLManager{
 		option.setDescription(getAttribute(item, Elements.DESCRIPTION));
 		option.setQuestion(question);
 		return option;
+	}
+	
+	private void extractPlan() throws ParserConfigurationException, SAXException,
+	IOException, ValidationException {
+		
+		Element docEle = getDOM().getDocumentElement();
+		NodeList nodes = docEle.getElementsByTagName(Elements.ELEMENTS).item(0).getChildNodes();
+		Plan plan = new Plan();
+		this.seamDao.persist(plan);
+		this.workflow.setPlan(plan);
+		seamDao.flush();
+		
+		for (int e = 0 ; e < nodes.getLength();e++) {
+			if(getTagName(nodes.item(e)).equals(Elements.PLAN)){
+				Node node = nodes.item(e);
+				//ProcessDefinition processDefinition = new ProcessDefinition(getAttribute(node, Elements.NAME));
+				List<Node> nl = getElements(node.getChildNodes());
+				if(nl != null && nl.size() > 0) {
+					for(int i = 0 ; i < nl.size();i++) {
+						if(nl.get(i).getNodeType() == 1){ //Somente do tipo ELEMENT
+							extractElement(nl.get(i), plan);
+						}
+					}
+				}
+			}
+		}
+		
+		
+		this.seamDao.merge(plan);
+		this.workflow.setPlan(plan);
+		seamDao.merge(this.workflow);
+		seamDao.flush();
 	}
 
 	private void extractProcessDefinitions() throws ParserConfigurationException, SAXException,

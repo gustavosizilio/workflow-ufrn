@@ -1,7 +1,10 @@
 package org.domain.workflow.session;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
@@ -12,6 +15,22 @@ import java.util.regex.Pattern;
 
 import javax.faces.event.ActionEvent;
 
+import org.apache.poi.hssf.usermodel.DVConstraint;
+import org.apache.poi.hssf.usermodel.HSSFDataValidation;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.domain.dao.SeamDAO;
 import org.domain.dao.UserDAO;
 import org.domain.dataManager.DesignConfigurationManager;
@@ -21,6 +40,7 @@ import org.domain.exception.ValidationException;
 import org.domain.model.User;
 import org.domain.model.processDefinition.Artefact;
 import org.domain.model.processDefinition.ArtefactFile;
+import org.domain.model.processDefinition.DepVariable;
 import org.domain.model.processDefinition.DesignType;
 import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.UserAssignment;
@@ -47,6 +67,7 @@ public class WorkflowConfiguration {
 	@In private FacesMessages facesMessages;
 	@In("userDao") UserDAO userDAO;
 	@In("user") protected User user;
+	@In(create=true, value="sendFile") protected SendFile sendFile;
 	@In(value = "pathBuilder", create = true) PathBuilder pathBuilder;
 	
 	private Workflow entity;
@@ -61,6 +82,7 @@ public class WorkflowConfiguration {
 	
 	@Begin(join=true, flushMode=FlushModeType.MANUAL)	
 	public void prepare(Workflow workflow) {
+		this.userPropertyString = "";
 		this.setEntity(workflow);
 		this.setUsersSelectedToShuffle(new Hashtable<String,List<User>>());
 	}
@@ -72,9 +94,88 @@ public class WorkflowConfiguration {
     }
 	
 	public void updateUserProperty(User u) {
-		System.out.println(u);
 		this.userProperty = u;
 	}
+	
+	public void downloadMetricsSheet() {
+		try {
+			Workbook wb = new HSSFWorkbook();
+		    //Workbook wb = new XSSFWorkbook();
+		    CreationHelper createHelper = wb.getCreationHelper();
+		    Sheet sheet = wb.createSheet("Metrics");
+		    Drawing drawing = sheet.createDrawingPatriarch();
+		    
+		    
+		    List<UserAssignment> uas = this.getEntity().getAllUserAssignments();  
+		    int col = 0;
+		    for (int j=0; j<uas.size(); j++) {
+		    	// Create a row and put some cells in it. Rows are 0 based.
+			    Row row2 = sheet.createRow((short)j+1);
+			    
+			    // Create a cell and put a value in it.
+			    String[] factors;
+			    if(uas.get(j).getKeyFactors() != null && !uas.get(j).getKeyFactors().isEmpty()) {
+			    	factors = uas.get(j).getKeyFactors().split("/");
+			    } else {
+			    	factors = (String[]) Arrays.asList(uas.get(j).getUser().getName()).toArray();
+			    }
+			    col = factors.length;
+			    for (int i = 0; i < col; i++) {
+					String string = factors[i];
+					Cell cell = row2.createCell(i);
+				    cell.setCellValue(string);
+				    
+				    if(i==0) {
+					    // Create the comment and set the text+author
+					    ClientAnchor anchor = createHelper.createClientAnchor();
+					    anchor.setCol1(cell.getColumnIndex());
+					    anchor.setCol2(cell.getColumnIndex()+3);
+					    anchor.setRow1(row2.getRowNum());
+					    anchor.setRow2(row2.getRowNum()+7);
+					    Comment comment = drawing.createCellComment(anchor);
+					    comment.setString(createHelper.createRichTextString(uas.get(j).toString()));
+	
+					    // Assign the comment to the cell
+					    cell.setCellComment(comment);
+				    }
+				    
+				    sheet.autoSizeColumn(i);
+				}
+			    
+			}
+		    
+		    
+		    Row row = sheet.createRow((short)0);
+		    List<DepVariable> vars = this.getEntity().getPlan().getDepVariables();
+		    for (int j=0; j<vars.size();j++ ) {
+				Cell cell = row.createCell(j+col);
+			    cell.setCellValue(createHelper.createRichTextString(vars.get(j).getName()));
+			    sheet.autoSizeColumn(j+col);
+			    
+			    if(!vars.get(j).getRange().isEmpty()) {
+			    	CellRangeAddressList addressList = new CellRangeAddressList(1, 999, j+col, j+col);
+					DVConstraint dvConstraint = DVConstraint.createExplicitListConstraint(vars.get(j).getRange().split(";"));
+					DataValidation dataValidation = new HSSFDataValidation(addressList, dvConstraint);
+					dataValidation.setSuppressDropDownArrow(false);
+					sheet.addValidationData(dataValidation);
+			    }
+			}
+		    
+	
+		    // Write the output to a file
+		    String file = pathBuilder.getExperimentMetricsSheetPath(this.getEntity());
+		    FileOutputStream fileOut = new FileOutputStream(file);
+		    
+			wb.write(fileOut);
+			wb.close();
+			fileOut.close();
+			
+			sendFile.sendFile(file);
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	}
+	
 	public void deployWorkflows() throws Exception {
 		try {
 			String experimentJpdlPath = pathBuilder.getExperimentJpdlPath(this.getEntity());

@@ -66,5 +66,6 @@ public class Elements {
 	public static final Object PLAN = "plan";
 	public static final Object DEPVARIABLES = "depvariables";
 	public static final Object RANGE = "range";
+	public static final Object RCBD = "rcbd";
 	
 }

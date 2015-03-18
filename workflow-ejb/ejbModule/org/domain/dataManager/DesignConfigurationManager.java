@@ -115,7 +115,32 @@ public class DesignConfigurationManager extends XMLManager{
 		
 		//return usersAssignments;
 	}
-
+	
+	private String findProcessName(Map<String, String> links, String s1, String s2) {
+		for (String key : links.keySet()) {
+			List<String> s = new ArrayList<String>(); 
+			for (String string : links.get(key).split(",")) {
+				if(!string.isEmpty()){
+					s.add(string);
+				}
+			}
+			
+			int hit = 0;
+			for (String str : s) {
+				if(str.equals(s1)){
+					hit++;
+				}
+				if(str.equals(s2)){
+					hit++;
+				}
+			}
+			if(hit == s.size()){
+				return key;
+			}
+		}
+		return "";
+	}
+	
 	private String findProcessName(LatinSquare ls, Map<String, String> links, int i, int j) {
 		for (String key : links.keySet()) {
 			List<String> s = new ArrayList<String>(); 
@@ -159,21 +184,71 @@ public class DesignConfigurationManager extends XMLManager{
 		}
 	}
 
-	private void executeTransformationsRCBD(Workflow workflow, Element docEle) {
+	private void executeTransformationsRCBD(Workflow workflow, Element docEle) throws Exception {
 		workflow.setDesignType(DesignType.RCBD);
 		List<Node> nodes = getElements(docEle.getChildNodes());
+		int internalReplication;
+		String treatment = null;
+		String block = null;
+		
+		try {
+			internalReplication = Integer.parseInt(getAttribute(docEle, Elements.INTERNAL_REPLICATION));
+		} catch (Exception e) {
+			internalReplication = 1;
+		}
+		
+		List<String> treatmentFactors = new ArrayList<String>();
+		List<String> blockFactors = new ArrayList<String>();
+		Map<String, String> links = new Hashtable<String,String>();
+		
 		for (Node node : nodes) {
-			if(getTagName(node).equals(Elements.PROCESS)){
-				String subjectDescription = getAttribute(node, Elements.SUBJECT);
-				ProcessDefinition process = findProcess(workflow, getAttribute(node, Elements.NAME));
-				//TODO NULL
-				UserAssignment ua = new UserAssignment(subjectDescription, process, null);
-				ua.setGroupValue(getAttribute(node, Elements.BLOCK));
-				process.getUserAssignments().add(ua);
+			if (getTagName(node).equals(Elements.RCBD)) {
+				treatment = getAttribute(node, Elements.TREATMENT);
+				block = getAttribute(node, Elements.BLOCK);
+			} else if(getTagName(node).equals(Elements.FACTOR)){
+				String nameFactor = getAttribute(node, Elements.NAME);
+				String nameLevel = getAttribute(node, Elements.LEVEL);
+				if(nameFactor.equals(treatment)){
+					treatmentFactors.add(nameFactor +"."+ nameLevel);
+				} else if(nameFactor.equals(block)){
+					blockFactors.add(nameFactor +"."+ nameLevel);
+				}
+			}else if(getTagName(node).equals(Elements.LINK)){
+				//TODO VERIFY
+				String nameLink = getAttribute(node, Elements.NAME);
+				String treatment2 = getAttribute(node, Elements.TREATMENT);
+				links.put(nameLink, treatment2);
 			}
 		}
+		
+		generateAssignmentsRCBD(workflow, links, treatmentFactors, blockFactors,  internalReplication);
+		
 	}
 
+	private void generateAssignmentsRCBD(Workflow workflow, Map<String, String> links,
+			List<String> treatmentFactors, List<String> blockFactors, int internalReplication) throws Exception {
+		
+		int n = 1;
+		for (int i = 0; i < blockFactors.size(); i++) {
+			for (int j = 0; j < treatmentFactors.size(); j++) {
+				for (int x = 0; x < internalReplication; x++) {
+					//find process
+					String processName = findProcessName(links, blockFactors.get(i), treatmentFactors.get(j));
+					ProcessDefinition process = findProcess(workflow, processName);
+					
+					UserAssignment u = new UserAssignment(0,
+							process, 
+							"Subject "+n,
+							blockFactors.get(i),
+							blockFactors.get(i) + "/" + treatmentFactors.get(j));
+					process.getUserAssignments().add(u);
+					
+					n++;
+				}	
+			}	
+		}
+	}
+	
 	private ProcessDefinition findProcess(Workflow workflow, String attribute) {
 		for (ProcessDefinition p : workflow.getProcessDefinitions()) {
 			if(p.getName().equals(attribute)){

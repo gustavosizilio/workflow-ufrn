@@ -113,15 +113,16 @@ public class WorkflowConfiguration {
 			    Row row2 = sheet.createRow((short)j+1);
 			    
 			    // Create a cell and put a value in it.
-			    String[] factors;
+			    List<String> factors = new ArrayList<String>();
+			    factors.add(uas.get(j).getUser().toString());
+			    
 			    if(uas.get(j).getKeyFactors() != null && !uas.get(j).getKeyFactors().isEmpty()) {
-			    	factors = uas.get(j).getKeyFactors().split("/");
-			    } else {
-			    	factors = (String[]) Arrays.asList(uas.get(j).getUser().getName()).toArray();
+			    	factors.addAll(Arrays.asList(uas.get(j).getKeyFactors().split("/")));
 			    }
-			    col = factors.length;
+			    
+			    col = factors.size();
 			    for (int i = 0; i < col; i++) {
-					String string = factors[i];
+					String string = factors.get(i);
 					Cell cell = row2.createCell(i);
 				    cell.setCellValue(string);
 				    

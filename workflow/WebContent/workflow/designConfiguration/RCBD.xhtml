@@ -67,7 +67,7 @@
 		<rich:column>
 			<f:facet name="header">#{messages['layout.text.subjects']}</f:facet>
 			<rich:dataList value="#{configuration.entity.getUserAssignments(key)}" var="ua">
-				<h:outputText value="#{ua.processDefinition.name} -> #{ua.user.name} (#{ua.user.email})" />
+				<h:outputText value="#{ua.keyFactors} -> #{ua.user.name} (#{ua.user.email})" />
 			</rich:dataList>
 		</rich:column>	
 	</rich:dataTable>

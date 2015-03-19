@@ -132,59 +132,63 @@ public class Question {
 	}
 	
 	public UserAnswer getUserAssignmentAnswer(UserAssignment userAssignment, TaskNode task) {
-		boolean isWorkflowQuest = false;
-		boolean isProcessQuest = false;
-		boolean isTaskNodeQuest = false;
-		
-		if(this.getQuestionnaire().getWorkflows().size() > 0) {
-			isWorkflowQuest = true;
-		}
-		if(this.getQuestionnaire().getProcessDefinitions().size() > 0){
-			isProcessQuest = true;
-		}
-		if(this.questionnaire.getTaskNodes().size() > 0) {
-			isTaskNodeQuest = true;
-		}
-		
-		
-		UserAnswer an = null;
-		for (UserAnswer a : getUserAnswers()) {
-			if(isWorkflowQuest) {
-				if(this.getQuestionnaire().getWorkflows().contains(userAssignment.getProcessDefinition().getWorkflow()) 
-					&&	a.getUserAssignment().getUser().getId().equals(userAssignment.getUser().getId())){
-					an = a;
-					break;
-				}
-			} else if (isProcessQuest) {
-				if(this.getQuestionnaire().getProcessDefinitions().contains(userAssignment.getProcessDefinition()) 
-						&&	a.getUserAssignment().equals(userAssignment)){
+		if(userAssignment != null) {
+			boolean isWorkflowQuest = false;
+			boolean isProcessQuest = false;
+			boolean isTaskNodeQuest = false;
+			
+			if(this.getQuestionnaire().getWorkflows().size() > 0) {
+				isWorkflowQuest = true;
+			}
+			if(this.getQuestionnaire().getProcessDefinitions().size() > 0){
+				isProcessQuest = true;
+			}
+			if(this.questionnaire.getTaskNodes().size() > 0) {
+				isTaskNodeQuest = true;
+			}
+			
+			
+			UserAnswer an = null;
+			for (UserAnswer a : getUserAnswers()) {
+				if(isWorkflowQuest) {
+					if(this.getQuestionnaire().getWorkflows().contains(userAssignment.getProcessDefinition().getWorkflow()) 
+						&&	a.getUserAssignment().getUser().getId().equals(userAssignment.getUser().getId())){
 						an = a;
 						break;
-				}
-			} else  if(isTaskNodeQuest){
-				if(this.getQuestionnaire().getTaskNodes().contains(task) 
-					&& a.getUserAssignment().equals(userAssignment)){
-					if(a.getTaskNode() != null && a.getTaskNode().getId().equals(task.getId())){
-						an = a;
-						break;
-					}		
+					}
+				} else if (isProcessQuest) {
+					if(this.getQuestionnaire().getProcessDefinitions().contains(userAssignment.getProcessDefinition()) 
+							&&	a.getUserAssignment().equals(userAssignment)){
+							an = a;
+							break;
+					}
+				} else  if(isTaskNodeQuest){
+					if(this.getQuestionnaire().getTaskNodes().contains(task) 
+						&& a.getUserAssignment().equals(userAssignment)){
+						if(a.getTaskNode() != null && a.getTaskNode().getId().equals(task.getId())){
+							an = a;
+							break;
+						}		
+					}
 				}
 			}
-		}
-		if (an == null){
-			an = new UserAnswer(userAssignment);
-			an.setQuestion(this);
-			an.setCreatedAt(new GregorianCalendar());
-			if(isWorkflowQuest) {
-				an.setWorkflow(userAssignment.getProcessDefinition().getWorkflow());
-			} else if (isProcessQuest) {
-				an.setProcessDefinition(userAssignment.getProcessDefinition());
-			} else if (isTaskNodeQuest){
-				an.setTaskNode(task);
+			if (an == null){
+				an = new UserAnswer(userAssignment);
+				an.setQuestion(this);
+				an.setCreatedAt(new GregorianCalendar());
+				if(isWorkflowQuest) {
+					an.setWorkflow(userAssignment.getProcessDefinition().getWorkflow());
+				} else if (isProcessQuest) {
+					an.setProcessDefinition(userAssignment.getProcessDefinition());
+				} else if (isTaskNodeQuest){
+					an.setTaskNode(task);
+				}
+				getUserAnswers().add(an);
 			}
-			getUserAnswers().add(an);
+			return an;
+		} else {
+			return null;
 		}
-		return an;
 	}
 	
 	public UserAnswer getUserAssignmentAnswer(UserAssignment userAssignment) {

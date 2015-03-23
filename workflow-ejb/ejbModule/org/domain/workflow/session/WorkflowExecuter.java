@@ -144,6 +144,9 @@ public class WorkflowExecuter {
 		if(!validateFields()) {
 			return;
 		}
+		if(!validateArtefacts()) {
+			return;
+		}
 		if(validateCurrentTaskNode()){
 			this.startState = null;
 			finishUserExecution();
@@ -346,7 +349,16 @@ public class WorkflowExecuter {
 		}
 		return true;
 	}
-	
+	private boolean validateArtefacts() {
+		for (Artefact artefact : this.currentTaskNode.getOutArtefacts()) {
+			if(artefact.get(currentUserExecution) == null){
+				facesMessages.add(Severity.ERROR, "You should send all artefacts!");
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private boolean validateCurrentTaskNode() {
 		if(currentTaskNode != null){
 			for (Task task : currentTaskNode.getTasks()) {

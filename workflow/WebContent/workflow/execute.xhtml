@@ -9,7 +9,10 @@
     xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/template.xhtml">
 	<ui:define name="body">
-		<rich:simpleTogglePanel switchType="client" rendered="#{executer.currentTaskNode == null}" label="#{executer.currentProcess.workflow.title}" opened="false" >
+		<rich:simpleTogglePanel switchType="client" rendered="#{executer.currentTaskNode == null 
+																and executer.currentProcess.workflow.title != null
+																and executer.currentProcess.workflow.title.length() > 0}" 
+																label="#{executer.currentProcess.workflow.title}" opened="false" >
 			<h:outputText value="#{executer.currentProcess.workflow.description}" />
 		</rich:simpleTogglePanel>
 		

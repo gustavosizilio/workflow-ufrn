@@ -86,6 +86,22 @@ public class PathBuilder {
 		}
 	}
 	
+	public String getExperimentTaskResultsSheetPath(Workflow w) {
+		try {
+			return validate(getExperimentsPath()+"/"+w.getId()+"/"+ "taskResults.xls");
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public String getExperimentTaskResultsSheetZipPath(Workflow w) {
+		try {
+			return validate(getExperimentsPath()+"/"+w.getId()+"/"+ "taskResults.zip");
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	private String validate(String path){
 		return path.replaceAll("//", "/");
 	}

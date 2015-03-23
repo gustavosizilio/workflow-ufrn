@@ -124,6 +124,11 @@ public class WorkflowConfiguration {
 			    for (int i = 0; i < col; i++) {
 					String string = factors.get(i);
 					Cell cell = row2.createCell(i);
+					CellStyle style = wb.createCellStyle();
+				    Font font = wb.createFont();
+			        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+			        style.setFont(font);
+			        cell.setCellStyle(style);
 				    cell.setCellValue(string);
 				    
 				    if(i==0) {
@@ -150,6 +155,11 @@ public class WorkflowConfiguration {
 		    List<DepVariable> vars = this.getEntity().getPlan().getDepVariables();
 		    for (int j=0; j<vars.size();j++ ) {
 				Cell cell = row.createCell(j+col);
+				CellStyle style = wb.createCellStyle();
+			    Font font = wb.createFont();
+		        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		        style.setFont(font);
+		        cell.setCellStyle(style);
 			    cell.setCellValue(createHelper.createRichTextString(vars.get(j).getName()));
 			    sheet.autoSizeColumn(j+col);
 			    

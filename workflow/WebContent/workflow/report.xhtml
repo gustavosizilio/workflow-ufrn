@@ -17,7 +17,7 @@
 				<rich:componentControl for="panelObservation" attachTo="observationModal" operation="show" event="onclick"/>
 			</a4j:commandButton>
 			<h:outputText value="   " />
-	    	<h:commandButton action="#{report.analysis}" title="graph" value="#{messages['layout.text.workflow.analysis']}"/>
+			<h:commandButton value="#{messages['layout.text.workflow.downloadTaskResults']}" action="#{report.downloadTaskResults()}" />
 		</h:form>
 	</h:panelGroup>
 	<br />

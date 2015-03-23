@@ -1,14 +1,10 @@
 package org.domain.workflow.session;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -283,7 +279,7 @@ public class WorkflowReport {
 						        
 						        
 						        if(file.getFile() != null) {
-						        	Hyperlink link = createHelper.createHyperlink(Hyperlink.LINK_URL);
+						        	Hyperlink link = createHelper.createHyperlink(Hyperlink.LINK_FILE);
 							        link.setAddress(file.getFile().replace(pathBuilder.getExperimentDataPath(this.getWorkflow()), ""));
 							        cellValue.setHyperlink(link);
 						    		cellValue.setCellValue(file.getFile().replace(pathBuilder.getExperimentDataPath(this.getWorkflow()), ""));

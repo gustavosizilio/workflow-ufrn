@@ -94,6 +94,14 @@ public class PathBuilder {
 		}
 	}
 	
+	public String getExperimentQuestResultsSheetPath(Workflow w) {
+		try {
+			return validate(getExperimentsPath()+"/"+w.getId()+"/"+ "questResults.xls");
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	public String getExperimentTaskResultsSheetZipPath(Workflow w) {
 		try {
 			return validate(getExperimentsPath()+"/"+w.getId()+"/"+ "taskResults.zip");

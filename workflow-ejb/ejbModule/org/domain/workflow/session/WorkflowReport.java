@@ -4,7 +4,9 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -31,6 +33,7 @@ import org.domain.model.processDefinition.TaskNode;
 import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.UserExecution;
 import org.domain.model.processDefinition.Workflow;
+import org.domain.model.processDefinition.metric.Question;
 import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.model.processDefinition.metric.UserAnswer;
 import org.domain.ranalysis.ANOVA;
@@ -98,6 +101,145 @@ public class WorkflowReport {
 		this.observation = observation;
 	}
 	
+	public void downloadQuestionnairesResults() {
+		try {
+			Workbook wb = new HSSFWorkbook();
+		    CreationHelper createHelper = wb.getCreationHelper();
+		 
+		    
+		    Map<Object, Questionnaire> mapQuests = new HashMap<Object, Questionnaire>();
+		    List<Questionnaire> quests = this.workflow.getQuestionnaires();
+		    for (Questionnaire q : quests) {
+		    	//workflow questionnaires
+		    	mapQuests.put(this.workflow, q);
+		    }
+		    List<ProcessDefinition> procs = this.workflow.getProcessDefinitions();
+		    for (ProcessDefinition processDefinition : procs) {
+		    	List<Questionnaire> quests2 = processDefinition.getQuestionnaires();
+			    for (Questionnaire q : quests2) {
+			    	//processDefinition questionnaires
+			    	mapQuests.put(processDefinition, q);
+			    }
+			    
+			    List<TaskNode> tasks = processDefinition.getTaskNodes();
+			    for (TaskNode taskNode : tasks) {
+			    	List<Questionnaire> quests3 = taskNode.getQuestionnaires();
+				    for (Questionnaire q : quests3) {
+				    	//taskNode questionnaires
+				    	mapQuests.put(taskNode, q);
+				    }
+				}
+			}
+		    
+		    
+		    for (Object key : mapQuests.keySet()) {
+				Questionnaire q = mapQuests.get(key);
+				String name = "";
+				List<UserAssignment> uas = q.getUserAssignments();
+				TaskNode taskNode = null;
+				if(key instanceof Workflow) {
+					name = q.getQuestionnaireType() + " " + ((Workflow)key).getTitle() + " - " + q.getName();
+				} else if(key instanceof ProcessDefinition) {
+					name = q.getQuestionnaireType() + " " + ((ProcessDefinition)key).getName() + " - " + q.getName();
+				} else if(key instanceof TaskNode) {
+					name = q.getQuestionnaireType() + " " + ((TaskNode)key).getName() + " - " + q.getName();
+					taskNode = ((TaskNode)key);
+				}
+				Sheet sheet = wb.createSheet(name);
+			    Drawing drawing = sheet.createDrawingPatriarch();
+			    
+			    int headerCold = 0;
+			    for (int j=0; j<uas.size(); j++) {
+			    	// Create a row and put some cells in it. Rows are 0 based.
+				    Row row2 = sheet.createRow((short)j+1);
+				    
+				    // Create a cell and put a value in it.
+				    List<String> factors = new ArrayList<String>();
+				    factors.add(uas.get(j).getUser().toString());
+				    
+				    if(uas.get(j).getKeyFactors() != null && !uas.get(j).getKeyFactors().isEmpty()) {
+				    	factors.addAll(Arrays.asList(uas.get(j).getKeyFactors().split("/")));
+				    }
+				    
+				    headerCold = factors.size();
+				    for (int i = 0; i < headerCold; i++) {
+						String string = factors.get(i);
+						Cell cell = row2.createCell(i);
+						CellStyle style = wb.createCellStyle();
+					    Font font = wb.createFont();
+				        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+				        style.setFont(font);
+				        cell.setCellStyle(style);
+					    cell.setCellValue(string);
+					    
+					    if(i==0) {
+						    // Create the comment and set the text+author
+						    ClientAnchor anchor = createHelper.createClientAnchor();
+						    anchor.setCol1(cell.getColumnIndex());
+						    anchor.setCol2(cell.getColumnIndex()+3);
+						    anchor.setRow1(row2.getRowNum());
+						    anchor.setRow2(row2.getRowNum()+7);
+						    Comment comment = drawing.createCellComment(anchor);
+						    comment.setString(createHelper.createRichTextString(uas.get(j).toString()));
+		
+						    // Assign the comment to the cell
+						    cell.setCellComment(comment);
+					    }
+					    
+					    sheet.autoSizeColumn(i);
+					}
+				    
+				}
+			    
+			    
+			    List<Question> questions = q.getQuestions();
+			    Row row = sheet.createRow((short)0);
+			    CellStyle style = wb.createCellStyle();
+			    Font font = wb.createFont();
+		        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		        style.setFont(font);
+	            style.setWrapText(true);
+	            row.setRowStyle(style);
+	            int col = headerCold-1;
+			    for (Question question : questions) {
+			    	Cell cell = row.createCell(++col);
+				    //sheet.setColumnWidth(col, (int)100);
+				    cell.setCellStyle(style);
+				    cell.setCellValue(createHelper.createRichTextString(question.getDescription()));
+				    for (int i=0; i<uas.size(); i++) {
+				    	UserAssignment ua = uas.get(i);
+				    	UserAnswer ue = question.getUserAssignmentAnswer(ua, taskNode); // taskNode.getUserExecutionByUserAssignment(ua);
+				    	if(ue != null) {
+					    	Row r = sheet.getRow(i+1);
+					    	Cell cellValue = r.createCell(col);
+					    	CellStyle cellStyle = wb.createCellStyle();
+					    	cellStyle.setWrapText(true);
+					        cellValue.setCellStyle(cellStyle);
+					        
+					    	cellValue.setCellValue(ue.getAnswer());
+				    	}
+					}
+				    
+			    }
+				
+			}
+		    
+		    
+		    
+		    // Write the output to a file
+		    String file = pathBuilder.getExperimentQuestResultsSheetPath(this.getWorkflow());
+		    FileOutputStream fileOut = new FileOutputStream(file);
+		    
+			wb.write(fileOut);
+			wb.close();
+			fileOut.close();
+			
+			sendFile.sendFile(file);
+		 
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	}
 	
 	public void downloadTaskResults() {
 		try {

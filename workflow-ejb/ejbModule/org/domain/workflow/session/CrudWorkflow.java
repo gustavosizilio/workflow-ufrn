@@ -44,7 +44,7 @@ import org.richfaces.model.TreeNodeImpl;
 @Scope(ScopeType.CONVERSATION)
 public class CrudWorkflow extends CrudAction<Workflow> {
 	
-	@In("workflowDAO") WorkflowDAO workflowDAO;
+	@In(value = "workflowDAO", create = true) WorkflowDAO workflowDAO;
 	@In(create = true, required = false, value="configuration") WorkflowConfiguration workflowConfiguration;
 	@In(value = "pathBuilder", create = true)  PathBuilder pathBuilder;
 	@In(value = "expdslUtil", create = true) private EXPDSLUtil dslUtil;

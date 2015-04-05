@@ -16,8 +16,6 @@ import org.domain.model.processDefinition.UserExecution;
 import org.domain.model.processDefinition.Workflow;
 import org.domain.utils.FileObject;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Begin;
-import org.jboss.seam.annotations.FlushModeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -39,7 +37,6 @@ public class WorkflowGrafico {
 	
 	private Observation observation;
 	
-	@Begin(join=true, flushMode=FlushModeType.MANUAL)	
 	public String init(Workflow workflow){
 		this.setWorkflow(workflow);
 		cleanObservation();		

@@ -48,5 +48,7 @@ public abstract class GenericEntity {
 		this.validateDeletable();
 		return this.errors.isEmpty();
 	}
+	
+	public abstract Object getId();
 
 }

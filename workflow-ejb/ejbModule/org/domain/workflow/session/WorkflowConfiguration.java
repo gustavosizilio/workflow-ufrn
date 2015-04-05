@@ -2,7 +2,6 @@ package org.domain.workflow.session;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,7 +25,6 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -49,8 +47,6 @@ import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.utils.MailGun;
 import org.domain.utils.PathBuilder;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Begin;
-import org.jboss.seam.annotations.FlushModeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -80,7 +76,6 @@ public class WorkflowConfiguration {
 	private Artefact currentArtefact;
 	private boolean showModalAddUser;
 	
-	@Begin(join=true, flushMode=FlushModeType.MANUAL)	
 	public void prepare(Workflow workflow) {
 		this.userPropertyString = "";
 		this.setEntity(workflow);

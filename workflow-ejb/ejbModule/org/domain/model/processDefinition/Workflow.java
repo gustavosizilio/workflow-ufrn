@@ -236,6 +236,7 @@ public class Workflow extends GenericEntity {
 	public String getTitle() {
 		return "";
 	}
+	@Override
 	public Long getId() {
 		return id;
 	}

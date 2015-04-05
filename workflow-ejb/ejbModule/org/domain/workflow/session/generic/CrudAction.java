@@ -46,17 +46,15 @@ public abstract class CrudAction<T extends GenericEntity> {
 
 	
 	protected void detailImpl(){};
-	@Begin(join=true, flushMode = FlushModeType.MANUAL)
 	public String detail(T entity){
 		crudType = CrudType.DETAIL;
-		seamDao.refresh(entity);
-		this.entity = entity;
+		//seamDao.refresh(entity);
+		this.entity = seamDao.find(this.type, entity.getId());
 		detailImpl();
 		return getPage();
 	}
 	
 	protected void createImpl(){};
-	@Begin(join=true, flushMode = FlushModeType.MANUAL)
 	@SuppressWarnings("unchecked")
 	public String create() throws ClassNotFoundException, InstantiationException, IllegalAccessException{
 		crudType = CrudType.CREATE;
@@ -68,11 +66,10 @@ public abstract class CrudAction<T extends GenericEntity> {
 	}
 	
 	protected void editImpl(){};
-	@Begin(join=true, flushMode = FlushModeType.MANUAL)
 	public String edit(T entity){
 		crudType = CrudType.EDIT;
-		seamDao.refresh(entity);
-		this.entity = entity;
+		//seamDao.refresh(entity);
+		this.entity = seamDao.find(this.type, entity.getId());
 		editImpl();
 		return getPage();
 	}
@@ -117,8 +114,8 @@ public abstract class CrudAction<T extends GenericEntity> {
 	
 	public String delete(T entity){
 		crudType = CrudType.DELETE;
-		seamDao.refresh(entity);
-		this.entity = entity;
+		//seamDao.refresh(entity);
+		this.entity = seamDao.find(this.type, entity.getId());
 		deleteImpl();
 		return list();
 	}

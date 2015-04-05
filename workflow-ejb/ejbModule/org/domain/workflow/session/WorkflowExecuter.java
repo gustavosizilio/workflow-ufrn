@@ -29,8 +29,6 @@ import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.model.processDefinition.metric.UserAnswer;
 import org.domain.utils.PathBuilder;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Begin;
-import org.jboss.seam.annotations.FlushModeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -91,7 +89,6 @@ public class WorkflowExecuter {
 		}
 	}
 	
-	@Begin(join=true, flushMode=FlushModeType.MANUAL)	
 	public String list(){
 		findEntities();
 		return WORKFLOW_LIST_EXECUTE_XHTML;

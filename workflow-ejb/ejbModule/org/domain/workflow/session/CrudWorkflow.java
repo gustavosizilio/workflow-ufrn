@@ -118,6 +118,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	
 	@Override
 	protected boolean saveImpl(){
+		this.entity.setSuccessCompiled(false);
 		boolean ret = super.saveImpl();
 		
 		try {
@@ -133,21 +134,13 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			String experimentPath = pathBuilder.getExperimentMyexpPath(this.entity);
 			dslUtil.convertEcoreToExpText(this.rootModel, experimentPath);
 			this.entity.setSuccessCompiled(true);
+			this.seamDao.merge(this.entity);
+			this.seamDao.flush();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			addError(e.getMessage());
-			this.entity.setSuccessCompiled(false);
 			e.printStackTrace();
 		}
-		
-		
-		try {
-			this.seamDao.merge(this.entity);
-		} catch (ValidationException e) {
-			addError(e.getMessage());
-			e.printStackTrace();
-		}
-		this.seamDao.flush();
 
 		return ret;
 	}

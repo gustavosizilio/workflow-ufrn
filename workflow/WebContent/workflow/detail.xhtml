@@ -28,8 +28,8 @@
 		<h:commandButton value="#{messages['layout.text.workflow.downloadMetricsSheet']}" rendered="#{crudWorkflow.entity.canStart()}" action="#{configuration.downloadMetricsSheet()}" />
 		
 				
-    	<h:commandButton action="#{crudWorkflow.start(entity)}" title="play" rendered="#{crudWorkflow.entity.canStart() and !crudWorkflow.entity.started}"  value="#{messages['layout.text.workflow.start']}" />
-    	<h:commandButton action="#{crudWorkflow.nextTurn(entity)}" title="play" rendered="#{crudWorkflow.entity.canStart() and crudWorkflow.entity.started and !crudWorkflow.entity.lastTurn}"  value="#{messages['layout.text.workflow.nextTurn']}" />
+    	<h:commandButton action="#{crudWorkflow.start(crudWorkflow.entity)}" title="play" rendered="#{crudWorkflow.entity.canStart() and !crudWorkflow.entity.started}"  value="#{messages['layout.text.workflow.start']}" />
+    	<h:commandButton action="#{crudWorkflow.nextTurn(crudWorkflow.entity)}" title="play" rendered="#{crudWorkflow.entity.canStart() and crudWorkflow.entity.started and !crudWorkflow.entity.lastTurn}"  value="#{messages['layout.text.workflow.nextTurn']}" />
     	<h:commandButton value="#{messages['layout.text.workflow.trackResults']}" rendered="#{crudWorkflow.entity.canStart()}" action="#{report.init(crudWorkflow.entity)}" />
 		
 	</ui:define>

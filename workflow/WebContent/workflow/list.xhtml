@@ -9,10 +9,8 @@
     xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/list.xhtml">
 	<ui:param name="action" value="#{crudWorkflow}" />
-	<ui:param name="disableEdit" value="#{entity.processDefinitions.size() > 0}" />
-	
-	
-    <ui:define name="columns">
+	<ui:define name="columns">
+		<ui:param name="disableEdit" value="#{entity.processDefinitions.size() > 0}" />
 		<rich:column>
 		 	<f:facet name="header">
 		 		<h:outputText value="#{messages['layout.text.workflow.experiment']}"/>
@@ -35,10 +33,8 @@
     
     <ui:define name="actions"> 
     	<h:panelGroup rendered="#{entity.canStart()}">
-    		
-    		<h:commandButton value="#{messages['layout.text.workflow.downloadMetricsSheet']}" rendered="#{crudWorkflow.entity.canStart()}" action="#{configuration.downloadMetricsSheet()}" />
-		
-	    	<h:commandButton action="#{crudWorkflow.start(entity)}" title="play" rendered="#{!entity.started}"  value="#{messages['layout.text.workflow.start']}" />
+    		<h:commandButton value="#{messages['layout.text.workflow.downloadMetricsSheet']}" rendered="#{entity.canStart()}" action="#{configuration.downloadMetricsSheet(entity)}" />
+			<h:commandButton action="#{crudWorkflow.start(entity)}" title="play" rendered="#{!entity.started}"  value="#{messages['layout.text.workflow.start']}" />
 	    	<h:commandButton action="#{crudWorkflow.nextTurn(entity)}" title="play" rendered="#{entity.started and !entity.lastTurn}"  value="#{messages['layout.text.workflow.nextTurn']}" />
 	    	<h:commandButton value="#{messages['layout.text.workflow.trackResults']}" action="#{report.init(entity)}" />
     	</h:panelGroup>

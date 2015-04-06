@@ -78,7 +78,8 @@ public class WorkflowConfiguration {
 	
 	public void prepare(Workflow workflow) {
 		this.userPropertyString = "";
-		this.setEntity(workflow);
+		//this.setEntity(workflow);
+		this.entity = seamDao.find(Workflow.class, workflow.getId());
 		this.setUsersSelectedToShuffle(new Hashtable<String,List<User>>());
 	}
 	
@@ -92,6 +93,10 @@ public class WorkflowConfiguration {
 		this.userProperty = u;
 	}
 	
+	public void downloadMetricsSheet(Workflow w) {
+		this.prepare(w);
+		downloadMetricsSheet();
+	}
 	public void downloadMetricsSheet() {
 		try {
 			Workbook wb = new HSSFWorkbook();

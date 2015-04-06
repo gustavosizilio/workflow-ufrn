@@ -9,15 +9,15 @@
     xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/list.xhtml">
 	<ui:param name="action" value="#{crudWorkflow}" />
-	<ui:param name="disableEdit" value="#{crudWorkflow.entity.processDefinitions.size() > 0}" />
+	<ui:param name="disableEdit" value="#{entity.processDefinitions.size() > 0}" />
 	
 	
     <ui:define name="columns">
 		<rich:column>
 		 	<f:facet name="header">
-            	<h:outputText value="#{messages['layout.text.workflow.experiment']}"/>
+		 		<h:outputText value="#{messages['layout.text.workflow.experiment']}"/>
             </f:facet>
-			<h:outputText value="Experiment ##{entity.id}" />
+            <h:outputText value="Experiment ##{entity.id}" />
 			<h:outputText value=" - #{messages['layout.text.workflow.startedAt']} " rendered="#{entity.started}" />
 			<h:outputText value="#{entity.startedAt}" rendered="#{entity.started}">
 				<f:convertDateTime pattern="MM/dd/yyyy HH:mm" />

@@ -91,7 +91,7 @@
 				<rich:dataGrid styleClass="hiddenBorders"
 					value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
 	
-					<h:panelGroup class="attrNodeTitleContent">
+					<h:panelGroup class="attrNodeTitleContent #{action.getLabelStyleClass(attr[0])}">
 						<rich:panel styleClass="hint" rendered="#{action.getHint(attr[0]) != null}">
 							<rich:toolTip>
 					            <span style="white-space:nowrap">
@@ -114,13 +114,13 @@
 						</h:panelGroup>
 	
 						<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'int'}">
-							<rich:inputNumberSpinner value="#{attr[1]}"
+							<rich:inputNumberSpinner styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}"
 								converter="javax.faces.Integer" />
 						</h:panelGroup>
 	
 						<h:panelGroup
 							rendered="#{action.getFieldType(attr[0]) eq 'enumOne'}">
-							<h:selectOneMenu value="#{attr[1]}">
+							<h:selectOneMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
 								<s:selectItems
 									value="#{attr[0].getEType().getDefaultValue().values()}"
 									var="enum" label="#{enum.literal}" noSelectionLabel="---" />
@@ -129,7 +129,7 @@
 						</h:panelGroup>
 						<h:panelGroup
 							rendered="#{action.getFieldType(attr[0]) eq 'enumMany'}">
-							<h:selectManyMenu value="#{attr[1]}">
+							<h:selectManyMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
 								<s:selectItems
 									value="#{attr[0].getEType().getDefaultValue().values()}"
 									var="enum" label="#{enum.literal}" />
@@ -140,7 +140,7 @@
 	
 						<h:panelGroup
 							rendered="#{action.getFieldType(attr[0]) eq 'refAttrOne'}">
-							<h:selectOneMenu value="#{attr[1]}">
+							<h:selectOneMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
 								<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
 									label="#{action.getName(o, true)}" noSelectionLabel="---" />
 								<f:converter converterId="SimpleIndexConverter" />
@@ -148,7 +148,7 @@
 						</h:panelGroup>
 						<h:panelGroup
 							rendered="#{action.getFieldType(attr[0]) eq 'refAttrMany'}">
-							<h:selectManyMenu value="#{attr[1]}">
+							<h:selectManyMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
 								<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
 									label="#{action.getName(o, true)}" />
 								<f:converter converterId="SimpleIndexConverter" />

@@ -367,6 +367,23 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			return null;
 		}
 	}
+	
+	public String getLabelStyleClass(EObject eObject) {
+		if(eObject == null)
+			return null;
+		
+		try {
+			String hintKey = getBasePropKey(eObject) + ".labelStyleClass";
+			@SuppressWarnings("unused")
+			Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+			ResourceBundle resourceBundle = SeamResourceBundle.getBundle();
+			String bundleMessage = resourceBundle.getString(hintKey);
+			return bundleMessage;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	public String getStyleClass(EObject eObject) {
 		if(eObject == null)
 			return null;

@@ -15,7 +15,9 @@ h1 {
 	font-size: 1.6em;
 	margin-top: 0;
 }
-
+.hidden {
+	display: none !important;
+}
 .hiddenBorders {
 	border: none !important;
 	padding: 0px !important;

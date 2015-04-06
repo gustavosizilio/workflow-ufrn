@@ -44,15 +44,15 @@
 				<h:panelGroup id="designConfigurationLinks">
 					<h:panelGroup rendered="#{crudWorkflow.entity.emptyDesign }">
 						<a4j:commandLink action="#{configuration.deployDefaultDesignConfiguration()}"
-							reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.loadFromDefinition']}]</a4j:commandLink>
+							reRender="designDefinition,designConfigurationLinks,buttons">[#{messages['layout.text.workflow.loadFromDefinition']}]</a4j:commandLink>
 						<h:outputText value="&nbsp; | &nbsp;" />
 						<a4j:commandLink action="#{configuration.updateDesignTypeToManual()}"
-							reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.manual']}]</a4j:commandLink>
+							reRender="designDefinition,designConfigurationLinks,buttons">[#{messages['layout.text.workflow.manual']}]</a4j:commandLink>
 					</h:panelGroup>
 					<h:panelGroup rendered="#{not crudWorkflow.entity.emptyDesign }">
 						<a4j:commandLink action="#{configuration.clearDesign(true)}"
 							onclick="confirm('#{messages['layout.messages.areYouSure?']}')"
-							reRender="designDefinition,designConfigurationLinks">[#{messages['layout.text.workflow.clearDesign']}]</a4j:commandLink>
+							reRender="designDefinition,designConfigurationLinks,buttons">[#{messages['layout.text.workflow.clearDesign']}]</a4j:commandLink>
 					</h:panelGroup>
 				</h:panelGroup>
 
@@ -124,7 +124,7 @@
 		</rich:panel>
 
 		<a4j:jsFunction name="refreshPanel"
-			reRender="workflowConfiguratioin,processDefinition,actions" />
+			reRender="workflowConfiguratioin,processDefinition,actions,buttons" />
 		<h:panelGroup id="actions">
 			
 		</h:panelGroup>

@@ -401,7 +401,7 @@ label {
 }
 
 #ajaxStatus {
-	position: absolute;
+	position: fixed;
 	background: black;
 	float: left;
 	padding: 0;

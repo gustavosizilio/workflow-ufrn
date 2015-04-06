@@ -264,14 +264,6 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		return getFieldType(node.getData());
 	}
 	
-	public boolean isId(EObject node) {
-		if(node instanceof EAttribute) {
-			return ((EAttribute) node).isID();
-		}
-		
-		return false;
-	}
-	
 	public String getFieldType(EObject node) {
 		if(node instanceof EReference) {
 			if(((EReference)node).isMany()) {
@@ -365,22 +357,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 			return null;
 		
 		try {
-			String className = null;
-			if(eObject instanceof EClassImpl) {
-				className = ((EClassImpl)eObject).getName();
-			} else if (eObject instanceof EAttributeImpl || eObject instanceof EReference ) {
-				className = this.selectedNode.getData().getClass().getInterfaces()[0].toString();
-				className = className.substring(className.lastIndexOf(".")+1);
-				if(eObject instanceof EReference) {
-					className = className + "." + ((EReference) eObject).getName();
-				} else if (eObject instanceof EAttributeImpl) {
-					className = className + "." + ((EAttributeImpl)eObject).getName();
-				}
-			} else {
-				className = eObject.getClass().getInterfaces()[0].toString();
-				className = className.substring(className.lastIndexOf(".")+1);
-			}
-			String hintKey = "layout.formalization.hint." + getName(className).replaceAll(" ", "");
+			String hintKey = getBasePropKey(eObject) + ".hint";
 			@SuppressWarnings("unused")
 			Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 			ResourceBundle resourceBundle = SeamResourceBundle.getBundle();
@@ -389,6 +366,41 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+	public String getStyleClass(EObject eObject) {
+		if(eObject == null)
+			return null;
+		
+		try {
+			String hintKey = getBasePropKey(eObject) + ".styleClass";
+			@SuppressWarnings("unused")
+			Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+			ResourceBundle resourceBundle = SeamResourceBundle.getBundle();
+			String bundleMessage = resourceBundle.getString(hintKey);
+			return bundleMessage;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	private String getBasePropKey(EObject eObject) {
+		String className = null;
+		if(eObject instanceof EClassImpl) {
+			className = ((EClassImpl)eObject).getName();
+		} else if (eObject instanceof EAttributeImpl || eObject instanceof EReference ) {
+			className = this.selectedNode.getData().getClass().getInterfaces()[0].toString();
+			className = className.substring(className.lastIndexOf(".")+1);
+			if(eObject instanceof EReference) {
+				className = className + "." + ((EReference) eObject).getName();
+			} else if (eObject instanceof EAttributeImpl) {
+				className = className + "." + ((EAttributeImpl)eObject).getName();
+			}
+		} else {
+			className = eObject.getClass().getInterfaces()[0].toString();
+			className = className.substring(className.lastIndexOf(".")+1);
+		}
+		String hintKey = "layout.formalization." + getName(className).replaceAll(" ", "");
+		return hintKey;
 	}
 	
 	public String getName(EObject eObject, boolean includeLookForName) {

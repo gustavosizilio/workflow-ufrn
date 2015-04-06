@@ -8,6 +8,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j" template="/layout/detail.xhtml">
 	<ui:param name="action" value="#{crudWorkflow}" />
+	<ui:param name="disableEdit" value="#{crudWorkflow.entity.processDefinitions.size() > 0}" />
 
 	<ui:define name="detail">
 		<h:inputTextarea value="#{crudWorkflow.treeString}" style="width: 100%; height: 200px;"  disabled="true">

@@ -20,7 +20,7 @@
 					
 					<h:outputText value="   " />
 					
-					<h:commandButton value="#{messages['layout.text.edit']}" action="#{action.edit(entity)}" />
+					<h:commandButton value="#{messages['layout.text.edit']}" disabled="#{disableEdit == null ? false : disableEdit}"  action="#{action.edit(entity)}" />
 					
 					<h:outputText value="   " />
 					

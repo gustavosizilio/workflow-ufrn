@@ -9,6 +9,8 @@
     xmlns:a4j="http://richfaces.org/a4j"
     template="/layout/list.xhtml">
 	<ui:param name="action" value="#{crudWorkflow}" />
+	<ui:param name="disableEdit" value="#{crudWorkflow.entity.processDefinitions.size() > 0}" />
+	
 	
     <ui:define name="columns">
 		<rich:column>

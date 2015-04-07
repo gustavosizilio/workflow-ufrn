@@ -341,7 +341,10 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		String[] r = className.split("(?=\\p{Lu})");
 		StringBuilder result = new StringBuilder();
 		for (String string : r) {
-			result.append(string + " ");
+			result.append(string);
+			if(string.length() > 0 && !Character.isUpperCase(string.charAt(string.length()-1))) {
+				result.append(" ");				
+			}
 		}
 		
 		String ret = result.toString();

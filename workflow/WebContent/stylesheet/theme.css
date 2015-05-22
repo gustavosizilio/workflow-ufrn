@@ -416,3 +416,11 @@ label {
 	opacity: .5;
 	padding-top: 80px;
 }
+
+.rich-tool-tip {
+	width: 300px;
+}
+
+.rich-tool-tip * {
+  white-space: normal !important;
+}

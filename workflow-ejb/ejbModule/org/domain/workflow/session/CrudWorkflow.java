@@ -132,10 +132,15 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		
 		try {
 			String experimentPath = pathBuilder.getExperimentMyexpPath(this.entity);
-			dslUtil.convertEcoreToExpText(this.rootModel, experimentPath);
-			this.entity.setSuccessCompiled(true);
-			this.seamDao.merge(this.entity);
-			this.seamDao.flush();
+			Exception erro = dslUtil.convertEcoreToExpText(this.rootModel, experimentPath);
+			if(erro == null) {
+				this.entity.setSuccessCompiled(true);
+				this.seamDao.merge(this.entity);
+				this.seamDao.flush();
+			} else {
+				addError("Your experiment should have validations problems...");
+				addError(erro.getMessage());
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			addError(e.getMessage());

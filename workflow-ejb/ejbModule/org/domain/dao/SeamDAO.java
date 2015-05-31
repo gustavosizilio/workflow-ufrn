@@ -33,6 +33,7 @@ public class SeamDAO implements Serializable, SeamDAOLocal{
 	@In("entityManager")
 	private EntityManager entityManager;
 
+	
 	public Query createQuery(String query) {
 		return entityManager.createQuery(query);
 	}

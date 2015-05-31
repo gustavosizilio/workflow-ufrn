@@ -419,6 +419,7 @@ label {
 
 .rich-tool-tip {
 	width: 300px;
+	text-align: justify;
 }
 
 .rich-tool-tip * {

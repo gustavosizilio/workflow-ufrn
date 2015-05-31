@@ -43,7 +43,7 @@
 							<rich:dataGrid styleClass="hiddenBorders"
 								value="#{action.dslUtil.findClasses(ref)}" var="eclass">
 								<a4j:commandButton  styleClass="refButton"
-									value="#{messages['layout.text.new']} #{action.getName(eclass.name)}"
+									value="#{messages['layout.text.add']} #{action.getName(eclass.name)}"
 									action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
 									reRender="panelForm" disabled="#{(action.getRefsObjects(action.selectedNode.data, ref).size > 0 and !ref.isMany())}" />
 								

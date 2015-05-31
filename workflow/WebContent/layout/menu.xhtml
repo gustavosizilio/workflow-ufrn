@@ -16,7 +16,7 @@
     <!-- @newMenuItem@ -->
     <rich:toolBarGroup location="right">
     	<h:form>
-	        <h:outputText id="menuWelcomeId" value="#{messages['layout.messages.wellcome']}, #{user.name}!" rendered="#{identity.loggedIn}"/>
+	        <h:outputText id="menuWelcomeId" value="#{messages['layout.messages.welcome']}, #{user.name}!" rendered="#{identity.loggedIn}"/>
 	        <s:link id="menuLoginId" view="/login.xhtml" value="#{messages['layout.text.login']}" rendered="#{not identity.loggedIn}" propagation="none"/>
 	        <h:commandLink id="menuLogoutId" action="#{authenticator.logout}" value="#{messages['layout.text.logout']}" rendered="#{identity.loggedIn}" />
     	</h:form>

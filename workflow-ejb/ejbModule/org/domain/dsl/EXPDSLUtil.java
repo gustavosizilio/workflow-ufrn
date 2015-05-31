@@ -209,17 +209,22 @@ public class EXPDSLUtil {
 		
 	}
 	
-	public void convertEcoreToExpText(EObject model, String path) throws IOException {
-		Injector injector = createInjectorAndDoEMFRegistration();
-		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
-		//create the whole dir
-		File file = new File(path);
-		file.getParentFile().mkdirs();
-		URI uri = URI.createURI(path);
-		Resource xtextResource = resourceSet.createResource(uri);
-		xtextResource.getContents().add(model);
-		EcoreUtil.resolveAll(xtextResource);
-		xtextResource.save(null);
+	public Exception convertEcoreToExpText(EObject model, String path) {
+		try {
+			Injector injector = createInjectorAndDoEMFRegistration();
+			XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
+			//create the whole dir
+			File file = new File(path);
+			file.getParentFile().mkdirs();
+			URI uri = URI.createURI(path);
+			Resource xtextResource = resourceSet.createResource(uri);
+			xtextResource.getContents().add(model);
+			EcoreUtil.resolveAll(xtextResource);
+			xtextResource.save(null);
+			return null;
+		} catch (Exception e) {
+			return e;
+		}
 	}
 	
 	public void convertEcoreToXMI(EObject model, String path) throws IOException {

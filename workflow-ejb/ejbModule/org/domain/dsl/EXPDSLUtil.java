@@ -73,17 +73,25 @@ public class EXPDSLUtil {
 		List<EObject> attrs = new ArrayList<EObject>();
 		if(raiz != null) {
 			EClassImpl eclazz = (EClassImpl) raiz.eClass();
-			for (EObject eObject : eclazz.eContents()) {
-				if(eObject instanceof EAttribute) {
-					attrs.add((EAttribute) eObject);
-				} else if(eObject instanceof EReference) {
-					if(!((EReferenceImpl)eObject).isContainment()) {
-						attrs.add((EReferenceImpl)eObject);
-					}
+			List<EClass> eclazzes = eclazz.getEAllSuperTypes();
+			for (EClass superEClass : eclazzes) {
+				extractAttrs(attrs, superEClass);
+			}
+			extractAttrs(attrs, eclazz);
+		}
+		return attrs;
+	}
+
+	private void extractAttrs(List<EObject> attrs, EClass eclazz) {
+		for (EObject eObject : eclazz.eContents()) {
+			if(eObject instanceof EAttribute) {
+				attrs.add((EAttribute) eObject);
+			} else if(eObject instanceof EReference) {
+				if(!((EReferenceImpl)eObject).isContainment()) {
+					attrs.add((EReferenceImpl)eObject);
 				}
 			}
 		}
-		return attrs;
 	}
 	
 	@SuppressWarnings("unchecked")

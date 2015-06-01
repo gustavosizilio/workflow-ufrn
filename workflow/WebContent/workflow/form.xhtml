@@ -42,12 +42,12 @@
 						value="#{action.getRefs(action.selectedNode.data)}" var="ref">
 							<rich:dataGrid styleClass="hiddenBorders"
 								value="#{action.dslUtil.findClasses(ref)}" var="eclass">
-								<a4j:commandButton  styleClass="refButton"
+								<a4j:commandButton  styleClass="refButton #{action.getStyleClass(eclass)}"
 									value="#{messages['layout.text.add']} #{action.getName(eclass.name)}"
 									action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
 									reRender="panelForm" disabled="#{(action.getRefsObjects(action.selectedNode.data, ref).size > 0 and !ref.isMany())}" />
 								
-								<rich:panel styleClass="hint" rendered="#{action.getHint(eclass) != null}">
+								<rich:panel styleClass="hint #{action.getStyleClass(eclass)}" rendered="#{action.getHint(eclass) != null}">
 									<rich:toolTip>
 							            <span style="white-space:nowrap">
 							                <h:outputText value="#{action.getHint(eclass)}" />
@@ -55,7 +55,9 @@
 							        </rich:toolTip>
 								</rich:panel>
 								
-								<br style="clear: both;" />
+								<h:panelGroup styleClass="#{action.getStyleClass(eclass)}">
+									<br style="clear: both;" />
+								</h:panelGroup>
 							</rich:dataGrid>
 						</rich:dataGrid>
 					</h:panelGroup>

@@ -217,7 +217,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	
 	public List<EReference>  getRefs(EObject raiz){
 		return this.dslUtil.getRefs(raiz);
-	} 
+	}
 	
 	public List<EObject>  getRefsObjects(EObject raiz, EReference ref){
 		return this.dslUtil.getRefsObjects(raiz, ref);
@@ -230,6 +230,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 		 for (EObject object : attrs) {
 			 attrProperties.add(new Object[] {object, getValueFromParent(this.selectedNode.getData(), object, false)});
 		 }
+		 //attrProperties.addAll(getAttrs(raiz));
 		 return attrProperties;
 	} 
 	

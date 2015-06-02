@@ -179,12 +179,6 @@
 				<a4j:commandButton  value="#{messages['layout.text.cancel']}"
 					action="#{action.updateSelectedNode(action.selectedNode.parent)}"
 					reRender="panelForm" />
-					<h:outputText value="   " />
-				<a4j:commandButton  value="#{messages['layout.text.cancelAndRemove']}" rendered="#{action.selectedRef != null}"
-					action="#{action.removeRef(action.selectedNode.parent, action.selectedNode.data, action.selectedRef)}">
-					<a4j:support action="#{action.updateSelectedNode(action.selectedNode.parent)}"
-						reRender="panelForm" event="oncomplete"/>
-				</a4j:commandButton>
 			</h:panelGroup>
 		</h:panelGroup>
 

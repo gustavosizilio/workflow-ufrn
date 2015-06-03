@@ -24,6 +24,7 @@
 				action="#{configuration.undeployWorkflow()}"
 				rendered="#{crudWorkflow.entity.processDefinitions.size() > 0}" />
 				
+		<h:commandButton value="#{messages['layout.text.workflow.downloadExperimentSpecification']}" action="#{configuration.downloadExperimentSpecification()}" />
 		
 		<h:commandButton value="#{messages['layout.text.workflow.downloadMetricsSheet']}" rendered="#{crudWorkflow.entity.canStart()}" action="#{configuration.downloadMetricsSheet()}" />
 		

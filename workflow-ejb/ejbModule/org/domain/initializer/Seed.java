@@ -31,6 +31,9 @@ public class Seed {
 		User u4 = new User("eduardoaranha@dimap.ufrn.br", new BasicPasswordEncryptor().encryptPassword("admin"), "Eduardo Aranha");
 		u4 = (User) persist(u4);
 		
+		User u5 = new User("trsilva.si@gmail.com", new BasicPasswordEncryptor().encryptPassword("admin"), "Thiago Reis");
+		u5 = (User) persist(u5);
+		
 		createUsers(20);
 		
 		//Workflow w = new Workflow(u);

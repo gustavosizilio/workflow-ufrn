@@ -97,6 +97,16 @@ public class WorkflowConfiguration {
 		this.prepare(w);
 		downloadMetricsSheet();
 	}
+	public void downloadExperimentSpecification() {
+		try {
+			// Write the output to a file
+		    String file = pathBuilder.getExperimentMyexpPath(this.getEntity());
+			sendFile.sendFile(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+			facesMessages.add(Severity.ERROR, "The experiment configuration could not be generated. You must finish your edition without errors.");
+		}
+	}
 	public void downloadMetricsSheet() {
 		try {
 			Workbook wb = new HSSFWorkbook();
@@ -365,8 +375,8 @@ public class WorkflowConfiguration {
 			this.userPropertyString = this.newUser.toString();
 			this.showModalAddUser = false;
 			
-			String mailMsg = "Hello "+this.newUser.getName()+", the user "+user.getName()+" invited you to be a participant in an experiment. \n\n "
-					+ "Access "+ pathBuilder.getWebPath() + "' Experiment Executer</a> using  the password "+passwordString;
+			String mailMsg = "Hello "+this.newUser.getName()+", the user "+user.getName()+" invited you to be a participant in an experiment. "
+					+ "Access "+ pathBuilder.getWebPath() + " Experiment Executer using  the password "+passwordString;
 			MailGun.sendMail(this.newUser.getEmail(), this.newUser.getName(), "You are invited for Experiment Executer", mailMsg);
 			
 		} catch (Exception e) {

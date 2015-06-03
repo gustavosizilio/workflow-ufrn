@@ -88,7 +88,7 @@ public abstract class CrudAction<T extends GenericEntity> {
 		}
 
 		seamDao.flush();
-		addInfo("Atualização efetuada com sucesso.");
+		addInfo("Was successful update.");
 		return true;
 	};
 	
@@ -103,7 +103,7 @@ public abstract class CrudAction<T extends GenericEntity> {
 	protected boolean deleteImpl(){
 		if(this.entity.isDeletable()){
 			seamDao.remove(this.entity);
-			addInfo("Remoção efetuada com sucesso.");
+			addInfo("Was successful removal.");
 			seamDao.flush();
 			return true;
 		} else {

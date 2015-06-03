@@ -283,7 +283,7 @@ label {
 }
 
 .refNodeTitle {
-	font-size: 18px;
+	font-size: 25px;
 	padding: 5px;
 	font-weight: normal !important;
 }
@@ -389,6 +389,7 @@ label {
 }
 .refButtonLeftBig {
 	float: left;
+	text-align: left;
 	width: 590px !important;
 }
 .refButtonRight {

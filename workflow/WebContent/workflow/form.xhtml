@@ -62,83 +62,90 @@
 		</h:panelGroup>
 
 		<h:panelGroup styleClass="nodePanel" >
-			<h:panelGroup rendered="#{action.selectedNode.data != action.rootModel}"> 
-				<h:outputText
-					value="#{action.getName(action.selectedNode.data, true)}"
-					styleClass="refNodeTitle" />
-				<rich:separator></rich:separator><br/><br/>
-				<rich:dataGrid styleClass="hiddenBorders"
-					value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
-	
-					<h:panelGroup class="attrNodeTitleContent #{action.getLabelStyleClass(attr[0])}">
-						<rich:panel styleClass="hint" rendered="#{action.getHint(attr[0]) != null}">
-							<rich:toolTip>
-					            <span style="white-space:nowrap">
-					                <h:outputText value="#{action.getHint(attr[0])}" />
-					            </span>
-					        </rich:toolTip>
-						</rich:panel>
-						
-						<h:outputText value="#{action.getName(attr[0], false)}: "
-							styleClass="attrNodeTitle" />
+			<h:panelGroup> 
+				<h:panelGroup rendered="#{action.selectedNode.data == action.rootModel}">
+						<h:outputText
+							value="#{action.getName(action.selectedNode.data, false)}"
+							styleClass="refNodeTitle" />
+						<rich:separator></rich:separator><br/>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{action.selectedNode.data != action.rootModel}">
+					<h:outputText
+						value="#{action.getName(action.selectedNode.data, true)}"
+						styleClass="refNodeTitle" />
+					<rich:separator></rich:separator><br/>
+					<rich:dataGrid styleClass="hiddenBorders"
+						value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
+		
+						<h:panelGroup class="attrNodeTitleContent #{action.getLabelStyleClass(attr[0])}">
+							<rich:panel styleClass="hint" rendered="#{action.getHint(attr[0]) != null}">
+								<rich:toolTip>
+						            <span style="white-space:nowrap">
+						                <h:outputText value="#{action.getHint(attr[0])}" />
+						            </span>
+						        </rich:toolTip>
+							</rich:panel>
 							
-					</h:panelGroup>
-	
-					<h:panelGroup class="attrNodeTitleField">
-	
-						<rich:jQuery selector=".id" query="setMask({mask:'*', type:'repeat', 'maxLength': 254})" timing="onload"/>
-						<h:panelGroup
-							rendered="#{action.getFieldType(attr[0]) eq 'string'}">
-							<h:inputTextarea styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}" />
+							<h:outputText value="#{action.getName(attr[0], false)}: "
+								styleClass="attrNodeTitle" />
+								
 						</h:panelGroup>
-	
-						<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'int'}">
-							<rich:inputNumberSpinner styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}"
-								converter="javax.faces.Integer" />
+		
+						<h:panelGroup class="attrNodeTitleField">
+		
+							<rich:jQuery selector=".id" query="setMask({mask:'*', type:'repeat', 'maxLength': 254})" timing="onload"/>
+							<h:panelGroup
+								rendered="#{action.getFieldType(attr[0]) eq 'string'}">
+								<h:inputTextarea styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}" />
+							</h:panelGroup>
+		
+							<h:panelGroup rendered="#{action.getFieldType(attr[0]) eq 'int'}">
+								<rich:inputNumberSpinner styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}"
+									converter="javax.faces.Integer" />
+							</h:panelGroup>
+		
+							<h:panelGroup
+								rendered="#{action.getFieldType(attr[0]) eq 'enumOne'}">
+								<h:selectOneMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
+									<s:selectItems
+										value="#{attr[0].getEType().getDefaultValue().values()}"
+										var="enum" label="#{enum.literal}" noSelectionLabel="---" />
+									<s:convertEnum />
+								</h:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{action.getFieldType(attr[0]) eq 'enumMany'}">
+								<h:selectManyMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
+									<s:selectItems
+										value="#{attr[0].getEType().getDefaultValue().values()}"
+										var="enum" label="#{enum.literal}" />
+									<s:convertEnum />
+								</h:selectManyMenu>
+							</h:panelGroup>
+		
+		
+							<h:panelGroup
+								rendered="#{action.getFieldType(attr[0]) eq 'refAttrOne'}">
+								<h:selectOneMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
+									<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
+										label="#{action.getName(o, true)}" noSelectionLabel="---" />
+									<f:converter converterId="SimpleIndexConverter" />
+								</h:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{action.getFieldType(attr[0]) eq 'refAttrMany'}">
+								<h:selectManyMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
+									<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
+										label="#{action.getName(o, true)}" />
+									<f:converter converterId="SimpleIndexConverter" />
+								</h:selectManyMenu>
+							</h:panelGroup>
+		
 						</h:panelGroup>
-	
-						<h:panelGroup
-							rendered="#{action.getFieldType(attr[0]) eq 'enumOne'}">
-							<h:selectOneMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
-								<s:selectItems
-									value="#{attr[0].getEType().getDefaultValue().values()}"
-									var="enum" label="#{enum.literal}" noSelectionLabel="---" />
-								<s:convertEnum />
-							</h:selectOneMenu>
-						</h:panelGroup>
-						<h:panelGroup
-							rendered="#{action.getFieldType(attr[0]) eq 'enumMany'}">
-							<h:selectManyMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
-								<s:selectItems
-									value="#{attr[0].getEType().getDefaultValue().values()}"
-									var="enum" label="#{enum.literal}" />
-								<s:convertEnum />
-							</h:selectManyMenu>
-						</h:panelGroup>
-	
-	
-						<h:panelGroup
-							rendered="#{action.getFieldType(attr[0]) eq 'refAttrOne'}">
-							<h:selectOneMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
-								<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
-									label="#{action.getName(o, true)}" noSelectionLabel="---" />
-								<f:converter converterId="SimpleIndexConverter" />
-							</h:selectOneMenu>
-						</h:panelGroup>
-						<h:panelGroup
-							rendered="#{action.getFieldType(attr[0]) eq 'refAttrMany'}">
-							<h:selectManyMenu styleClass="#{action.getStyleClass(attr[0])}" value="#{attr[1]}">
-								<s:selectItems value="#{action.getFieldValues(attr[0])}" var="o"
-									label="#{action.getName(o, true)}" />
-								<f:converter converterId="SimpleIndexConverter" />
-							</h:selectManyMenu>
-						</h:panelGroup>
-	
-					</h:panelGroup>
-					<br style="clear: both" />
-				</rich:dataGrid>
-				
-				<br/>
+						<br style="clear: both" />
+					</rich:dataGrid>
+					<br/>
+				</h:panelGroup>
 		        <h:panelGroup id="itemChildren" styleClass="moreActions">
 					<rich:dataGrid styleClass="hiddenBorders"
 						value="#{action.getRefs(action.selectedNode.data)}" var="ref">
@@ -161,20 +168,22 @@
 					</rich:dataGrid>
 				</h:panelGroup>
 				
-		    	<br/><rich:separator></rich:separator>
-				<br style="clear: both" />
-				
-				<a4j:commandButton  value="#{messages['layout.text.updateAndContinue']}" action="#{action.updateAttrProperties}"
-					reRender="panelForm" />
-				<h:outputText value="   " />
-				<a4j:commandButton  value="#{messages['layout.text.updateAndBack']}" action="#{action.updateAttrProperties}">
-					<a4j:support event="oncomplete" action="#{action.updateSelectedNode(action.selectedNode.getParent())}"
-					reRender="panelForm" />
-				</a4j:commandButton>
-				<h:outputText value="   " />
-				<a4j:commandButton  value="#{messages['layout.text.cancel']}"
-					action="#{action.updateSelectedNode(action.selectedNode.parent)}"
-					reRender="panelForm" />
+				<h:panelGroup rendered="#{action.selectedNode.data != action.rootModel}">
+			    	<br/><rich:separator></rich:separator>
+					<br style="clear: both" />
+					
+					<a4j:commandButton  value="#{messages['layout.text.updateAndContinue']}" action="#{action.updateAttrProperties}"
+						reRender="panelForm" />
+					<h:outputText value="   " />
+					<a4j:commandButton  value="#{messages['layout.text.updateAndBack']}" action="#{action.updateAttrProperties}">
+						<a4j:support event="oncomplete" action="#{action.updateSelectedNode(action.selectedNode.getParent())}"
+						reRender="panelForm" />
+					</a4j:commandButton>
+					<h:outputText value="   " />
+					<a4j:commandButton  value="#{messages['layout.text.cancel']}"
+						action="#{action.updateSelectedNode(action.selectedNode.parent)}"
+						reRender="panelForm" />
+				</h:panelGroup>
 			</h:panelGroup>
 		</h:panelGroup>
 

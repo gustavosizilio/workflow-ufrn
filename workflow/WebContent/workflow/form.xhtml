@@ -35,58 +35,30 @@
             
             <br /><rich:separator></rich:separator><br />
 			
-			<rich:tabPanel switchType="client">
-		        <rich:tab label="#{messages['layout.text.workflow.newElement']}">
-		        	<h:panelGroup id="moreActions" styleClass="moreActions">
-			            <rich:dataGrid styleClass="hiddenBorders"
-						value="#{action.getRefs(action.selectedNode.data)}" var="ref">
-							<rich:dataGrid styleClass="hiddenBorders"
-								value="#{action.dslUtil.findClasses(ref)}" var="eclass">
-								<a4j:commandButton  styleClass="refButton #{action.getStyleClass(eclass)}"
-									value="#{messages['layout.text.add']} #{action.getName(eclass.name)}"
-									action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
-									reRender="panelForm" disabled="#{(action.getRefsObjects(action.selectedNode.data, ref).size > 0 and !ref.isMany())}" />
-								
-								<rich:panel styleClass="hint #{action.getStyleClass(eclass)}" rendered="#{action.getHint(eclass) != null}">
-									<rich:toolTip>
-							            <span style="white-space:nowrap">
-							                <h:outputText value="#{action.getHint(eclass)}" />
-							            </span>
-							        </rich:toolTip>
-								</rich:panel>
-								
-								<h:panelGroup styleClass="#{action.getStyleClass(eclass)}">
-									<br style="clear: both;" />
-								</h:panelGroup>
-							</rich:dataGrid>
-						</rich:dataGrid>
-					</h:panelGroup>
-		        </rich:tab>
-		        <rich:tab label="#{messages['layout.text.workflow.elements']}">
-		            <h:panelGroup id="itemChildren" styleClass="moreActions">
-						<rich:dataGrid styleClass="hiddenBorders"
-							value="#{action.getRefs(action.selectedNode.data)}" var="ref">
-							<rich:dataGrid styleClass="hiddenBorders"
-								value="#{action.getChildren(action.selectedNode, ref)}"
-								var="refNode">
-								<a4j:commandButton  value="#{action.getName(refNode.data, true)}"
-									styleClass="refButton refButtonLeft"
-									action="#{action.updateSelectedNode(refNode)}"
-									reRender="panelForm" />
-		
-								<a4j:commandButton  value="#{messages['layout.text.remove']}"
-									styleClass="refButton refButtonRight"
-									onclick="if (! confirm('Really want to do that?')) return false"
-									action="#{action.removeRef(action.selectedNode, refNode.data, ref)}"
-									reRender="panelForm" />
-		
-								<br style="clear: both;" />
-							</rich:dataGrid>
-						</rich:dataGrid>
-					</h:panelGroup>
-		        </rich:tab>
-		    </rich:tabPanel>
-		    
+	  	<h:panelGroup id="moreActions" styleClass="moreActions">
+	            <rich:dataGrid styleClass="hiddenBorders"
+				value="#{action.getRefs(action.selectedNode.data)}" var="ref">
+					<rich:dataGrid styleClass="hiddenBorders"
+						value="#{action.dslUtil.findClasses(ref)}" var="eclass">
+						<a4j:commandButton  styleClass="refButton #{action.getStyleClass(eclass)}"
+							value="#{messages['layout.text.add']} #{action.getName(eclass.name)}"
+							action="#{action.buildRef(action.selectedNode.data, ref, eclass)}"
+							reRender="panelForm" disabled="#{(action.getRefsObjects(action.selectedNode.data, ref).size > 0 and !ref.isMany())}" />
+						
+						<rich:panel styleClass="hint #{action.getStyleClass(eclass)}" rendered="#{action.getHint(eclass) != null}">
+							<rich:toolTip>
+					            <span style="white-space:nowrap">
+					                <h:outputText value="#{action.getHint(eclass)}" />
+					            </span>
+					        </rich:toolTip>
+						</rich:panel>
+						
+						<h:panelGroup styleClass="#{action.getStyleClass(eclass)}">
+							<br style="clear: both;" />
+						</h:panelGroup>
+					</rich:dataGrid>
+				</rich:dataGrid>
+			</h:panelGroup>
 		</h:panelGroup>
 
 		<h:panelGroup styleClass="nodePanel" >
@@ -94,7 +66,7 @@
 				<h:outputText
 					value="#{action.getName(action.selectedNode.data, true)}"
 					styleClass="refNodeTitle" />
-				<rich:separator></rich:separator>
+				<rich:separator></rich:separator><br/><br/>
 				<rich:dataGrid styleClass="hiddenBorders"
 					value="#{action.getAttrs(action.selectedNode.data)}" var="attr">
 	
@@ -164,8 +136,32 @@
 	
 					</h:panelGroup>
 					<br style="clear: both" />
-	
 				</rich:dataGrid>
+				
+				<br/>
+		        <h:panelGroup id="itemChildren" styleClass="moreActions">
+					<rich:dataGrid styleClass="hiddenBorders"
+						value="#{action.getRefs(action.selectedNode.data)}" var="ref">
+						<rich:dataGrid styleClass="hiddenBorders"
+							value="#{action.getChildren(action.selectedNode, ref)}"
+							var="refNode">
+							<a4j:commandButton  value="#{action.getName(refNode.data, true)}"
+								styleClass="refButton refButtonLeftBig"
+								action="#{action.updateSelectedNode(refNode)}"
+								reRender="panelForm" />
+	
+							<a4j:commandButton  value="#{messages['layout.text.remove']}"
+								styleClass="refButton refButtonRight"
+								onclick="if (! confirm('Really want to do that?')) return false"
+								action="#{action.removeRef(action.selectedNode, refNode.data, ref)}"
+								reRender="panelForm" />
+	
+							<br style="clear: both;" />
+						</rich:dataGrid>
+					</rich:dataGrid>
+				</h:panelGroup>
+				
+		    	<br/><rich:separator></rich:separator>
 				<br style="clear: both" />
 				
 				<a4j:commandButton  value="#{messages['layout.text.updateAndContinue']}" action="#{action.updateAttrProperties}"

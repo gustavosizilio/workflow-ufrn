@@ -346,7 +346,7 @@ label {
 }
 
 .panelForm input[type=text], .panelForm input[type=password], .panelForm textarea, .panelForm select {
-	width: 500px !important;
+	width: 540px !important;
 	height: 50px !important;
 	background: none;
 }
@@ -386,6 +386,10 @@ label {
 .refButtonLeft {
 	float: left;
 	width: 180px !important;
+}
+.refButtonLeftBig {
+	float: left;
+	width: 590px !important;
 }
 .refButtonRight {
 	width: 90px !important;

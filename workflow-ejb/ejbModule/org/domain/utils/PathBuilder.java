@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Name;
 public class PathBuilder {
 	
 	private String expHome;
+	private String jbossLibPath;
 	private String webPath;
 	@In(value = "expdslUtil", create = true) private EXPDSLUtil dslUtil;
 	
@@ -56,7 +57,7 @@ public class PathBuilder {
 	
 	public String getExperimentJpdlPath(Workflow w) {
 		try {
-			return validate(getExperimentsPath()+"/"+w.getId()+"/"+JPDLDSLUtil.getInstance().getJpdlName(w));
+			return validate(getExperimentsPath()+"/"+w.getId()+"/"+JPDLDSLUtil.getInstance(jbossLibPath).getJpdlName(w));
 		} catch (Exception e) {
 			return null;
 		}
@@ -128,6 +129,14 @@ public class PathBuilder {
 
 	public void setWebPath(String webPath) {
 		this.webPath = webPath;
+	}
+
+	public String getJbossLibPath() {
+		return jbossLibPath;
+	}
+
+	public void setJbossLibPath(String jbossLibPath) {
+		this.jbossLibPath = jbossLibPath;
 	}
 	
 }

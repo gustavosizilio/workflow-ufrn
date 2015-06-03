@@ -190,7 +190,7 @@ public class WorkflowConfiguration {
 	public void deployWorkflows() throws Exception {
 		try {
 			String experimentJpdlPath = pathBuilder.getExperimentJpdlPath(this.getEntity());
-			JPDLDSLUtil.getInstance().convertXMIToJPDL(pathBuilder.getExperimentXMIPath(this.getEntity()), experimentJpdlPath);
+			JPDLDSLUtil.getInstance(pathBuilder.getJbossLibPath()).convertXMIToJPDL(pathBuilder.getExperimentXMIPath(this.getEntity()), experimentJpdlPath);
 			
 			//deploy jpdl
 			WorkflowManager manager = new WorkflowManager(experimentJpdlPath, this.getEntity(),seamDao);
@@ -209,7 +209,7 @@ public class WorkflowConfiguration {
 			File f = new File(experimentConfPath); //delete the file to fix bug in the acceleo convertion that concat the content instead of recreate the file
 			if (f.exists()) f.delete();
 			
-			JPDLDSLUtil.getInstance().convertXMIToConf(pathBuilder.getExperimentXMIPath(this.getEntity()), experimentPath);
+			JPDLDSLUtil.getInstance(pathBuilder.getJbossLibPath()).convertXMIToConf(pathBuilder.getExperimentXMIPath(this.getEntity()), experimentPath);
 			deployDesignConfiguration(experimentConfPath);
 			
 		} catch (Exception e) {

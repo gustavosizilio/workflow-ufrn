@@ -17,17 +17,17 @@ public class JPDLDSLUtil {
 	private String transformationJar, javaAcceleo;
 	private static final String packageClass = "jpdl31Plus.Jpdl31PlusPackage";
 	
-	public synchronized static JPDLDSLUtil getInstance() throws Exception {
+	public synchronized static JPDLDSLUtil getInstance(String jbossLibPath) throws Exception {
 		if(instance == null) {
-			instance = new JPDLDSLUtil();
+			instance = new JPDLDSLUtil(jbossLibPath);
 		}
 		return instance;
 	}
 	
-	private JPDLDSLUtil() throws Exception {
-		qvtoFilePath = ServletLifecycle.getCurrentServletContext().getRealPath("/") + "../" + "QVTOTransformation.qvto";
-		transformationJar = ServletLifecycle.getCurrentServletContext().getRealPath("/") + "../lib/ExpDSLTransformationsTool.jar";
-		javaAcceleo = ServletLifecycle.getCurrentServletContext().getRealPath("/") + "../lib/javaAcceleo.jar";
+	private JPDLDSLUtil(String jbossLibPath) throws Exception {
+		qvtoFilePath = jbossLibPath+ "/" + "QVTOTransformation.qvto";
+		transformationJar = jbossLibPath+ "/" + "ExpDSLTransformationsTool.jar";
+		javaAcceleo = jbossLibPath+ "/" + "javaAcceleo.jar";
 		
 		String factoryClass = packageClass.substring(0, packageClass.lastIndexOf("Package"))+"Factory";
 		Class<?> packageFactory;
@@ -53,6 +53,9 @@ public class JPDLDSLUtil {
 
 	public void convertXMIToJPDL(String xmiPath, String experimentJpdlPath) throws Exception {
 		String cmd = "java -jar " + transformationJar + " \"qvto\"" + " \""+qvtoFilePath+"\"" + " \""+xmiPath+"\"" + " \""+experimentJpdlPath+"\"";
+		System.out.println("CONVERTING XMI TO JPDL");
+		System.out.println(cmd);
+		
 		Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", cmd});
 	    p.waitFor();
 	}

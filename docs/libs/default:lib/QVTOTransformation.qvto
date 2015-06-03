@@ -1,0 +1,598 @@
+modeltype DSL  uses expdslv3('http://www.ufrn.br/dimap/ase/dsl/Expdslv3');
+modeltype JPDL uses jpdl31Plus('urn:jbpm.org:jpdl-3.1Plus');
+
+transformation ExpDSLv3ToWorkExpTese(in dsl : DSL, out outModel: JPDL);
+
+main() {
+	
+    log('starting transformation...');
+    dsl.rootObjects()[DSL::Model]->map model2model();
+	log('ending transformation...');
+}
+
+mapping DSL::Model::model2model():JPDL::Model{
+log('elements...');
+	elements := self.elements->map model2DSLModel()->asOrderedSet();
+}
+
+mapping DSL::ExperimentElement::model2DSLModel():JPDL::DocumentRoot	 {
+
+  log('process...');
+  processDefinition := self.process->map processToProcessDefinition(self.experiments.replication);
+  log('questionnaires...');
+  questionnaires := self.questionnaire -> map questToQuestionnaire(result);
+  log('plan...');   
+  plan := self.experiments -> map experimentalPlanToPlan(result);
+  
+}
+
+
+mapping DSL::ExperimentalDesign::experimentalPlanToPlan(in res: JPDL::DocumentRoot):JPDL::ExperimentalPlan {
+	log('goals...');
+    goals := self.goal->map goalsToGoal()->asOrderedSet();
+	log('research questions...');
+	researchQuestions := self.researchQuestion->map RQtoRQ()->asOrderedSet();
+	log('hypothesis...');
+	hypothesis := self.researchHypothesis-> map RHtoRH()->asOrderedSet();
+	log('dependent variables...');
+	depVariables := self.depVar -> map depVarToDepVar()->asOrderedSet();
+	log('factors...');
+	factors := self.factor -> map factorToFactor()->asOrderedSet();
+	log('context...');
+	context := self.parameter -> map parameterToParameter()->asOrderedSet();
+	log('design...');
+	//DESIGN
+	
+	design := map doeToDesign(self.doe);
+	//design := getDesign(self.doe);
+}
+
+mapping doeToDesign(in doe: DSL::DOE): JPDL::Design{
+var design: JPDL::Design;
+
+		if(doe.oclIsTypeOf(DSL::LS))then {
+		log('LS');
+		result := object JPDL::LS {
+		  treatment := getFactor(doe.oclAsType(DSL::LS).treatment.name);
+		  row := getFactor(doe.oclAsType(DSL::LS).row.name);
+		  col := getFactor(doe.oclAsType(DSL::LS).col.name);
+	};}
+	else {
+		if(doe.oclIsTypeOf(DSL::RCBD))then {
+			log('RCBD');
+			result := object JPDL::RCBD {
+				treatment := getFactor(doe.oclAsType(DSL::RCBD).treatment.name);
+				blockVariable:= getFactor(doe.oclAsType(DSL::RCBD).blockVariable.name);
+		};	
+		} else {
+		if(doe.oclIsTypeOf(DSL::CRB))then {//<===ALTERAR NA DSL====
+			log('CRD');
+			result := object JPDL::CRD {
+			 	treatment := getFactor(doe.oclAsType(DSL::CRB).treatment.name);
+		};
+		}
+		else {
+		if(doe.oclIsTypeOf(DSL::OTHER))then {
+			log('OTHER');
+			result := object JPDL::Other {
+				name := doe.oclAsType(OTHER).name;
+		};}endif;
+	}endif;
+	} endif;
+	}endif;
+	//result := design;
+}
+//Map ExpDSLv3 StructuredGoal or SimpleGoal to JPDL::Goal
+mapping DSL::Goal::goalsToGoal():JPDL::Goal {
+    
+	if(self.oclIsTypeOf(StructuredGoal))then {
+		var g:= self.oclAsType(StructuredGoal);
+		description := 'Analyze' + g._object +  ' for the purpose of ' + g.technique + ' with respect to their ' + g.quality + ' the point of view of the ' + g.ptView +  ' in the context of ' + g.contextOf;
+		id := g.name;
+	}else {
+	if(self.oclIsTypeOf(SimpleGoal)) then {
+		
+	    var g:= self.oclAsType(SimpleGoal);
+		id := g.name;
+		description := g.description;
+		
+	}endif; 
+	}endif;
+}
+
+	
+mapping DSL::ResearchQuestion::RQtoRQ():JPDL::ResearchQuestion {
+	description := self.description;
+	name := self.name;
+	//fromGoal := getGoal(self.goal);
+	var allGoals := outModel.objectsOfType(JPDL::Goal);
+  	allGoals->forEach(go) {
+  	if(go.oclAsType(JPDL::Goal).id.equalsIgnoreCase(self.goal.name))then {
+  	        log('goal:'+ self.goal.name);
+		    fromGoal := go;
+		}endif;
+  };
+}
+
+mapping DSL::ResearchHypothesis::RHtoRH():JPDL::ResearchHyphotesis {
+	description := self.description;
+	id := self.name;
+	var allGoals := outModel.allInstances(JPDL::Goal);
+  	allGoals->forEach(go) {
+  	if(go.oclAsType(JPDL::Goal).id.equalsIgnoreCase(self.goal.name))then {
+  	        log('goal:'+ self.goal.name);
+		    fromGoal := go;
+		}endif;
+  };
+	
+}
+mapping DSL::DepVariable::depVarToDepVar(): JPDL::DependentVariable {
+		    name := self.name;
+	        description := self.description;
+	        scale := getScale(self.scaleType);
+	        if(self.scaleType = DSL::ScaleType::Nominal or self.scaleType = DSL::ScaleType::Ordinal) then{
+				range := self.range->map rangeToRange();
+			}endif;
+			if ( (self.rh) <> null ) then	{
+				self.rh->forEach(h){
+					relatesToRH += Sequence{getRH(h)};
+				};
+	        }endif;
+	       if ( (self.rq) <> null ) then	{
+				self.rq->forEach(q){
+					relatesToRQ += Sequence{getRQ(q)};
+				};
+	        }endif;
+	        }  
+
+mapping DSL::Factor::factorToFactor(): JPDL::Factor{
+	name := self.name;
+	description := self.description;
+	if(self.scaleType = DSL::ScaleType::Nominal or self.scaleType = DSL::ScaleType::Ordinal) then{
+				range := self.range->map rangeToRange();
+	}endif;
+	scale := getScale(self.scaleType);
+}	
+
+mapping DSL::Parameter::parameterToParameter(): JPDL::Parameter{
+    name := self.name;
+    description := self.description;
+    scale := getScale(self.scaleType);
+    if(self.scaleType = DSL::ScaleType::Nominal or self.scaleType = DSL::ScaleType::Ordinal) then{
+				range := self.range->map rangeToRange();
+	}endif;
+}
+mapping DSL::Range::rangeToRange(): JPDL::Range{
+	name := self.name;
+}
+mapping DSL::ResearchQuestion::relatesToRQtoRQ(): JPDL::ResearchQuestion {
+	 result := getRQ(self);
+}
+
+mapping DSL::ResearchHypothesis::relatesToRHtoRH(): JPDL::ResearchHyphotesis {
+	 result := getRH(self);
+}
+
+
+mapping DSL::Questionnaire::questToQuestionnaire(in res: JPDL::DocumentRoot): JPDL::Questionnaire {
+	name := self.name;
+	question := self.question->map questionToQuestion();
+	if(type<>null) then {
+		type := getQuestionnaireType(self.questionnaireType);
+	}endif;
+
+	self.relatesTo->forEach(p){
+	   res.allSubobjectsOfType(JPDL::ProcessDefinitionType)->forEach(pro){
+	   		if(pro.oclAsType(JPDL::ProcessDefinitionType).name.equalsIgnoreCase(p.name))then{
+	   				result.processes += Sequence{pro.oclAsType(JPDL::ProcessDefinitionType)};
+	   		}endif;
+	   };
+	};
+}
+
+mapping DSL::Question::questionToQuestion():JPDL::Question{
+	description := self.description;
+	type := getQuestionType(self.type);
+	option := self.alternatives->alternativesToAlternatives();
+	if (self.req = 1) then {
+	    required := true.oclAsType(BooleanType);
+	}else {
+		required := false.oclAsType(BooleanType);
+	}endif;
+}
+
+mapping DSL::Alternatives::alternativesToAlternatives(): JPDL::Alternative {
+	description := self.description;
+}
+	
+mapping DSL::Process::processToProcessDefinition(in num: Real) :JPDL::ProcessDefinitionType{
+  
+  	//cria o nó inicial e final do processo
+  result.startState := object JPDL::StartStateType { 
+				name := 'Starting'; 
+				
+				var act: Set(Task);
+				act := self.allInstances(DSL::Task);
+				
+				act->forEach(a) {
+					var comp := a.repr();
+					var res := isSuccessor(comp, self.task); //if the activity has no other refering to her as next, it is a first activity...
+						if(res.repr().equalsIgnoreCase('false')) then {
+						//create a transition from start to this activity...	
+						var start_t := object JPDL::TransitionType{
+							name := 'startTransition'+a.name;
+							to := a.name;
+						};
+						
+			       	  transition += Sequence{start_t}
+					
+					}endif;			
+				}				
+  };
+  	
+  result.endState := object JPDL::EndStateType { 
+				name := 'End'; 			
+  };
+  
+  // cria swimlane com o papel determinado para a primeira atividade, caso exista.
+  	result.swimlane := object JPDL::SwimlaneType { 
+        
+  		assignment := object JPDL::AssignmentType {
+			actorId := getProcessRole(self);
+		};
+		
+  };
+  name := self.name;
+  quantity := num.round();
+  log('taskNodes...');
+  taskNode := self.task->map task2taskNode(self)->asOrderedSet();
+  
+  //links
+    self.allInstances(DSL::Task)-> map ligarAoNoFinal(result)->asOrderedSet();
+}
+
+mapping DSL::Task::task2taskNode(in pro:DSL::Process): JPDL::TaskNodeType{
+	name := self.name;
+	description := self.description;
+	log('artefacts...');
+	artefacts := self.artefacts->map artefact2artefact()->asOrderedSet();
+	log('fields...');
+	fields := self.fields -> map fieldToField()->asOrderedSet();
+	log('questionnaires relation...');
+	questionnaires := self.questionnaire -> map questToQuest()->asOrderedSet();
+	
+	// tratar última tarefa
+	self.next->forEach(i){
+		transition += object JPDL::TransitionType{
+			name := self.name+'_Transition';
+			to := i.name;
+		}//end_create_transactions
+	};//end forEach next
+}
+
+mapping DSL::Questionnaire::questToQuest():JPDL::Questionnaire {
+	name := self.name;
+}
+mapping DSL::Artefact::artefact2artefact():JPDL::Artefact{
+	name := self.name;
+	description := self.description;
+ 
+	if(self.type = DSL::ArtefactType::in_) then {
+		result.type := JPDL::ArtefactType::input.repr();
+		
+	}endif;
+		
+	if (self.type = DSL::ArtefactType::out_)then {
+
+		result.type:= JPDL::ArtefactType::output.repr();
+	}endif;
+		
+	if (self.type = DSL::ArtefactType::inout_)then {
+
+		result.type:= JPDL::ArtefactType::inoutput.repr();
+	}endif;
+	}
+	
+mapping DSL::Field::fieldToField():JPDL::Field{
+	name := self.variable;
+	//TODO: self.textField
+}
+//Create links to ENDNODE
+mapping DSL::Task::ligarAoNoFinal(inout process: JPDL::ProcessDefinitionType){
+
+		// cria transições para o fim...
+		var i := getTransitionToFim(process);
+		
+	   if(i>1)then{
+		
+		var join := object JPDL::JoinType {
+				name := 'joinEnd';
+				transition := object JPDL::TransitionType{
+					name := 'to_EndTransition';
+					to:= 'End';
+				};
+			};
+			process.join += Sequence{join};
+			process.allInstances(JPDL::TaskNodeType)->forEach(task) {
+			if(task.transition->isEmpty())then{
+				var trst := object JPDL::TransitionType {
+				name := task.name + 'transition';
+				to := 'joinEnd';
+			};
+			task.transition += trst;
+			}endif;
+		};
+			
+		}else {
+		
+		process.allInstances(JPDL::TaskNodeType)->forEach(task) {
+			if(task.transition->isEmpty())then{
+				var trst := object JPDL::TransitionType {
+				name := task.name + 'transition';
+				to := 'End';
+			};
+			task.transition += trst;
+			}endif;
+		};
+		}endif;
+	
+}
+
+/************
+ *  QUERYS  *
+ ************/
+
+query getRQ(in rq: DSL::ResearchQuestion): JPDL::ResearchQuestion {
+	
+ var allRQs := outModel.objectsOfType(JPDL::ResearchQuestion);
+  allRQs->forEach(res) {
+		if(res.oclAsType(JPDL::ResearchQuestion).name.equalsIgnoreCase(rq.name))then {
+			return res;
+		}endif;
+	};
+ return null;
+}
+
+
+query getRH(in rh: DSL::ResearchHypothesis): JPDL::ResearchHyphotesis {
+	
+ var allRHs := outModel.objectsOfType(JPDL::ResearchHyphotesis);
+  allRHs->forEach(res) {
+		if(res.oclAsType(JPDL::ResearchHyphotesis).id.equalsIgnoreCase(rh.name))then {
+			return res;
+		}endif;
+	};
+ return null;
+}
+ 
+ 
+query getFactor(in name:String): JPDL::Factor {
+	var allFactors := outModel.objectsOfType(JPDL::Factor);
+	allFactors->forEach(f){
+		if(f.oclAsType(JPDL::Factor).name.equalsIgnoreCase(name)) then {
+			return f;
+		}endif;
+	};
+	return null;
+}
+
+query getGoal(in g:DSL::Goal): JPDL::Goal {
+  var allGoals := outModel.objectsOfType(JPDL::Goal);
+  allGoals->forEach(go) {
+  	if(go.oclAsType(JPDL::Goal).id.equalsIgnoreCase(g.name))then {
+		    return go;
+		}endif;
+  };
+  return null;
+}
+
+ 
+ query getTransitionToFim(in process: JPDL::ProcessDefinitionType): Integer{
+    var i := 0;
+    process.allInstances(JPDL::TaskNodeType)->forEach(task) {
+			if(task.transition->isEmpty())then{
+				i:= i +1;
+		
+			}endif;
+		};
+    return i;
+ 	
+ }
+
+//check if activity is between begin and end
+query checkBetween(in begin: String, in end_: String, in atual :String, in pro:DSL::Process):Boolean{
+	
+ if( atual.equalsIgnoreCase(begin) or atual.equalsIgnoreCase(end_))then {
+ 	return true;
+ }else {
+ 	var atividadeAtual : Task;
+ 	//pegar o conjunto de todas as atividades do processo...
+	//pega a primeira e vai andando pra ver se é o begin, se sim, até chegar na end pega
+	atividadeAtual = getTask(atual,pro);
+	if(atividadeAtual.next != null) then{
+	   atividadeAtual.next->forEach(act){ 
+           checkBetween(begin,end_,act.name,pro);
+     };
+     }endif;
+	    
+ }endif;
+return false;
+}
+
+//QUERY QUE RETORNA A ATIVIDADE A PARTIR DO NOME
+query getTask(in name: String, in pro:DSL::Process):DSL::Task {
+	var activities : Set(DSL::Task);
+	activities := pro.allInstances(Task);
+	 activities->forEach(i){
+ 			
+ 		var exp := name.equalsIgnoreCase(i.oclAsType(Task).name);
+  		if (exp) then {
+  			return i;
+ 		 }endif;
+  };
+}
+
+query getProcessRole(in pro: DSL::Process): String {
+	//alwasy return the role from the first process activity or task ...
+	var act := pro.task;
+	var role:= 'unknown';
+	/*
+		
+	}if (act->notEmpty())then {
+		var roles := act.role;
+		if (roles->notEmpty()) then {
+			role := roles->at(1).name;
+		}else  { // case role has not been specified to activity, it can be specified to tasks.
+			if(act.tasks->notEmpty())then{
+				var role2 := act.tasks.role;
+				role := role2->at(1).name;
+			}endif;
+		}endif;
+	}endif;
+	*/
+	return pro.role->at(1).repr();
+}
+
+//It verify if a task is setted as next for any other task, else it activity is the one of the firsts and returns false...
+query isSuccessor(in rep: String,in act: Set(Task)): Boolean {
+	
+	var x:=0;
+	act->forEach(i){
+	    i.next->forEach(j){
+			if(j.repr().equalsIgnoreCase(rep))then{
+			x:= x +1;
+		}endif;
+	}
+	};
+	if(x>0)then{
+		return true;
+	} else {
+		return false;
+	}endif;
+	
+}
+
+query getScale(in type: DSL::ScaleType) : JPDL::ScaleType {
+	var res: JPDL::ScaleType;
+   
+    if(type.=(DSL::ScaleType::Absolute)) then {
+		res := JPDL::ScaleType::Integer;    
+		}
+	else {
+	if(type.= (DSL::ScaleType::Ratio)) then {
+		res := JPDL::ScaleType::Real;
+	} else {
+		if(type.= (DSL::ScaleType::Ordinal)) then {
+		res := JPDL::ScaleType::Ordinal;
+	} else {
+	if(type.= (DSL::ScaleType::Nominal)) then {
+		res := JPDL::ScaleType::Nominal;
+	}else {
+	if(type.= (DSL::ScaleType::Interval)) then {
+		res := JPDL::ScaleType::Interval;
+	}endif;
+	}endif;
+	}endif;
+	}endif;
+	}endif;
+	
+	return res;
+}
+//
+query getQuestionType(in type : DSL::AnswerType) : JPDL::AnswerType {
+	var res: JPDL::AnswerType;
+   
+    if(type.=(DSL::AnswerType::SingleChoice)) then {
+		res := JPDL::AnswerType::comboBox;    }
+	else {
+	if(type.= (DSL::AnswerType::ParagraphText)) then {
+		res := JPDL::AnswerType::paragraphText;
+	} else {
+		if(type.=(DSL::AnswerType::Text)) then {
+		res := JPDL::AnswerType::text;
+	} else {
+		if(type.=(DSL::AnswerType::MultipleChoice)) then {
+		res := JPDL::AnswerType::checkBox;
+	}endif;
+	}endif;
+	}endif;
+	}endif;
+	
+	return res;
+}
+
+query getDesign(in type : DSL::DesignType) : JPDL::DoEType {
+	var res: JPDL::DoEType;
+	if( type.=(DSL::DesignType::CDR))then {
+		res := JPDL::DoEType::CRD;
+	} else {
+	if( type.=(DSL::DesignType::RCBD)) then {
+		res := JPDL::DoEType::RCBD;
+	} else {
+		if( type.=(DSL::DesignType::LS)) then {
+		res := JPDL::DoEType::LS;
+	} else {
+	if( type.=(DSL::DesignType::other)) then {
+		res := JPDL::DoEType::other;
+	}endif;
+	}endif;
+	}endif;
+	}endif;
+	return res;
+}
+
+
+query getQuestionnaireType(in type: DSL::QuestionnaireType): JPDL::QuestionnaireType {
+
+		if(type.=(QuestionnaireType::pre))then {
+			return JPDL::QuestionnaireType::Pre;
+		} else {
+			return JPDL::QuestionnaireType::Post;
+			
+		}endif;
+	
+	return null;
+}
+
+
+
+query getBooleanValue(in type: String): JPDL::BooleanType {
+	if(type.equalsIgnoreCase("true")) then {
+		return true.oclAsType(BooleanType);
+	} else{
+		return false.oclAsType(BooleanType);
+	}endif;
+	return null;
+}
+
+
+query getDesign(in doe: DSL::DOE):JPDL::Design {
+	var res: JPDL::Design;
+	
+	if(doe.oclIsTypeOf(DSL::LS))then {
+		log('LS');
+		res.oclAsType(JPDL::LS).treatment := getFactor(doe.oclAsType(DSL::LS).treatment.name);
+		res.oclAsType(JPDL::LS).row := getFactor(doe.oclAsType(DSL::LS).row.name);
+		res.oclAsType(JPDL::LS).col := getFactor(doe.oclAsType(DSL::LS).col.name);
+	}
+	else {
+		if(doe.oclIsTypeOf(DSL::RCBD))then {
+			log('RCBD');
+			res.oclAsType(JPDL::RCBD).treatment := getFactor(doe.oclAsType(DSL::RCBD).treatment.name);
+			res.oclAsType(JPDL::RCBD).blockVariable:= getFactor(doe.oclAsType(DSL::RCBD).blockVariable.name);
+			
+		} else {
+		if(doe.oclIsTypeOf(DSL::CRB))then {//<===ALTERAR NA DSL====
+			log('CRD');
+			res.oclAsType(JPDL::CRD).treatment := getFactor(doe.oclAsType(DSL::CRB).treatment.name);
+		}
+		else {
+		if(doe.oclIsTypeOf(DSL::OTHER))then {
+			log('OTHER');
+			res.oclAsType(JPDL::Other).name := doe.oclAsType(OTHER).name;
+		}endif;
+	}endif;
+} endif;
+	}endif;
+	return res;
+}

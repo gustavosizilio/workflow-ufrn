@@ -68,6 +68,7 @@
 	<component name="pathBuilder">
 		<property name="expHome">@expHome@</property>
 		<property name="webPath">@webPath@</property>
+		<property name="jbossLibPath">@jbossLibPath@</property>
 	</component>
 	
 </components>

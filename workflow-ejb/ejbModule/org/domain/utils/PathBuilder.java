@@ -13,6 +13,9 @@ public class PathBuilder {
 	private String expHome;
 	private String jbossLibPath;
 	private String webPath;
+	private String mailSender;
+	private String mailSenderPwd;
+	
 	@In(value = "expdslUtil", create = true) private EXPDSLUtil dslUtil;
 	
 	public String getExperimentsPath(){
@@ -137,6 +140,22 @@ public class PathBuilder {
 
 	public void setJbossLibPath(String jbossLibPath) {
 		this.jbossLibPath = jbossLibPath;
+	}
+
+	public String getMailSender() {
+		return mailSender;
+	}
+
+	public void setMailSender(String mailSender) {
+		this.mailSender = mailSender;
+	}
+
+	public String getMailSenderPwd() {
+		return mailSenderPwd;
+	}
+
+	public void setMailSenderPwd(String mailSenderPwd) {
+		this.mailSenderPwd = mailSenderPwd;
 	}
 	
 }

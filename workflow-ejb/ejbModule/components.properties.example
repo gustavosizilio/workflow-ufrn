@@ -6,3 +6,5 @@ host=localhost
 expHome=/home/jboss/experiments/
 webPath=http\://177.20.147.154\:8080/workflow/
 jbossLibPath=/usr/share/jboss-5.1.0.GA/server/default/lib/
+mailSender=experimentoufrn@gmail.com
+mailSenderPwd=1q2w3e4F

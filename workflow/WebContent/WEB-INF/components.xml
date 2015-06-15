@@ -69,6 +69,8 @@
 		<property name="expHome">@expHome@</property>
 		<property name="webPath">@webPath@</property>
 		<property name="jbossLibPath">@jbossLibPath@</property>
+		<property name="jbossLibPath">@mailSender@</property>
+		<property name="jbossLibPath">@mailSenderPwd@</property>
 	</component>
 	
 </components>

@@ -44,8 +44,8 @@ import org.domain.model.processDefinition.ProcessDefinition;
 import org.domain.model.processDefinition.UserAssignment;
 import org.domain.model.processDefinition.Workflow;
 import org.domain.model.processDefinition.metric.Questionnaire;
-import org.domain.utils.MailGun;
 import org.domain.utils.PathBuilder;
+import org.domain.utils.SendMailTLS;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -377,7 +377,7 @@ public class WorkflowConfiguration {
 			
 			String mailMsg = "Hello "+this.newUser.getName()+", the user "+user.getName()+" invited you to be a participant in an experiment. "
 					+ "Access "+ pathBuilder.getWebPath() + " Experiment Executer using  the password "+passwordString;
-			MailGun.sendMail(this.newUser.getEmail(), this.newUser.getName(), "You are invited for Experiment Executer", mailMsg);
+			SendMailTLS.sendMail(this.newUser.getEmail(), this.newUser.getName(), "You are invited for Experiment Executer", mailMsg);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

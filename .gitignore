@@ -4,3 +4,4 @@ workflow-ejb/build/*
 workflow-test/bin/*
 workflow/build/*
 ExpDSLTool/bin/*
+workflow-ejb/ejbModule/components.properties

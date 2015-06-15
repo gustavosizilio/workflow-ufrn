@@ -48,12 +48,17 @@ public class Seed {
 	}
 
 	private Object persist(Object u) {
-		if(seamDao.findByExample(u).size() == 0){
-			seamDao.persist(u);
-			return u;
-		} else {
-			return seamDao.findByExample(u).get(0);
+		try {
+			if(seamDao.findByExample(u).size() == 0){
+				seamDao.persist(u);
+				return u;
+			} else {
+				return seamDao.findByExample(u).get(0);
+			}			
+		} catch (Exception e) {
+			System.out.println("Failed to SEED");
 		}
+		return null;
 	}
 
 }

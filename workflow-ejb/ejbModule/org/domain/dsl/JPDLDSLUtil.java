@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 
 import org.domain.model.processDefinition.Workflow;
-import org.domain.utils.PathBuilder;
+import org.domain.utils.ConstantsBuilder;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.jboss.seam.contexts.ServletLifecycle;
 

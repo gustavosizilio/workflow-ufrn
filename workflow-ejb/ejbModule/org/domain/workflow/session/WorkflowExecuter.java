@@ -27,7 +27,7 @@ import org.domain.model.processDefinition.UserExecution;
 import org.domain.model.processDefinition.metric.Question;
 import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.model.processDefinition.metric.UserAnswer;
-import org.domain.utils.PathBuilder;
+import org.domain.utils.ConstantsBuilder;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -44,7 +44,7 @@ public class WorkflowExecuter {
 	@In("userAssignmentDao") protected UserAssignmentDAO userAssignmentDao;
 	@In("seamDao") protected SeamDAO seamDao;
 	@In("user") protected User user;
-	@In(value = "pathBuilder", create = true)  protected PathBuilder pathBuilder;
+	@In(value = "constantsBuilder", create = true)  protected ConstantsBuilder pathBuilder;
 	
 	@In
 	private FacesMessages facesMessages;

@@ -7,8 +7,8 @@ import org.domain.model.processDefinition.Workflow;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-@Name("pathBuilder")
-public class PathBuilder {
+@Name("constantsBuilder")
+public class ConstantsBuilder {
 	
 	private String expHome;
 	private String jbossLibPath;

@@ -9,16 +9,22 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
  
+@Name("sendMail")
 public class SendMailTLS {
+	
+	@In(value = "constantsBuilder", create = true) ConstantsBuilder pathBuilder;
  
-	public static synchronized void sendMail(String to, String name, String subject, String msg) throws MessagingException {
+	public void sendMail(String to, String name, String subject, String msg) throws MessagingException {
 	//public static void main(String[] args) {
  
 		final String toEmail = to;
 		
-		final String email = "";
-		final String password = "";
+		final String email = pathBuilder.getMailSender();
+		final String password = pathBuilder.getMailSenderPwd();
  
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");

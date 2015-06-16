@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.domain.model.processDefinition.Workflow;
-import org.domain.utils.PathBuilder;
+import org.domain.utils.ConstantsBuilder;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
@@ -40,7 +40,7 @@ public class EXPDSLUtil {
 	private EFactoryImpl factory;
 	private Injector injector;
 	private static final String packageClass = "br.ufrn.dimap.ase.dsl.expdslv3.Expdslv3Package";
-	@In(value = "pathBuilder", create = true) private PathBuilder pathBuilder;
+	@In(value = "constantsBuilder", create = true) private ConstantsBuilder pathBuilder;
 	
 	public EXPDSLUtil() throws Exception {
 		String factoryClass = packageClass.substring(0, packageClass.lastIndexOf("Package"))+"Factory";

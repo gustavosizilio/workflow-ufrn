@@ -58,6 +58,9 @@ public class User {
 	public void setPassword(String password) {
 		this.encryptedPassword = new BasicPasswordEncryptor().encryptPassword(password);
 	}
+	public String getPassword() {
+		return "";
+	}
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
 	}
@@ -80,4 +83,7 @@ public class User {
 		return getId().hashCode();
 	}
 	 
+	public boolean isAdmin(){
+		return this.id == 1;
+	}
 }

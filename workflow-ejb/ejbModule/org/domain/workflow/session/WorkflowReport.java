@@ -37,7 +37,7 @@ import org.domain.model.processDefinition.metric.Question;
 import org.domain.model.processDefinition.metric.Questionnaire;
 import org.domain.model.processDefinition.metric.UserAnswer;
 import org.domain.ranalysis.ANOVA;
-import org.domain.utils.PathBuilder;
+import org.domain.utils.ConstantsBuilder;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -55,7 +55,7 @@ public class WorkflowReport {
 	private Workflow workflow;
 	private Questionnaire currentQuestionnaire;
 	@In(create=true, value="sendFile") protected SendFile sendFile;
-	@In(value = "pathBuilder", create = true) PathBuilder pathBuilder;
+	@In(value = "constantsBuilder", create = true) ConstantsBuilder pathBuilder;
 	
 	private Observation observation;
 	

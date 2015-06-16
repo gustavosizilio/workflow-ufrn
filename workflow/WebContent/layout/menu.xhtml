@@ -10,6 +10,7 @@
 			<h:panelGroup rendered="#{identity.loggedIn}">
 	        	<h:commandLink action="#{crudWorkflow.list()}" value="#{messages['layout.text.myExperiments']}" />
 	        	<h:commandLink action="#{executer.list()}" value="#{messages['layout.text.experimentsExecution']}" />
+	        	<h:commandLink action="#{usersManager.init()}" rendered="#{user.admin}" value="#{messages['layout.text.manageUsers']}" />
 			</h:panelGroup>
        </h:form>
     </rich:toolBarGroup>

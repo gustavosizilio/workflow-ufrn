@@ -16,7 +16,7 @@ import org.domain.dao.WorkflowDAO;
 import org.domain.dsl.EXPDSLUtil;
 import org.domain.exception.ValidationException;
 import org.domain.model.processDefinition.Workflow;
-import org.domain.utils.PathBuilder;
+import org.domain.utils.ConstantsBuilder;
 import org.domain.workflow.session.generic.CrudAction;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
@@ -46,7 +46,7 @@ public class CrudWorkflow extends CrudAction<Workflow> {
 	
 	@In(value = "workflowDAO", create = true) WorkflowDAO workflowDAO;
 	@In(create = true, required = false, value="configuration") WorkflowConfiguration workflowConfiguration;
-	@In(value = "pathBuilder", create = true)  PathBuilder pathBuilder;
+	@In(value = "constantsBuilder", create = true)  ConstantsBuilder pathBuilder;
 	@In(value = "expdslUtil", create = true) private EXPDSLUtil dslUtil;
 	private EObject rootModel;
 	private TreeNode<EObject> rootNode;

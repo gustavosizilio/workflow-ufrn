@@ -22,6 +22,9 @@
 		            </f:facet>
 		            <h:commandButton value="#{messages['layout.text.resetPassword']}" action="#{usersManager.resetPass(user)}" />
 				</rich:column> 
+				<f:facet name="footer">
+	                <rich:datascroller id="ds" renderIfSinglePage="true"></rich:datascroller>
+	            </f:facet>
 			</rich:dataTable>
 	</ui:define>
 </ui:composition>

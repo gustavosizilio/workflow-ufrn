@@ -174,7 +174,21 @@ public class WorkflowExecuter {
 		
 		if(this.endState != null) {
 			this.currentQuestionnaires.addAll(this.currentProcess.getPostQuestionnaires());
-			this.currentQuestionnaires.addAll(this.currentProcess.getWorkflow().getPostQuestionnaires());
+				
+			
+			
+			List<UserAssignment> userAssignments = this.userAssignmentDao.findAllOpened(user);
+			List<ProcessDefinition> unfinishedProcess = new ArrayList<ProcessDefinition>();
+			for (UserAssignment userAssignment : userAssignments) {
+				if(userAssignment.getProcessDefinition().getWorkflow().equals(this.currentProcess.getWorkflow())){
+					if(!userAssignment.getProcessDefinition().finishedByUserAssignment(userAssignment)){
+						unfinishedProcess.add(userAssignment.getProcessDefinition());
+					}
+				}
+			}
+			if(unfinishedProcess.size() == 0){
+				this.currentQuestionnaires.addAll(this.currentProcess.getWorkflow().getPostQuestionnaires());
+			}
 		}	
 		
 		if(this.currentTaskNode != null) {

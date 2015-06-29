@@ -143,6 +143,7 @@
 		</rich:panel>
 		
 		<rich:panel header="#{executer.endState.name}" rendered="#{executer.endState != null}">
+			<h:outputText value="#{messages['layout.text.workflow.endState']}" /> <br /><br />
 			<h:outputText value="#{executer.endState.description}" />
 		</rich:panel>
 		

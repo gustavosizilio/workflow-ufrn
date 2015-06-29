@@ -243,6 +243,16 @@ public class ProcessDefinition extends GenericEntity{
 		return false;
 	}
 	
+	public boolean finishedByUserAssignment(UserAssignment userAssignment){
+		for (TaskNode taskNode : getTaskNodes()) {
+			if(!taskNode.finishedByUserAssignment(userAssignment)){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	
 	public List<UserAssignment> getUserAssignments() {
 		return userAssignments;
 	}

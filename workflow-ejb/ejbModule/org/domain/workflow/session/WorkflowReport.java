@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -104,18 +105,18 @@ public class WorkflowReport {
 		    CreationHelper createHelper = wb.getCreationHelper();
 		 
 		    
-		    Map<Object, Questionnaire> mapQuests = new HashMap<Object, Questionnaire>();
+		    List<Object[]> mapQuests = new ArrayList<Object[]>();
 		    List<Questionnaire> quests = this.workflow.getQuestionnaires();
 		    for (Questionnaire q : quests) {
 		    	//workflow questionnaires
-		    	mapQuests.put(this.workflow, q);
+		    	mapQuests.add(new Object[]{this.workflow, q});
 		    }
 		    List<ProcessDefinition> procs = this.workflow.getProcessDefinitions();
 		    for (ProcessDefinition processDefinition : procs) {
 		    	List<Questionnaire> quests2 = processDefinition.getQuestionnaires();
 			    for (Questionnaire q : quests2) {
 			    	//processDefinition questionnaires
-			    	mapQuests.put(processDefinition, q);
+			    	mapQuests.add(new Object[]{processDefinition, q});
 			    }
 			    
 			    List<TaskNode> tasks = processDefinition.getTaskNodes();
@@ -123,14 +124,15 @@ public class WorkflowReport {
 			    	List<Questionnaire> quests3 = taskNode.getQuestionnaires();
 				    for (Questionnaire q : quests3) {
 				    	//taskNode questionnaires
-				    	mapQuests.put(taskNode, q);
+				    	mapQuests.add(new Object[]{taskNode, q});
 				    }
 				}
 			}
 		    
 		    
-		    for (Object key : mapQuests.keySet()) {
-				Questionnaire q = mapQuests.get(key);
+		    for (Object[] o : mapQuests) {
+		    	Object key = o[0];
+				Questionnaire q = (Questionnaire) o[1];
 				String name = "";
 				List<UserAssignment> uas = q.getUserAssignments();
 				TaskNode taskNode = null;

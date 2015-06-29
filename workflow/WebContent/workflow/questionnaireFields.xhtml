@@ -25,6 +25,13 @@
 		</h:selectManyCheckbox>
 	</h:panelGroup>
 	
+	<h:panelGroup rendered="#{question.isRadioButtons()}">
+		<ui:param name="ua" value="#{question.getUserAssignmentAnswer(userAssignment, taskNode)}" />
+		<h:selectOneRadio style="width:100%;" value="#{ua.answer}" disabled="#{disabledFields}" >
+			<s:selectItems var="op" label="#{op.description}" itemValue="#{op.id}"  value="#{question.options}" />
+		</h:selectOneRadio>
+	</h:panelGroup>
+	
 	<h:panelGroup rendered="#{question.isText()}">
 		<ui:param name="ua" value="#{question.getUserAssignmentAnswer(userAssignment, taskNode)}" />
 		<h:inputText style="width:100%;" value="#{ua.answer}" disabled="#{disabledFields}" >

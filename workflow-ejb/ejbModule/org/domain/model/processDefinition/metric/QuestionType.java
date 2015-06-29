@@ -4,5 +4,6 @@ public enum QuestionType {
 	CHECKBOX,
 	COMBOBOX,
 	TEXT,
-	PARAGRAPH
+	PARAGRAPH,
+	RADIOBUTTONS
 }

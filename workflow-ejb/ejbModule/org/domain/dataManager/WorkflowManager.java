@@ -195,8 +195,6 @@ public class WorkflowManager extends XMLManager{
 			if(getAttribute(item, Elements.TYPE).equals(Elements.PARAGRAPHTEXT)){
 				question.setType(QuestionType.PARAGRAPH);
 			}
-		} else {
-			question.setType(QuestionType.TEXT);
 		}
 		
 		List<Node> nodes = getElements(item.getChildNodes());
@@ -204,8 +202,17 @@ public class WorkflowManager extends XMLManager{
 			if(extraxtName(node.getNodeName()).equals(Elements.OPTION)){
 				QuestionOption option = extractOption(node, question);
 				question.getOptions().add(option);
+				if(getAttribute(item, Elements.TYPE) == null){
+					//É null mas tem options... radiobuttons como default
+					question.setType(QuestionType.RADIOBUTTONS);
+				}
 			}
 		}
+		
+		if( question.getType() == null ) {
+			question.setType(QuestionType.TEXT);
+		}
+		
 		return question;
 	}
 

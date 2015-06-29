@@ -55,6 +55,14 @@ public class Question {
 		
 		return false;
 	}
+	
+	public Boolean isRadioButtons(){
+		if(getType() == QuestionType.RADIOBUTTONS)
+			return true;
+		
+		return false;
+	}
+	
 	public Boolean isComboBox(){
 		if(getType() == QuestionType.COMBOBOX)
 			return true;

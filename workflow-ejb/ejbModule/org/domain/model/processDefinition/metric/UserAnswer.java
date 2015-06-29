@@ -73,7 +73,26 @@ public class UserAnswer {
 		this.createdAt = createdAt;
 	}
 
-
+	public String getAnswerString() {
+		if(getQuestion().hasOptions()){
+			if(getAnswer() != null) {
+				if(getAnswer().contains(";")){
+					String r = "";
+					for (String string : getAnswerAsList()) {
+						r += getQuestion().getOption(Long.parseLong(string)).getDescription() + ";";
+					}
+					return r;
+				} else {
+					return getQuestion().getOption(Long.parseLong(getAnswer())).getDescription();
+				}		
+			} else {
+				return "";
+			}
+		} else {			
+			return answer;
+		}
+	}
+	
 	public String getAnswer() {
 		return answer;
 	}

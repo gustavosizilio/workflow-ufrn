@@ -215,7 +215,7 @@ public class WorkflowReport {
 					    	cellStyle.setWrapText(true);
 					        cellValue.setCellStyle(cellStyle);
 					        
-					    	cellValue.setCellValue(ue.getAnswer());
+					    	cellValue.setCellValue(ue.getAnswerString());
 				    	}
 					}
 				    

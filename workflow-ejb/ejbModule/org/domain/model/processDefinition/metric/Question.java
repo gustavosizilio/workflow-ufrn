@@ -92,7 +92,7 @@ public class Question {
 	
 	public QuestionOption getOption(Long id){
 		for (QuestionOption op : getOptions()) {
-			if(id == op.getId())
+			if(id.equals(op.getId()))
 				return op;
 		}
 		
